@@ -275,7 +275,7 @@ abstract class Page implements PageContract
     public function getRoute(array $params = []): string
     {
         return $this->getRouter()->to(
-            ($this->hasResource() || isset($params['resourceUri'])) ? 'resource.page' : 'page',
+            $this->hasResource() ? 'resource.page' : 'page',
             $params
         );
     }
