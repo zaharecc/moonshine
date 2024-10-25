@@ -140,6 +140,8 @@ final readonly class MoonShineEndpoints implements EndpointsContract
             new MoonShineException('Page not exists')
         );
 
+        $params = array_merge($params, $this->router->getParams());
+
         return $redirect
             ? redirect($targetPage->getRoute($params))
             : $targetPage->getRoute($params);

@@ -15,6 +15,9 @@ use MoonShine\Laravel\MoonShineRequest;
 use MoonShine\Laravel\Providers\MoonShineServiceProvider;
 use MoonShine\Laravel\Resources\MoonShineUserResource;
 use MoonShine\Laravel\Resources\MoonShineUserRoleResource;
+use MoonShine\Tests\Fixtures\Pages\Custom\CustomPageDetail;
+use MoonShine\Tests\Fixtures\Pages\Custom\CustomPageForm;
+use MoonShine\Tests\Fixtures\Pages\Custom\CustomPageIndex;
 use MoonShine\Tests\Fixtures\Resources\TestCategoryResource;
 use MoonShine\Tests\Fixtures\Resources\TestCommentResource;
 use MoonShine\Tests\Fixtures\Resources\TestCoverResource;
@@ -127,6 +130,9 @@ class TestCase extends Orchestra
         ], newCollection: true)
         ->pages([
             ...$this->moonshineCore->getConfig()->getPages(),
+            CustomPageIndex::class,
+            CustomPageForm::class,
+            CustomPageDetail::class,
         ]);
 
         return $this;
