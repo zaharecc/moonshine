@@ -43,7 +43,7 @@ final readonly class NotificationItem implements NotificationItemContract
 
     public function getButton(): ?NotificationButtonContract
     {
-        if(empty($this->notification->data['button'])) {
+        if (empty($this->notification->data['button'])) {
             return null;
         }
 

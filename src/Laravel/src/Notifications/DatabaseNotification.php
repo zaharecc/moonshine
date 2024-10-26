@@ -34,7 +34,7 @@ final class DatabaseNotification extends Notification
     {
         return [
             'message' => $this->message,
-            'button' => is_null($this->button) ? [] : [
+            'button' => \is_null($this->button) ? [] : [
                 'label' => $this->button->getLabel(),
                 'link' => $this->button->getLink(),
             ],

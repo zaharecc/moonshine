@@ -11,8 +11,7 @@ final readonly class NotificationButton implements NotificationButtonContract
     public function __construct(
         private string $label,
         private string $link,
-    )
-    {
+    ) {
 
     }
 
