@@ -56,7 +56,7 @@ class InstallCommand extends MoonShineCommand
             ]);
         }
 
-        if(!$this->testsMode && $this->useMigrations) {
+        if (! $this->testsMode && $this->useMigrations) {
             $this->call('migrate');
         }
 
@@ -210,7 +210,7 @@ class InstallCommand extends MoonShineCommand
             $this->components->task('Notifications enabled');
         }
 
-        if(!$confirmDatabase) {
+        if (! $confirmDatabase) {
             $this->replaceInFile(
                 "'use_database_notifications' => true,",
                 "'use_database_notifications' => false,",

@@ -51,7 +51,7 @@ class TestCase extends Orchestra
         $this->moonshineRequest = $this->moonshineCore->getContainer(MoonShineRequest::class);
         $this->moonshineCore->flushState();
 
-        if(!static::$hasRunOnce) {
+        if (! static::$hasRunOnce) {
             $this->performApplication();
         }
 
