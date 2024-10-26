@@ -5,43 +5,46 @@ declare(strict_types=1);
 namespace MoonShine\Laravel\Notifications;
 
 use DateTimeInterface;
-use Illuminate\Notifications\DatabaseNotification;
 
-final readonly class NotificationItem implements NotificationItemContract
+final readonly class NotificationMemoryItem implements NotificationItemContract
 {
     public function __construct(
-        private DatabaseNotification $notification,
+        private null|int|string $id,
+        private ?string $message,
+        private ?string $color = null,
+        private ?DateTimeInterface $date = null,
+        private array $button = [],
     ) {
     }
 
     public function getId(): int|string|null
     {
-        return $this->notification->id;
+        return $this->id;
     }
 
     public function getReadRoute(): string
     {
-        return route('moonshine.notifications.read', $this->notification);
+        return route('moonshine.notifications.read', $this->getId());
     }
 
     public function getColor(): string
     {
-        return $this->notification->data['color'] ?? 'green';
+        return $this->color ?? 'green';
     }
 
     public function getMessage(): string
     {
-        return $this->notification->data['message'] ?? '';
+        return $this->message ?? '';
     }
 
     public function getDate(): DateTimeInterface
     {
-        return $this->notification->created_at ?? now();
+        return $this->date ?? now();
     }
 
     public function getButton(): array
     {
-        return $this->notification->data['button'] ?? [];
+        return $this->button ?? [];
     }
 
     public function getButtonLink(): ?string

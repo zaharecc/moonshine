@@ -39,6 +39,8 @@ class Fragment extends AbstractWithComponents implements HasAsyncContract
     }
 
     /**
+     * @param class-string<ResourceContract>|ResourceContract|null $resource
+     * @param class-string<PageContract>|PageContract|null $page
      * @throws Throwable
      */
     public function updateWith(
