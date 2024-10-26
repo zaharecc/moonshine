@@ -146,16 +146,16 @@ final class MoonShineServiceProvider extends ServiceProvider
         $this->app->singleton(AssetResolverContract::class, AssetResolver::class);
         $this->app->{app()->runningUnitTests() ? 'bind' : 'singleton'}(ConfiguratorContract::class, MoonShineConfigurator::class);
         $this->app->singleton(AppliesRegisterContract::class, AppliesRegister::class);
+        $this->app->singleton(
+            MoonShineNotificationContract::class,
+            moonshineConfig()->isUseDatabaseNotifications() ? MoonShineNotification::class : MoonShineMemoryNotification::class
+        );
 
         $this->app->bind(TranslatorContract::class, Translator::class);
         $this->app->bind(FieldsContract::class, Fields::class);
         $this->app->bind(ViewRendererContract::class, ViewRenderer::class);
 
         $this->app->bind(RequestContract::class, Request::class);
-        $this->app->bind(
-            MoonShineNotificationContract::class,
-            moonshineConfig()->isUseDatabaseNotifications() ? MoonShineNotification::class : MoonShineMemoryNotification::class
-        );
 
         $this->app->bind(StorageContract::class, static fn (Application $app, array $parameters): LaravelStorage => new LaravelStorage(
             $parameters['disk'] ?? $parameters[0] ?? 'public',

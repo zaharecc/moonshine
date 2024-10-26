@@ -51,20 +51,23 @@ class InstallCommand extends MoonShineCommand
         }, 'Installation completed');
 
         if ($this->useMigrations) {
-            $this->call('migrate');
             $this->call(PublishCommand::class, [
                 'type' => 'resources',
             ]);
         }
 
-        $userCreated = $this->confirmAction(
+        if(!$this->testsMode && $this->useMigrations) {
+            $this->call('migrate');
+        }
+
+        $userCreate = $this->confirmAction(
             'Create super user ?',
             canRunningInTests: false,
             skipOption: 'without-user',
             condition: fn (): bool => $this->useMigrations && $this->authEnabled,
         );
 
-        if ($userCreated) {
+        if ($userCreate) {
             $this->call(MakeUserCommand::class);
         }
 
@@ -78,7 +81,7 @@ class InstallCommand extends MoonShineCommand
             ]);
         }
 
-        if (! $userCreated && $this->useMigrations && $this->authEnabled) {
+        if (! $userCreate && $this->useMigrations && $this->authEnabled) {
             $this->components->task('');
             outro("Now run 'php artisan moonshine:user'");
         }
@@ -183,20 +186,14 @@ class InstallCommand extends MoonShineCommand
 
         $confirmDatabase = $this->confirmAction(
             'Use database notifications?',
+            canRunningInTests: false,
             condition: fn (): bool => $confirm && $this->useMigrations,
-            autoEnable: $this->testsMode,
         );
 
         if (! $confirm) {
             $this->replaceInFile(
                 "'use_notifications' => true,",
                 "'use_notifications' => false,",
-                config_path('moonshine.php'),
-            );
-
-            $this->replaceInFile(
-                "'use_database_notifications' => true,",
-                "'use_database_notifications' => false,",
                 config_path('moonshine.php'),
             );
 
@@ -213,7 +210,15 @@ class InstallCommand extends MoonShineCommand
             $this->components->task('Notifications enabled');
         }
 
-        if ($confirm && $confirmDatabase) {
+        if(!$confirmDatabase) {
+            $this->replaceInFile(
+                "'use_database_notifications' => true,",
+                "'use_database_notifications' => false,",
+                config_path('moonshine.php'),
+            );
+        }
+
+        if ($confirmDatabase) {
             $this->call(NotificationTableCommand::class);
 
             $this->replaceInFile(

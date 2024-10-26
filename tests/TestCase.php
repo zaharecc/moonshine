@@ -41,6 +41,8 @@ class TestCase extends Orchestra
 
     protected MoonShineRequest $moonshineRequest;
 
+    protected static bool $hasRunOnce = false;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -49,10 +51,16 @@ class TestCase extends Orchestra
         $this->moonshineRequest = $this->moonshineCore->getContainer(MoonShineRequest::class);
         $this->moonshineCore->flushState();
 
-        $this->performApplication()
+        if(!static::$hasRunOnce) {
+            $this->performApplication();
+        }
+
+        $this
             ->resolveSuperUser()
             ->resolveMoonShineUserResource()
             ->registerTestResource();
+
+        static::$hasRunOnce = true;
     }
 
     protected function defineEnvironment($app): void
@@ -61,7 +69,7 @@ class TestCase extends Orchestra
         $app['config']->set('moonshine.cache', 'array');
         $app['config']->set('moonshine.use_migrations', true);
         $app['config']->set('moonshine.use_notifications', true);
-        $app['config']->set('moonshine.use_database_notifications', true);
+        $app['config']->set('moonshine.use_database_notifications', false);
         $app['config']->set('moonshine.auth.enabled', true);
         $app['config']->set('moonshine.resource_prefix', '');
     }
