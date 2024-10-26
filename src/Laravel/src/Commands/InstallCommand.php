@@ -182,7 +182,7 @@ class InstallCommand extends MoonShineCommand
 
         $confirmDatabase = $this->confirmAction(
             'Use database notifications?',
-            condition: fn() => $confirm && $this->useMigrations,
+            condition: fn(): bool => $confirm && $this->useMigrations,
             autoEnable: $this->testsMode,
         );
 
