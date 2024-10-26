@@ -6,6 +6,8 @@ namespace MoonShine\Laravel\Notifications;
 
 use DateTimeInterface;
 use Illuminate\Notifications\DatabaseNotification;
+use MoonShine\Laravel\Contracts\Notifications\NotificationButtonContract;
+use MoonShine\Laravel\Contracts\Notifications\NotificationItemContract;
 
 final readonly class NotificationItem implements NotificationItemContract
 {
@@ -39,19 +41,16 @@ final readonly class NotificationItem implements NotificationItemContract
         return $this->notification->created_at ?? now();
     }
 
-    public function getButton(): array
+    public function getButton(): ?NotificationButtonContract
     {
-        return $this->notification->data['button'] ?? [];
-    }
+        if(empty($this->notification->data['button'])) {
+            return null;
+        }
 
-    public function getButtonLink(): ?string
-    {
-        return data_get($this->getButton(), 'link');
-    }
-
-    public function getButtonLabel(): ?string
-    {
-        return data_get($this->getButton(), 'label');
+        return new NotificationButton(
+            $this->notification->data['button']['label'],
+            $this->notification->data['button']['link'],
+        );
     }
 
     public function getIcon(): string

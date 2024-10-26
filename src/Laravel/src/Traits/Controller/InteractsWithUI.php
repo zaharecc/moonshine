@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MoonShine\Laravel\Traits\Controller;
 
+use MoonShine\Laravel\Contracts\Notifications\NotificationButtonContract;
 use MoonShine\Laravel\MoonShineUI;
 use MoonShine\Support\Enums\Color;
 use MoonShine\Support\Enums\ToastType;
@@ -16,12 +17,11 @@ trait InteractsWithUI
     }
 
     /**
-     * @param  array{}|array{'link': string, 'label': string}  $buttons
      * @param  array<int|string>  $ids
      */
     protected function notification(
         string $message,
-        array $buttons = [],
+        ?NotificationButtonContract $buttons = null,
         array $ids = [],
         string|Color|null $color = null
     ): void {

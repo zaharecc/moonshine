@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MoonShine\Laravel\Notifications;
+namespace MoonShine\Laravel\Contracts\Notifications;
 
 use Illuminate\Support\Collection;
 use MoonShine\Support\Enums\Color;
@@ -13,12 +13,11 @@ use MoonShine\Support\Enums\Color;
 interface MoonShineNotificationContract
 {
     /**
-     * @param  array{}|array{'link': string, 'label': string}  $button
      * @param  array<int|string>  $ids
      */
     public function notify(
         string $message,
-        array $button = [],
+        ?NotificationButtonContract $button = null,
         array $ids = [],
         string|Color|null $color = null
     ): void;

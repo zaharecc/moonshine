@@ -6,6 +6,8 @@ namespace MoonShine\Laravel\Notifications;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use MoonShine\Laravel\Contracts\Notifications\MoonShineNotificationContract;
+use MoonShine\Laravel\Contracts\Notifications\NotificationButtonContract;
 use MoonShine\Support\Enums\Color;
 
 /**
@@ -16,12 +18,11 @@ final class MoonShineMemoryNotification implements MoonShineNotificationContract
     private array $messages = [];
 
     /**
-     * @param  array{}|array{'link': string, 'label': string}  $button
      * @param  array<int|string>  $ids
      */
     public static function send(
         string $message,
-        array $button = [],
+        ?NotificationButtonContract $button = null,
         array $ids = [],
         string|Color|null $color = null,
     ): void {
@@ -29,12 +30,11 @@ final class MoonShineMemoryNotification implements MoonShineNotificationContract
     }
 
     /**
-     * @param  array{}|array{'link': string, 'label': string}  $button
      * @param  array<int|string>  $ids
      */
     public function notify(
         string $message,
-        array $button = [],
+        ?NotificationButtonContract $button = null,
         array $ids = [],
         string|Color|null $color = null,
     ): void {
