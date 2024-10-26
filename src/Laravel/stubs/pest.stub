@@ -8,7 +8,7 @@ use function Pest\Laravel\actingAs;
 uses()->group('moonshine');
 
 beforeEach(function (): void {
-    $this->resource = new DummyResource();
+    $this->resource = app(DummyResource::class);
     $this->user = MoonshineUser::factory()->create();
 });
 

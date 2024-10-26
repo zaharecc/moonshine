@@ -23,7 +23,7 @@ class DummyResourceTest extends TestCase
     {
         parent::setUp();
 
-        $this->resource = new DummyResource();
+        $this->resource = app(DummyResource::class);
 
         $user = MoonshineUser::factory()->create();
 
