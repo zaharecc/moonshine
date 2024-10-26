@@ -9,12 +9,13 @@ use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Notifications\Console\NotificationTableCommand;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\ServiceProvider;
+
+use function Laravel\Prompts\{confirm, intro, outro, spin, warning};
+
 use MoonShine\Laravel\Providers\MoonShineServiceProvider;
 use MoonShine\Laravel\Resources\MoonShineUserResource;
 use MoonShine\Laravel\Resources\MoonShineUserRoleResource;
 use Symfony\Component\Console\Attribute\AsCommand;
-
-use function Laravel\Prompts\{confirm, intro, outro, spin, warning};
 
 #[AsCommand(name: 'moonshine:install')]
 class InstallCommand extends MoonShineCommand
@@ -60,7 +61,7 @@ class InstallCommand extends MoonShineCommand
             'Create super user ?',
             canRunningInTests: false,
             skipOption: 'without-user',
-            condition: fn(): bool => $this->useMigrations && $this->authEnabled,
+            condition: fn (): bool => $this->useMigrations && $this->authEnabled,
         );
 
         if ($userCreated) {
@@ -182,7 +183,7 @@ class InstallCommand extends MoonShineCommand
 
         $confirmDatabase = $this->confirmAction(
             'Use database notifications?',
-            condition: fn(): bool => $confirm && $this->useMigrations,
+            condition: fn (): bool => $confirm && $this->useMigrations,
             autoEnable: $this->testsMode,
         );
 
@@ -316,13 +317,13 @@ class InstallCommand extends MoonShineCommand
             return true;
         }
 
-        $additionallyCondition = is_null($condition) || $condition();
+        $additionallyCondition = \is_null($condition) || $condition();
 
         if (! $canRunningInTests && $this->testsMode) {
             return false;
         }
 
-        $skipByOption = ! is_null($skipOption) && $this->option($skipOption) === true;
+        $skipByOption = ! \is_null($skipOption) && $this->option($skipOption) === true;
 
         return $additionallyCondition && ! $skipByOption && confirm($message);
     }
