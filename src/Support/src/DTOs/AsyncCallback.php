@@ -11,51 +11,51 @@ final readonly class AsyncCallback implements Arrayable, JsonSerializable
 {
     public function __construct(
         /**
-         * Replacing the async request response handler
+         * Called before a request
          */
-        private ?string $responseCallback,
+        private ?string $beforeRequest,
 
         /**
-         * Will be called before the async request
+         * Replaces the default response handler
          */
-        private ?string $beforeResponse,
+        private ?string $customResponse,
 
         /**
-         * Will be called after native request processing if $responseCallback is not specified
+         * Called after standard response processing if $customResponse is not specified
          */
-        private ?string $afterCallback,
+        private ?string $afterResponse,
     ) {
     }
 
     public static function with(
-        ?string $responseCallback = null,
-        ?string $beforeResponse = null,
-        ?string $afterCallback = null
+        ?string $beforeRequest = null,
+        ?string $customResponse = null,
+        ?string $afterResponse = null
     ): self {
-        return new self($responseCallback, $beforeResponse, $afterCallback);
+        return new self($beforeRequest, $customResponse, $afterResponse);
     }
 
-    public function responseCallback(): ?string
+    public function beforeRequest(): ?string
     {
-        return $this->responseCallback;
+        return $this->beforeRequest;
     }
 
-    public function beforeResponse(): ?string
+    public function customResponse(): ?string
     {
-        return $this->beforeResponse;
+        return $this->customResponse;
     }
 
-    public function afterCallback(): ?string
+    public function afterResponse(): ?string
     {
-        return $this->afterCallback;
+        return $this->afterResponse;
     }
 
     public function toArray(): array
     {
         return [
-            'responseCallback' => $this->responseCallback(),
-            'beforeResponse' => $this->beforeResponse(),
-            'afterCallback' => $this->afterCallback(),
+            'beforeRequest' => $this->beforeRequest(),
+            'customResponse' => $this->customResponse(),
+            'afterResponse' => $this->afterResponse(),
         ];
     }
 
