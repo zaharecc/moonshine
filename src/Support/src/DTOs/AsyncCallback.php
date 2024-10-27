@@ -35,17 +35,17 @@ final readonly class AsyncCallback implements Arrayable, JsonSerializable
         return new self($beforeRequest, $responseHandler, $afterResponse);
     }
 
-    public function beforeRequest(): ?string
+    public function getBeforeRequest(): ?string
     {
         return $this->beforeRequest;
     }
 
-    public function responseHandler(): ?string
+    public function getResponseHandler(): ?string
     {
         return $this->responseHandler;
     }
 
-    public function afterResponse(): ?string
+    public function getAfterResponse(): ?string
     {
         return $this->afterResponse;
     }
@@ -53,9 +53,9 @@ final readonly class AsyncCallback implements Arrayable, JsonSerializable
     public function toArray(): array
     {
         return [
-            'beforeRequest' => $this->beforeRequest(),
-            'responseHandler' => $this->responseHandler(),
-            'afterResponse' => $this->afterResponse(),
+            'beforeRequest' => $this->getBeforeRequest(),
+            'responseHandler' => $this->getResponseHandler(),
+            'afterResponse' => $this->getAfterResponse(),
         ];
     }
 
