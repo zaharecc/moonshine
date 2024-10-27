@@ -70,8 +70,8 @@ final readonly class AlpineJs
         return array_filter([
             'data-async-events' => self::prepareEvents($events),
             'data-async-selector' => $selector,
-            'data-async-callback' => $callback?->getResponseHandler(),
-            'data-async-before-function' => $callback?->getBeforeRequest(),
+            'data-async-response-handler' => $callback?->getResponseHandler(),
+            'data-async-before-request' => $callback?->getBeforeRequest(),
             'data-async-method' => $method->value,
         ]);
     }

@@ -18,7 +18,7 @@ use MoonShine\UI\Traits\HasAsync;
 use Throwable;
 
 /**
- * @method static static make(array $fields = [])
+ * @method static static make(iterable $components = [])
  */
 class Fragment extends AbstractWithComponents implements HasAsyncContract
 {

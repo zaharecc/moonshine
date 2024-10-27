@@ -96,7 +96,11 @@
         "rector": "vendor/bin/rector process --clear-cache",
         "rector:dry": "vendor/bin/rector process --clear-cache --dry-run",
         "test": "vendor/bin/pest",
-        "test:fresh": "rm -rf vendor/orchestra && composer install --dev && vendor/bin/pest --bail",
+        "test:fresh": [
+            "rm -rf vendor/orchestra",
+            "composer install",
+            "vendor/bin/pest --bail"
+        ],
         "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes"
     }
 }
