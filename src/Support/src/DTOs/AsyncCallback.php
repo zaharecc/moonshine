@@ -18,10 +18,10 @@ final readonly class AsyncCallback implements Arrayable, JsonSerializable
         /**
          * Replaces the default response handler
          */
-        private ?string $customResponse,
+        private ?string $responseHandler,
 
         /**
-         * Called after standard response processing if $customResponse is not specified
+         * Called after standard response processing if $responseHandler is not specified
          */
         private ?string $afterResponse,
     ) {
@@ -29,10 +29,10 @@ final readonly class AsyncCallback implements Arrayable, JsonSerializable
 
     public static function with(
         ?string $beforeRequest = null,
-        ?string $customResponse = null,
+        ?string $responseHandler = null,
         ?string $afterResponse = null
     ): self {
-        return new self($beforeRequest, $customResponse, $afterResponse);
+        return new self($beforeRequest, $responseHandler, $afterResponse);
     }
 
     public function beforeRequest(): ?string
@@ -40,9 +40,9 @@ final readonly class AsyncCallback implements Arrayable, JsonSerializable
         return $this->beforeRequest;
     }
 
-    public function customResponse(): ?string
+    public function responseHandler(): ?string
     {
-        return $this->customResponse;
+        return $this->responseHandler;
     }
 
     public function afterResponse(): ?string
@@ -54,7 +54,7 @@ final readonly class AsyncCallback implements Arrayable, JsonSerializable
     {
         return [
             'beforeRequest' => $this->beforeRequest(),
-            'customResponse' => $this->customResponse(),
+            'responseHandler' => $this->responseHandler(),
             'afterResponse' => $this->afterResponse(),
         ];
     }
