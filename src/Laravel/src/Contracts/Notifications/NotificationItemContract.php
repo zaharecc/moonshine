@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MoonShine\Laravel\Notifications;
+namespace MoonShine\Laravel\Contracts\Notifications;
 
 use DateTimeInterface;
 
@@ -20,12 +20,5 @@ interface NotificationItemContract
 
     public function getDate(): DateTimeInterface;
 
-    /**
-     * @return array{}|array{'link': string, 'label': string}
-     */
-    public function getButton(): array;
-
-    public function getButtonLink(): ?string;
-
-    public function getButtonLabel(): ?string;
+    public function getButton(): ?NotificationButtonContract;
 }

@@ -91,6 +91,8 @@ final readonly class MoonShineEndpoints implements EndpointsContract
     }
 
     /**
+     * @param  class-string<PageContract>|PageContract|null  $page
+     * @param  class-string<ResourceContract>|ResourceContract|null  $resource
      * @throws Throwable
      */
     public function toPage(

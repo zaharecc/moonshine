@@ -175,7 +175,7 @@ final class MoonShineConfigurator implements ConfiguratorContract
 
     public function isUseMigrations(): bool
     {
-        return $this->get('use_migrations', true);
+        return $this->get('use_migrations', false);
     }
 
     public function useMigrations(): self
@@ -185,12 +185,22 @@ final class MoonShineConfigurator implements ConfiguratorContract
 
     public function isUseNotifications(): bool
     {
-        return $this->get('use_notifications', true);
+        return $this->get('use_notifications', false);
     }
 
     public function useNotifications(): self
     {
         return $this->set('use_notifications', true);
+    }
+
+    public function isUseDatabaseNotifications(): bool
+    {
+        return $this->get('use_database_notifications', false);
+    }
+
+    public function useDatabaseNotifications(): self
+    {
+        return $this->set('use_database_notifications', true);
     }
 
     /**
@@ -229,14 +239,19 @@ final class MoonShineConfigurator implements ConfiguratorContract
         return $this->get("user_fields.$field", $default ?? $field);
     }
 
-    public function userField(string|false $field, string|Closure $value): self
+    public function userField(string $field, string|false|Closure $value): self
     {
         return $this->set("user_fields.$field", $value);
     }
 
     public function isAuthEnabled(): bool
     {
-        return $this->get('auth.enabled', true);
+        return $this->get('auth.enabled', false);
+    }
+
+    public function authEnable(): self
+    {
+        return $this->set('auth.enabled', true);
     }
 
     public function authDisable(): self

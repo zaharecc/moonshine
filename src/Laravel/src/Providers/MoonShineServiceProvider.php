@@ -52,6 +52,7 @@ use MoonShine\Laravel\Commands\MakeResourceCommand;
 use MoonShine\Laravel\Commands\MakeTypeCastCommand;
 use MoonShine\Laravel\Commands\MakeUserCommand;
 use MoonShine\Laravel\Commands\PublishCommand;
+use MoonShine\Laravel\Contracts\Notifications\MoonShineNotificationContract;
 use MoonShine\Laravel\DependencyInjection\AssetResolver;
 use MoonShine\Laravel\DependencyInjection\MoonShine;
 use MoonShine\Laravel\DependencyInjection\MoonShineConfigurator;
@@ -63,8 +64,8 @@ use MoonShine\Laravel\Fields\Relationships\BelongsToMany;
 use MoonShine\Laravel\Fields\Relationships\MorphTo;
 use MoonShine\Laravel\Models\MoonshineUser;
 use MoonShine\Laravel\MoonShineRequest;
+use MoonShine\Laravel\Notifications\MoonShineMemoryNotification;
 use MoonShine\Laravel\Notifications\MoonShineNotification;
-use MoonShine\Laravel\Notifications\MoonShineNotificationContract;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Laravel\Storage\LaravelStorage;
 use MoonShine\MenuManager\MenuManager;
@@ -143,15 +144,18 @@ final class MoonShineServiceProvider extends ServiceProvider
         $this->app->singleton(MenuManagerContract::class, MenuManager::class);
         $this->app->singleton(AssetManagerContract::class, AssetManager::class);
         $this->app->singleton(AssetResolverContract::class, AssetResolver::class);
-        $this->app->singleton(ConfiguratorContract::class, MoonShineConfigurator::class);
+        $this->app->{app()->runningUnitTests() ? 'bind' : 'singleton'}(ConfiguratorContract::class, MoonShineConfigurator::class);
         $this->app->singleton(AppliesRegisterContract::class, AppliesRegister::class);
+        $this->app->singleton(
+            MoonShineNotificationContract::class,
+            moonshineConfig()->isUseDatabaseNotifications() ? MoonShineNotification::class : MoonShineMemoryNotification::class
+        );
 
         $this->app->bind(TranslatorContract::class, Translator::class);
         $this->app->bind(FieldsContract::class, Fields::class);
         $this->app->bind(ViewRendererContract::class, ViewRenderer::class);
 
         $this->app->bind(RequestContract::class, Request::class);
-        $this->app->bind(MoonShineNotificationContract::class, MoonShineNotification::class);
 
         $this->app->bind(StorageContract::class, static fn (Application $app, array $parameters): LaravelStorage => new LaravelStorage(
             $parameters['disk'] ?? $parameters[0] ?? 'public',

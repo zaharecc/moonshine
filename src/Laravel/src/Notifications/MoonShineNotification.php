@@ -8,6 +8,8 @@ use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Notification;
+use MoonShine\Laravel\Contracts\Notifications\MoonShineNotificationContract;
+use MoonShine\Laravel\Contracts\Notifications\NotificationButtonContract;
 use MoonShine\Laravel\MoonShineAuth;
 use MoonShine\Support\Enums\Color;
 
@@ -17,12 +19,11 @@ use MoonShine\Support\Enums\Color;
 final class MoonShineNotification implements MoonShineNotificationContract
 {
     /**
-     * @param  array{}|array{'link': string, 'label': string}  $button
      * @param  array<int|string>  $ids
      */
     public static function send(
         string $message,
-        array $button = [],
+        ?NotificationButtonContract $button = null,
         array $ids = [],
         string|Color|null $color = null
     ): void {
@@ -30,12 +31,11 @@ final class MoonShineNotification implements MoonShineNotificationContract
     }
 
     /**
-     * @param  array{}|array{'link': string, 'label': string}  $button
      * @param  array<int|string>  $ids
      */
     public function notify(
         string $message,
-        array $button = [],
+        ?NotificationButtonContract $button = null,
         array $ids = [],
         string|Color|null $color = null
     ): void {
@@ -55,7 +55,7 @@ final class MoonShineNotification implements MoonShineNotificationContract
                     )
                 )
                 ->get(),
-            DatabaseNotification::make(
+            new DatabaseNotification(
                 $message,
                 $button,
                 $color

@@ -92,6 +92,8 @@ if (! \function_exists('appliesRegister')) {
 
 if (! \function_exists('toPage')) {
     /**
+     * @param  class-string<PageContract>|PageContract|null  $page
+     * @param  class-string<ResourceContract>|ResourceContract|null  $resource
      * @throws Throwable
      */
     function toPage(
