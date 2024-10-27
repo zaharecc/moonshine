@@ -239,7 +239,7 @@ final class MoonShineConfigurator implements ConfiguratorContract
         return $this->get("user_fields.$field", $default ?? $field);
     }
 
-    public function userField(string $field, string|Closure $value): self
+    public function userField(string $field, string|false|Closure $value): self
     {
         return $this->set("user_fields.$field", $value);
     }
