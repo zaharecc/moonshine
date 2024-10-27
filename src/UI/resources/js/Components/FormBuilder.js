@@ -1,6 +1,6 @@
 import {ComponentRequestData} from '../DTOs/ComponentRequestData.js'
 import {addInvalidListener, containsAttribute, isTextInput} from '../Support/Forms.js'
-import request from '../Request/Core.js'
+import request, {afterResponse, initCallback} from '../Request/Core.js'
 import {dispatchEvents as de} from '../Support/DispatchEvents.js'
 import {getInputs, showWhenChange, showWhenVisibilityChange} from '../Support/ShowWhen.js'
 import {formToJSON} from 'axios'
@@ -24,7 +24,7 @@ export default (name = '', initData = {}, reactive = {}) => ({
       if (!t.blockWatch) {
         let focused = document.activeElement
 
-        componentRequestData.withAfterCallback(function (data) {
+        componentRequestData.withAfterResponse(function (data) {
           for (let [column, html] of Object.entries(data.fields)) {
             let selectorWrapper = '.field-' + column + '-wrapper'
             let selectorElement = '.field-' + column + '-element'
@@ -171,7 +171,7 @@ export default (name = '', initData = {}, reactive = {}) => ({
       this.$el.submit()
     }
   },
-  async(events = '', callbackFunction = '', beforeFunction = '') {
+  async(events = '', callback = {}) {
     const form = this.$el
     submitState(form, true)
     const t = this
@@ -189,21 +189,25 @@ export default (name = '', initData = {}, reactive = {}) => ({
 
     let componentRequestData = new ComponentRequestData()
 
+    callback = initCallback(callback)
+
     componentRequestData
-      .withBeforeFunction(beforeFunction)
-      .withResponseFunction(callbackFunction)
+      .withBeforeRequest(callback.beforeRequest)
+      .withResponseHandler(callback.responseHandler)
       .withEvents(events)
-      .withAfterCallback(function (data, type) {
+      .withAfterResponse(function (data, type) {
         if (type !== 'error' && t.inModal && t.autoClose) {
           t.toggleModal()
         }
 
         submitState(form, false, false)
-      })
-      .withAfterErrorCallback(function () {
-        submitState(form, false)
+
+        if(callback.afterResponse) {
+          afterResponse(callback.afterResponse, data, type)
+        }
       })
       .withErrorCallback(function (data) {
+        submitState(form, false)
         inputsErrors(data, t.$el)
       })
 

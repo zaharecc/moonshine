@@ -11,6 +11,7 @@ use MoonShine\Contracts\UI\HasAsyncContract;
 use MoonShine\Core\Traits\NowOn;
 use MoonShine\Laravel\Resources\CrudResource;
 use MoonShine\Support\AlpineJs;
+use MoonShine\Support\DTOs\AsyncCallback;
 use MoonShine\Support\Enums\JsEvent;
 use MoonShine\UI\Components\AbstractWithComponents;
 use MoonShine\UI\Traits\HasAsync;
@@ -47,10 +48,15 @@ class Fragment extends AbstractWithComponents implements HasAsyncContract
         array $params = [],
         string|ResourceContract|null $resource = null,
         string|PageContract|null $page = null,
+        string|array|null $events = null,
+        ?AsyncCallback $callback = null,
     ): static {
         /** @var ?CrudResource $resource */
         $resource ??= moonshineRequest()->getResource();
         $page ??= moonshineRequest()->getPage();
+
+        $this->asyncEvents = $events;
+        $this->asyncCallback = $callback;
 
         return $this->nowOn(
             $page,
@@ -75,7 +81,8 @@ class Fragment extends AbstractWithComponents implements HasAsyncContract
 
         $this->xDataMethod('fragment', $this->getAsyncUrl());
         $this->customAttributes([
-            AlpineJs::eventBlade(JsEvent::FRAGMENT_UPDATED, $this->getName()) => 'fragmentUpdate',
+            AlpineJs::eventBlade(JsEvent::FRAGMENT_UPDATED, $this->getName())
+            => 'fragmentUpdate(`' . $this->getAsyncEvents() . '`,' .json_encode($this->getAsyncCallback()). ')',
         ]);
     }
 }

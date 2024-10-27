@@ -17,8 +17,8 @@ export default function request(
     componentRequestData = new ComponentRequestData()
   }
 
-  if (componentRequestData.hasBeforeFunction()) {
-    beforeCallback(componentRequestData.beforeFunction, t.$el, t)
+  if (componentRequestData.hasBeforeRequest()) {
+    beforeRequest(componentRequestData.beforeRequest, t.$el, t)
   }
 
   axios({
@@ -33,13 +33,13 @@ export default function request(
       const data = response.data
       const contentDisposition = response.headers['content-disposition']
 
-      if (componentRequestData.hasBeforeCallback()) {
-        componentRequestData.beforeCallback(data, t)
+      if (componentRequestData.hasBeforeResponse()) {
+        componentRequestData.beforeResponse(data, t)
       }
 
-      if (componentRequestData.hasResponseFunction()) {
-        responseCallback(
-          componentRequestData.responseFunction,
+      if (componentRequestData.hasResponseHandler()) {
+        responseHandler(
+          componentRequestData.responseHandler,
           response,
           t.$el,
           componentRequestData.events,
@@ -82,22 +82,19 @@ export default function request(
         MoonShine.ui.toast(data.message, type)
       }
 
-      if (componentRequestData.hasAfterCallback()) {
-        componentRequestData.afterCallback(data, type, t)
+      const events = data.events ?? componentRequestData.events
+      if (events) {
+        dispatchEvents(events, type, t, componentRequestData.extraProperties)
       }
 
-      const events = data.events ?? componentRequestData.events
-
-      if (events) {
-        dispatchEvents(events, type, t, componentRequestData.extraAttributes)
+      if (componentRequestData.hasAfterResponse()) {
+        componentRequestData.afterResponse(data, type, t)
       }
     })
     .catch(errorResponse => {
       t.loading = false
 
       if (!errorResponse?.response?.data) {
-        console.error(errorResponse)
-
         return
       }
 
@@ -105,22 +102,6 @@ export default function request(
 
       if (componentRequestData.hasErrorCallback()) {
         componentRequestData.errorCallback(data, t)
-      }
-
-      if (componentRequestData.hasResponseFunction()) {
-        responseCallback(
-          componentRequestData.responseFunction,
-          errorResponse.response,
-          t.$el,
-          componentRequestData.events,
-          t,
-        )
-
-        return
-      }
-
-      if (componentRequestData.hasAfterErrorCallback()) {
-        componentRequestData.afterErrorCallback(data, t)
       }
 
       MoonShine.ui.toast(data.message ?? data, 'error')
@@ -139,7 +120,7 @@ export function urlWithQuery(url, append, callback = null) {
   return urlObject.toString() + separator + append
 }
 
-function responseCallback(callback, response, element, events, component) {
+function responseHandler(callback, response, element, events, component) {
   const fn = MoonShine.callbacks[callback]
 
   if (typeof fn !== 'function') {
@@ -151,7 +132,7 @@ function responseCallback(callback, response, element, events, component) {
   fn(response, element, events, component)
 }
 
-function beforeCallback(callback, element, component) {
+export function beforeRequest(callback, element, component) {
   const fn = MoonShine.callbacks[callback]
 
   if (typeof fn !== 'function') {
@@ -159,6 +140,27 @@ function beforeCallback(callback, element, component) {
   }
 
   fn(element, component)
+}
+
+export function afterResponse(callback, data, messageType) {
+    const fn = MoonShine.callbacks[callback]
+
+    if (typeof fn !== 'function') {
+        throw new Error(callback + ' is not a function!')
+    }
+
+    fn(data, messageType)
+}
+
+export function initCallback(callback) {
+    if(callback === null) {
+        return {
+            beforeRequest: '',
+            responseHandler: '',
+            afterResponse: '',
+        }
+    }
+    return callback
 }
 
 function downloadFile(fileName, data) {

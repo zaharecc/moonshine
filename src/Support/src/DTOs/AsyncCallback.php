@@ -5,35 +5,62 @@ declare(strict_types=1);
 namespace MoonShine\Support\DTOs;
 
 use Illuminate\Contracts\Support\Arrayable;
+use JsonSerializable;
 
-final readonly class AsyncCallback implements Arrayable
+final readonly class AsyncCallback implements Arrayable, JsonSerializable
 {
     public function __construct(
-        private ?string $success,
-        private ?string $before,
+        /**
+         * Called before a request
+         */
+        private ?string $beforeRequest,
+
+        /**
+         * Replaces the default response handler
+         */
+        private ?string $responseHandler,
+
+        /**
+         * Called after standard response processing if $responseHandler is not specified
+         */
+        private ?string $afterResponse,
     ) {
     }
 
-    public static function with(?string $success = null, ?string $before = null): self
-    {
-        return new self($success, $before);
+    public static function with(
+        ?string $beforeRequest = null,
+        ?string $responseHandler = null,
+        ?string $afterResponse = null
+    ): self {
+        return new self($beforeRequest, $responseHandler, $afterResponse);
     }
 
-    public function getBefore(): ?string
+    public function getBeforeRequest(): ?string
     {
-        return $this->before;
+        return $this->beforeRequest;
     }
 
-    public function getSuccess(): ?string
+    public function getResponseHandler(): ?string
     {
-        return $this->success;
+        return $this->responseHandler;
+    }
+
+    public function getAfterResponse(): ?string
+    {
+        return $this->afterResponse;
     }
 
     public function toArray(): array
     {
         return [
-            'before' => $this->getBefore(),
-            'success' => $this->getSuccess(),
+            'beforeRequest' => $this->getBeforeRequest(),
+            'responseHandler' => $this->getResponseHandler(),
+            'afterResponse' => $this->getAfterResponse(),
         ];
+    }
+
+    public function jsonSerialize(): array
+    {
+        return $this->toArray();
     }
 }
