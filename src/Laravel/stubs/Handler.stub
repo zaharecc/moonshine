@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 class DummyHandler extends Handler
 {
     /**
-     * @throws ActionException
+     * @throws ActionButtonException
      */
     public function handle(): Response
     {
@@ -42,11 +42,8 @@ class DummyHandler extends Handler
         // Logic here
     }
 
-    /**
-     * @throws ActionButtonException
-     */
     public function getButton(): ActionButtonContract
     {
-        return ActionButton::make('Process');
+        return ActionButton::make($this->getLabel(), $this->getUrl());
     }
 }
