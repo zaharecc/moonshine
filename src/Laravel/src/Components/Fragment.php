@@ -82,7 +82,7 @@ class Fragment extends AbstractWithComponents implements HasAsyncContract
         $this->xDataMethod('fragment', $this->getAsyncUrl());
         $this->customAttributes([
             AlpineJs::eventBlade(JsEvent::FRAGMENT_UPDATED, $this->getName())
-            => 'fragmentUpdate(`' . $this->getAsyncEvents() . '`,' .json_encode($this->getAsyncCallback()). ')',
+            => 'fragmentUpdate(`' . $this->getAsyncEvents() . '`,' . json_encode($this->getAsyncCallback()) . ')',
         ]);
     }
 }
