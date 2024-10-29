@@ -176,7 +176,7 @@ class MenuItem extends MenuElement
 
         if ($this->isBlank()) {
             $this->actionButton = $this->actionButton->customAttributes([
-                '_target' => '_blank',
+                'target' => '_blank',
             ]);
         }
 
