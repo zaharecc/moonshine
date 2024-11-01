@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace MoonShine\Laravel\Http\Responses;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Traits\Conditionable;
 use MoonShine\Support\AlpineJs;
 use MoonShine\Support\Enums\ToastType;
 use MoonShine\Support\Traits\Makeable;
-use Illuminate\Http\JsonResponse;
 
 /** @method static static make(array $data = []) */
 final class MoonShineJsonResponse extends JsonResponse
