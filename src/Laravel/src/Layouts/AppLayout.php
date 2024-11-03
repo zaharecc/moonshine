@@ -9,7 +9,7 @@ use MoonShine\Laravel\Resources\MoonShineUserRoleResource;
 use MoonShine\MenuManager\MenuGroup;
 use MoonShine\MenuManager\MenuItem;
 use MoonShine\UI\Components\{Components,
-    Layout\Block,
+    Layout\Div,
     Layout\Body,
     Layout\Content,
     Layout\Flash,
@@ -46,7 +46,7 @@ class AppLayout extends BaseLayout
                         // $this->getTopBarComponent(),
                         $this->getSidebarComponent(),
 
-                        Block::make([
+                        Div::make([
                             Flash::make(),
 
                             $this->getHeaderComponent(),

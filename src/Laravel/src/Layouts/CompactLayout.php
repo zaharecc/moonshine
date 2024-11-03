@@ -8,7 +8,7 @@ use MoonShine\AssetManager\Css;
 use MoonShine\ColorManager\ColorManager;
 use MoonShine\Contracts\ColorManager\ColorManagerContract;
 use MoonShine\UI\Components\{Components,
-    Layout\Block,
+    Layout\Div,
     Layout\Body,
     Layout\Content,
     Layout\Flash,
@@ -87,7 +87,7 @@ class CompactLayout extends AppLayout
                     Wrapper::make([
                         // $this->getTopBarComponent(),
                         $this->getSidebarComponent(),
-                        Block::make([
+                        Div::make([
                             Flash::make(),
                             $this->getHeaderComponent(),
 

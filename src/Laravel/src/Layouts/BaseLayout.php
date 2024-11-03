@@ -12,7 +12,7 @@ use MoonShine\Laravel\DependencyInjection\MoonShine;
 use MoonShine\UI\AbstractLayout;
 use MoonShine\UI\Components\Breadcrumbs;
 use MoonShine\UI\Components\Layout\Assets;
-use MoonShine\UI\Components\Layout\Block;
+use MoonShine\UI\Components\Layout\Div;
 use MoonShine\UI\Components\Layout\Burger;
 use MoonShine\UI\Components\Layout\Favicon;
 use MoonShine\UI\Components\Layout\Footer;
@@ -57,23 +57,23 @@ abstract class BaseLayout extends AbstractLayout
     protected function getSidebarComponent(): Sidebar
     {
         return Sidebar::make([
-            Block::make([
-                Block::make([
+            Div::make([
+                Div::make([
                     $this->getLogoComponent()->minimized(),
                 ])->class('menu-heading-logo'),
 
-                Block::make([
-                    Block::make([
+                Div::make([
+                    Div::make([
                         ThemeSwitcher::make(),
                     ])->class('menu-heading-mode'),
 
-                    Block::make([
+                    Div::make([
                         Burger::make(),
                     ])->class('menu-heading-burger'),
                 ])->class('menu-heading-actions'),
             ])->class('menu-heading'),
 
-            Block::make([
+            Div::make([
                 Menu::make(),
                 When::make(
                     fn (): bool => $this->isAuthEnabled(),
@@ -89,26 +89,26 @@ abstract class BaseLayout extends AbstractLayout
     protected function getTopBarComponent(): Topbar
     {
         return TopBar::make([
-            Block::make([
+            Div::make([
                 $this->getLogoComponent()->minimized(),
             ])->class('menu-logo'),
 
-            Block::make([
+            Div::make([
                 Menu::make()->top(),
             ])->class('menu-navigation'),
 
-            Block::make([
+            Div::make([
                 When::make(
                     fn (): bool => $this->isAuthEnabled(),
                     static fn (): array => [Profile::make()],
                 ),
 
-                Block::make()->class('menu-inner-divider'),
-                Block::make([
+                Div::make()->class('menu-inner-divider'),
+                Div::make([
                     ThemeSwitcher::make()->top(),
                 ])->class('menu-mode'),
 
-                Block::make([
+                Div::make([
                     Burger::make(),
                 ])->class('menu-burger'),
             ])->class('menu-actions'),

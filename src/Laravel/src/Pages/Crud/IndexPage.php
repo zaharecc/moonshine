@@ -15,7 +15,6 @@ use MoonShine\Laravel\Enums\Ability;
 use MoonShine\Support\Enums\JsEvent;
 use MoonShine\Support\Enums\PageType;
 use MoonShine\UI\Components\ActionGroup;
-use MoonShine\UI\Components\Layout\Block;
 use MoonShine\UI\Components\Layout\Div;
 use MoonShine\UI\Components\Layout\Flex;
 use MoonShine\UI\Components\Layout\LineBreak;
@@ -118,7 +117,7 @@ class IndexPage extends CrudPage
         $metrics = $this->getResource()->getMetrics();
 
         return $metrics
-            ? Block::make($metrics)
+            ? Div::make($metrics)
                 ->class('layout-metrics')
             : null;
     }

@@ -8,7 +8,7 @@ use MoonShine\Laravel\Traits\WithComponentsPusher;
 use MoonShine\UI\Components\Components;
 use MoonShine\UI\Components\FlexibleRender;
 use MoonShine\UI\Components\Heading;
-use MoonShine\UI\Components\Layout\{Block, Body, Html, Layout};
+use MoonShine\UI\Components\Layout\{Div, Body, Html, Layout};
 
 final class LoginLayout extends BaseLayout
 {
@@ -51,17 +51,17 @@ final class LoginLayout extends BaseLayout
             Html::make([
                 $this->getHeadComponent(),
                 Body::make([
-                    Block::make([
-                        Block::make([
+                    Div::make([
+                        Div::make([
                             $this->getLogoComponent(),
                         ])->class('authentication-logo'),
 
-                        Block::make([
-                            Block::make([
+                        Div::make([
+                            Div::make([
                                 Heading::make(
                                     $this->getTitle(),
                                 ),
-                                Block::make([
+                                Div::make([
                                     FlexibleRender::make(
                                         $this->getDescription(),
                                     ),
