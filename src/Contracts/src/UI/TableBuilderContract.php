@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MoonShine\Contracts\UI;
 
+use Closure;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Traits\Conditionable;
 use MoonShine\Contracts\Core\Paginator\PaginatorContract;
@@ -66,7 +67,11 @@ interface TableBuilderContract extends
 
     public function isEditable(): bool;
 
-    public function vertical(): static;
+    /**
+     * @param  ?Closure(FieldContract $field, ComponentContract $default, static $ctx): ComponentContract  $title
+     * @param  ?Closure(FieldContract $field, ComponentContract $default, static $ctx): ComponentContract   $value
+     */
+    public function vertical(?Closure $title = null, ?Closure $value = null): static;
 
     public function isVertical(): bool;
 
