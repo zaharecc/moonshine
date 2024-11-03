@@ -5,16 +5,20 @@ declare(strict_types=1);
 namespace MoonShine\Tests\Fixtures\Resources;
 
 use MoonShine\ImportExport\Contracts\HasImportExportContract;
+use MoonShine\ImportExport\ExportHandler;
 use MoonShine\ImportExport\Traits\ImportExportConcern;
+use MoonShine\Laravel\Handlers\Handler;
 use MoonShine\Laravel\Resources\ModelResource;
 
 abstract class AbstractTestingResource extends ModelResource implements HasImportExportContract
 {
     use ImportExportConcern;
 
-    protected function isExportToCsv(): bool
+    protected function export(): ?Handler
     {
-        return true;
+        return ExportHandler::make(__('moonshine::ui.export'))
+            ->csv()
+            ->filename($this->getUriKey());
     }
 
     public function getUriKey(): string
