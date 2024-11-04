@@ -21,6 +21,9 @@ use MoonShine\Laravel\Pages\ProfilePage;
 
 return [
     'title' => env('MOONSHINE_TITLE', 'MoonShine'),
+    'logo' => 'vendor/moonshine/logo.svg',
+    'logo_small' => 'vendor/moonshine/logo-small.svg',
+
 
     // Default flags
     'use_migrations' => false,

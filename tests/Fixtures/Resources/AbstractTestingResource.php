@@ -20,9 +20,4 @@ abstract class AbstractTestingResource extends ModelResource implements HasImpor
             ->csv()
             ->filename($this->getUriKey());
     }
-
-    public function getUriKey(): string
-    {
-        return parent::getUriKey();
-    }
 }

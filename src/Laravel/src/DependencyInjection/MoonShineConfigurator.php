@@ -102,6 +102,16 @@ final class MoonShineConfigurator implements ConfiguratorContract
         return $this->set('title', $title);
     }
 
+    public function getLogo(bool $small = false): ?string
+    {
+        return $this->get($small ? 'logo_small' : 'logo');
+    }
+
+    public function logo(string|Closure $logo, bool $small = false): self
+    {
+        return $this->set($small ? 'logo_small' : 'logo', $logo);
+    }
+
     /**
      * @return string[]
      */
