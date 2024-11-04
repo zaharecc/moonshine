@@ -8,7 +8,7 @@ use MoonShine\Laravel\Traits\WithComponentsPusher;
 use MoonShine\UI\Components\Components;
 use MoonShine\UI\Components\FlexibleRender;
 use MoonShine\UI\Components\Heading;
-use MoonShine\UI\Components\Layout\{Div, Body, Html, Layout};
+use MoonShine\UI\Components\Layout\{Body, Div, Html, Layout};
 
 final class LoginLayout extends BaseLayout
 {

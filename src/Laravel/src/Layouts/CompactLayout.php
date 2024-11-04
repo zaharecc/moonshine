@@ -7,14 +7,16 @@ namespace MoonShine\Laravel\Layouts;
 use MoonShine\AssetManager\Css;
 use MoonShine\ColorManager\ColorManager;
 use MoonShine\Contracts\ColorManager\ColorManagerContract;
-use MoonShine\UI\Components\{Components,
-    Layout\Div,
+use MoonShine\UI\Components\{
+    Components,
     Layout\Body,
     Layout\Content,
+    Layout\Div,
     Layout\Flash,
     Layout\Html,
     Layout\Layout,
-    Layout\Wrapper};
+    Layout\Wrapper
+};
 
 class CompactLayout extends AppLayout
 {
