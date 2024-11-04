@@ -11,7 +11,7 @@ use MoonShine\Laravel\Components\Layout\{Locales, Notifications, Profile, Search
 use MoonShine\UI\Components\{Breadcrumbs,
     Components,
     Layout\Flash,
-    Layout\Block,
+    Layout\Div,
     Layout\Body,
     Layout\Burger,
     Layout\Content,

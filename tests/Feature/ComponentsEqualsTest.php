@@ -18,7 +18,6 @@ use MoonShine\UI\Components\FlexibleRender;
 use MoonShine\UI\Components\Heading;
 use MoonShine\UI\Components\Icon;
 use MoonShine\UI\Components\Layout\Assets;
-use MoonShine\UI\Components\Layout\Block;
 use MoonShine\UI\Components\Layout\Body;
 use MoonShine\UI\Components\Layout\Box;
 use MoonShine\UI\Components\Layout\Burger;
@@ -124,10 +123,6 @@ function renderBlade(string $alias, array $parameters = [], array $attributes = 
 describe('Layouts', function () {
     it('assets', function () {
         compare(Assets::make());
-    });
-
-    it('block', function () {
-        compare(Block::make($this->components), slot: $this->slot);
     });
 
     it('body', function () {
