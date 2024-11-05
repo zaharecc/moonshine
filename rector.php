@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use Rector\CodeQuality\Rector\If_\ExplicitBoolCompareRector;
 use Rector\Config\RectorConfig;
+use Rector\DeadCode\Rector\ClassMethod\RemoveUselessParamTagRector;
+use Rector\DeadCode\Rector\ClassMethod\RemoveUselessReturnTagRector;
+use Rector\DeadCode\Rector\Property\RemoveUselessVarTagRector;
 use Rector\Php81\Rector\Array_\FirstClassCallableRector;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
@@ -24,7 +27,9 @@ return static function (RectorConfig $rectorConfig): void {
         __DIR__ . '/src/Laravel/stubs',
         ExplicitBoolCompareRector::class,
         FirstClassCallableRector::class,
-
+        RemoveUselessReturnTagRector::class,
+        RemoveUselessVarTagRector::class,
+        RemoveUselessParamTagRector::class,
     ]);
 
     $rectorConfig->importNames();

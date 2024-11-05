@@ -4,39 +4,33 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use Illuminate\Support\ServiceProvider;
+use MoonShine\Contracts\Core\DependencyInjection\ConfiguratorContract;
+use MoonShine\Contracts\Core\DependencyInjection\CoreContract;
+use MoonShine\Laravel\DependencyInjection\MoonShine;
 use MoonShine\Laravel\DependencyInjection\MoonShineConfigurator;
-use MoonShine\Laravel\Providers\MoonShineApplicationServiceProvider;
 use MoonShine\Laravel\Resources\MoonShineUserResource;
 use MoonShine\Laravel\Resources\MoonShineUserRoleResource;
-use MoonShine\Contracts\Core\ResourceContract;
-use MoonShine\Contracts\Core\PageContract;
-use Closure;
 
-class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
+class MoonShineServiceProvider extends ServiceProvider
 {
     /**
-     * @return array<class-string<ResourceContract>>
+     * @param  MoonShine  $core
+     * @param  MoonShineConfigurator  $config
+     *
      */
-    protected function resources(): array
+    public function boot(CoreContract $core, ConfiguratorContract $config): void
     {
-        return [
-            MoonShineUserResource::class,
-            MoonShineUserRoleResource::class,
-        ];
-    }
+        // $config->authEnable();
 
-    /**
-     * @return array<class-string<PageContract>>
-     */
-    protected function pages(): array
-    {
-        return [
-            ...moonshineConfig()->getPages(),
-        ];
-    }
-
-    protected function configure(MoonShineConfigurator $config): MoonShineConfigurator
-    {
-        return $config;
+        $core
+            ->resources([
+                MoonShineUserResource::class,
+                MoonShineUserRoleResource::class,
+            ])
+            ->pages([
+                ...$config->getPages(),
+            ])
+        ;
     }
 }

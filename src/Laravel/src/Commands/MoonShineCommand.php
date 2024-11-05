@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace MoonShine\Laravel\Commands;
 
+use Closure;
+use Illuminate\Support\Stringable;
 use Leeto\PackageCommand\Command;
 use MoonShine\MenuManager\MenuItem;
 
@@ -18,34 +20,40 @@ abstract class MoonShineCommand extends Command
 
     public static function addResourceOrPageToProviderFile(string $class, bool $page = false, string $prefix = ''): void
     {
+        $method = $page ? 'pages' : 'resources';
+
         self::addResourceOrPageTo(
-            $prefix . $class,
-            append: "$class::class",
+            class: $prefix . $class,
             to: app_path('Providers/MoonShineServiceProvider.php'),
-            method: $page ? 'pages' : 'resources',
-            page: $page
+            isPage: $page,
+            between: static fn(Stringable $content): Stringable => $content->betweenFirst("->$method([", ']'),
+            replace: static fn(Stringable $content, Closure $tab): Stringable => $content->append("{$tab()}$class::class,\n{$tab(3)}"),
         );
     }
 
     public static function addResourceOrPageToMenu(string $class, string $title, bool $page = false, string $prefix = ''): void
     {
         self::addResourceOrPageTo(
-            $prefix . $class,
-            append: "MenuItem::make('{$title}', $class::class)",
+            class: $prefix . $class,
             to: app_path('MoonShine/Layouts/MoonShineLayout.php'),
-            method: 'menu',
-            page: $page,
+            isPage: $page,
+            between: static fn(Stringable $content): Stringable => $content->betweenFirst("protected function menu(): array", '}'),
+            replace: static fn(Stringable $content, Closure $tab): Stringable => $content->replace("];", "{$tab()}MenuItem::make('{$title}', $class::class),\n{$tab(2)}];"),
             use: MenuItem::class,
         );
     }
 
-    private static function addResourceOrPageTo(string $class, string $append, string $to, string $method, bool $page, string $use = ''): void
+    /**
+     * @param  Closure(Stringable $content): Stringable  $between
+     * @param  Closure(Stringable $content, Closure $tab): Stringable  $replace
+     */
+    private static function addResourceOrPageTo(string $class, string $to, bool $isPage, Closure $between, Closure $replace, string $use = ''): void
     {
         if (! file_exists($to)) {
             return;
         }
 
-        $dir = $page ? 'Pages' : 'Resources';
+        $dir = $isPage ? 'Pages' : 'Resources';
         $namespace = moonshineConfig()->getNamespace("\\$dir\\") . $class;
 
         $content = str(file_get_contents($to));
@@ -57,7 +65,7 @@ abstract class MoonShineCommand extends Command
         $tab = static fn (int $times = 1): string => str_repeat(' ', $times * 4);
 
         $headSection = $content->before('class ');
-        $resourcesSection = $content->betweenFirst("protected function $method(): array", '}');
+        $replaceContent = $between($content);
 
         if ($content->contains($use)) {
             $use = '';
@@ -66,13 +74,13 @@ abstract class MoonShineCommand extends Command
         $content = str_replace(
             [
                 $headSection->value(),
-                $resourcesSection->value(),
+                $replaceContent->value(),
             ],
             [
                 $headSection->replaceLast(';', (";\nuse $namespace;" . ($use ? "\nuse $use;" : ''))),
-                $resourcesSection->replace("];", "{$tab()}$append,\n{$tab(2)}];")->value(),
+                $replace($replaceContent, $tab)->value(),
             ],
-            $content->value()
+            $content->value(),
         );
 
         file_put_contents($to, $content);

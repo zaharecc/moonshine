@@ -9,7 +9,7 @@ use MoonShine\Contracts\UI\ApplyContract;
 use MoonShine\Contracts\UI\FieldContract;
 
 /**
- * Сhange the FieldContract in the DocBlocks to the desired Field
+ * Change the FieldContract in the DocBlocks to the desired Field
  * @implements ApplyContract<FieldContract>
  */
 class DummyClass implements ApplyContract

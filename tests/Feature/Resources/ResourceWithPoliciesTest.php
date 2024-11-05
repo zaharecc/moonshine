@@ -31,14 +31,11 @@ beforeEach(function (): void {
             Text::make('Name', 'name')->sortable(),
             HasMany::make(
                 'Comments',
-                resource: (new TestCommentResource(app(CoreContract::class)))->setTestPolicy(true)
+                resource: app(TestCommentResource::class)->setTestPolicy(true)
             )->creatable(),
         ])
         ->setTestPolicy(true)
     ;
-
-    //app(TestCommentResource::class)->setTestPolicy(true);
-
 });
 
 it('policies in index', function () {
