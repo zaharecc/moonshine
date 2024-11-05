@@ -14,9 +14,6 @@ interface HasModalContract
 {
     public function isInModal(): bool;
 
-    /**
-     * @return ?T
-     */
     public function getModal(): ?ComponentContract;
 
     public function toggleModal(string $name = 'default'): static;

@@ -53,8 +53,6 @@ interface FieldsContract extends Enumerable, HasStructureContract
 
     /**
      * @param  T  $default
-     *
-     * @return ?T
      */
     public function findByColumn(
         string $column,
@@ -64,8 +62,6 @@ interface FieldsContract extends Enumerable, HasStructureContract
     /**
      * @param  class-string<T>  $class
      * @param  ?T  $default
-     *
-     * @return ?T
      */
     public function findByClass(
         string $class,

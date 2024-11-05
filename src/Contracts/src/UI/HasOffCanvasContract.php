@@ -11,9 +11,6 @@ use Closure;
  */
 interface HasOffCanvasContract
 {
-    /**
-     * @return ?T
-     */
     public function getOffCanvas(): ?ComponentContract;
 
     public function isInOffCanvas(): bool;

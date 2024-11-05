@@ -11,9 +11,6 @@ use MoonShine\Contracts\Core\ResourceContract;
  */
 trait HasResourceRequest
 {
-    /**
-     * @return ?T
-     */
     public function getResource(): ?ResourceContract
     {
         if (\is_null($this->getResourceUri())) {

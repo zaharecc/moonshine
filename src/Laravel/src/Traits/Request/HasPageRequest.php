@@ -11,9 +11,6 @@ use MoonShine\Contracts\Core\PageContract;
  */
 trait HasPageRequest
 {
-    /**
-     * @return ?TPage
-     */
     public function findPage(): ?PageContract
     {
         return memoize(function (): ?PageContract {
