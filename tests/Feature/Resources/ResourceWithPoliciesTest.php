@@ -36,9 +36,6 @@ beforeEach(function (): void {
         ])
         ->setTestPolicy(true)
     ;
-
-    //app(TestCommentResource::class)->setTestPolicy(true);
-
 });
 
 it('policies in index', function () {
