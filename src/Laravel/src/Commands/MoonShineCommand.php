@@ -26,8 +26,8 @@ abstract class MoonShineCommand extends Command
             class: $prefix . $class,
             to: app_path('Providers/MoonShineServiceProvider.php'),
             isPage: $page,
-            between: static fn(Stringable $content): Stringable => $content->betweenFirst("->$method([", ']'),
-            replace: static fn(Stringable $content, Closure $tab): Stringable => $content->append("{$tab()}$class::class,\n{$tab(3)}"),
+            between: static fn (Stringable $content): Stringable => $content->betweenFirst("->$method([", ']'),
+            replace: static fn (Stringable $content, Closure $tab): Stringable => $content->append("{$tab()}$class::class,\n{$tab(3)}"),
         );
     }
 
@@ -37,8 +37,8 @@ abstract class MoonShineCommand extends Command
             class: $prefix . $class,
             to: app_path('MoonShine/Layouts/MoonShineLayout.php'),
             isPage: $page,
-            between: static fn(Stringable $content): Stringable => $content->betweenFirst("protected function menu(): array", '}'),
-            replace: static fn(Stringable $content, Closure $tab): Stringable => $content->replace("];", "{$tab()}MenuItem::make('{$title}', $class::class),\n{$tab(2)}];"),
+            between: static fn (Stringable $content): Stringable => $content->betweenFirst("protected function menu(): array", '}'),
+            replace: static fn (Stringable $content, Closure $tab): Stringable => $content->replace("];", "{$tab()}MenuItem::make('{$title}', $class::class),\n{$tab(2)}];"),
             use: MenuItem::class,
         );
     }
