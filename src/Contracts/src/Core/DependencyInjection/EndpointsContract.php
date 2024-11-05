@@ -24,14 +24,14 @@ interface EndpointsContract
         array $extra = [],
     ): mixed;
 
-    
+
     public function updateField(
         ?ResourceContract $resource = null,
         ?PageContract $page = null,
         array $extra = []
     ): string;
 
-    
+
     public function method(
         string $method,
         ?string $message = null,
@@ -46,7 +46,7 @@ interface EndpointsContract
         array $additionally = []
     ): string;
 
-    
+
     public function reactive(
         ?PageContract $page = null,
         ?ResourceContract $resource = null,

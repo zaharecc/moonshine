@@ -29,8 +29,10 @@ beforeEach(function (): void {
         ->setTestFields([
             ID::make()->sortable(),
             Text::make('Name', 'name')->sortable(),
-            HasMany::make('Comments',
-                resource: (new TestCommentResource(app(CoreContract::class)))->setTestPolicy(true))->creatable(),
+            HasMany::make(
+                'Comments',
+                resource: (new TestCommentResource(app(CoreContract::class)))->setTestPolicy(true)
+            )->creatable(),
         ])
         ->setTestPolicy(true)
     ;
@@ -103,7 +105,7 @@ it('policy in has many', function () {
 
 it('policies index forbidden', function () {
     MoonshineUser::query()->where('id', 1)->update([
-        'name' => 'Policies test'
+        'name' => 'Policies test',
     ]);
 
     asAdmin()->get(

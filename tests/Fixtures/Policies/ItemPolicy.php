@@ -12,7 +12,7 @@ class ItemPolicy
 
     public function viewAny(MoonshineUser $user)
     {
-        if($user->name === 'Policies test') {
+        if ($user->name === 'Policies test') {
             return false;
         }
 

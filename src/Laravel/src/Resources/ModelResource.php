@@ -84,7 +84,7 @@ abstract class ModelResource extends CrudResource implements
 
         $user = MoonShineAuth::getGuard()->user();
 
-        $item = in_array($ability, [
+        $item = \in_array($ability, [
             Ability::CREATE,
             Ability::MASS_DELETE,
             Ability::VIEW_ANY,
