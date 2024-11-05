@@ -59,13 +59,6 @@ class TestResource extends AbstractTestingResource
         return $this;
     }
 
-    public function setTestPolicy(bool $value): static
-    {
-        $this->withPolicy = $value;
-
-        return $this;
-    }
-
     public function setTestTitle(string $value): static
     {
         $this->title = $value;

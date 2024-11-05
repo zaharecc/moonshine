@@ -83,15 +83,14 @@ abstract class ModelResource extends CrudResource implements
         }
 
         $user = MoonShineAuth::getGuard()->user();
-        $item = $this->getItem();
 
-        if (
-            $ability === Ability::CREATE
-            || $ability === Ability::MASS_DELETE
-            || $ability === Ability::VIEW_ANY
-        ) {
-            $item = $this->getItemOrInstance();
-        }
+        $item = in_array($ability, [
+            Ability::CREATE,
+            Ability::MASS_DELETE,
+            Ability::VIEW_ANY,
+        ], true)
+            ? $this->getDataInstance()
+            : $this->getItem();
 
         $checkCustomRules = moonshineConfig()
             ->getAuthorizationRules()

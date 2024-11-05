@@ -2,12 +2,17 @@
 
 declare(strict_types=1);
 
+use MoonShine\Contracts\Core\DependencyInjection\CoreContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
+use MoonShine\Laravel\Fields\Relationships\HasMany;
 use MoonShine\Laravel\Models\MoonshineUser;
 use MoonShine\Laravel\Pages\Crud\DetailPage;
+use MoonShine\Laravel\Pages\Crud\FormPage;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Support\Enums\HttpMethod;
+use MoonShine\Tests\Fixtures\Models\Comment;
 use MoonShine\Tests\Fixtures\Models\Item;
+use MoonShine\Tests\Fixtures\Resources\TestCommentResource;
 use MoonShine\Tests\Fixtures\Resources\TestResourceBuilder;
 use MoonShine\UI\Components\ActionButton;
 use MoonShine\UI\Fields\ID;
@@ -24,9 +29,14 @@ beforeEach(function (): void {
         ->setTestFields([
             ID::make()->sortable(),
             Text::make('Name', 'name')->sortable(),
+            HasMany::make('Comments',
+                resource: (new TestCommentResource(app(CoreContract::class)))->setTestPolicy(true))->creatable(),
         ])
         ->setTestPolicy(true)
     ;
+
+    //app(TestCommentResource::class)->setTestPolicy(true);
+
 });
 
 it('policies in index', function () {
@@ -69,9 +79,25 @@ it('policies in index', function () {
         $this->moonshineCore->getRouter()->getEndpoints()
             ->toPage(page: IndexPage::class, resource: $this->resource)
     )
+        ->assertOk()
         ->assertSeeHtml($createButton)
         ->assertSeeHtml($massButton)
-        ->assertOk();
+    ;
+
+});
+
+it('policy in has many', function () {
+    $comment = Comment::query()->first();
+
+    asAdmin()->get(
+        $this->moonshineCore->getRouter()->getEndpoints()
+            ->toPage(page: FormPage::class, resource: $this->resource, params: ['resourceItem' => $this->item->id])
+    )
+        ->assertOk()
+        ->assertSee($comment->content)
+        ->assertDontSee('has-many-modal-comments-create')
+        ->assertSee('has-many-modal-mass-delete')
+    ;
 
 });
 

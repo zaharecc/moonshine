@@ -20,4 +20,11 @@ abstract class AbstractTestingResource extends ModelResource implements HasImpor
             ->csv()
             ->filename($this->getUriKey());
     }
+
+    public function setTestPolicy(bool $value): static
+    {
+        $this->withPolicy = $value;
+
+        return $this;
+    }
 }
