@@ -255,9 +255,7 @@ class InstallCommand extends MoonShineCommand
                 $replace,
             );
 
-            if (! moonshine()->runningUnitTests()) {
-                $this->registerServiceProvider();
-            }
+            $this->registerServiceProvider();
 
             $this->components->task('Service Provider created');
         }

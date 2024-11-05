@@ -106,12 +106,14 @@ interface CrudResourceContract extends ResourceContract
 
     /**
      * @param  TData  $item
+     * @param ?TFields $fields
      *
      */
     public function delete(mixed $item, ?FieldsContract $fields = null): bool;
 
     /**
      * @param  TData  $item
+     * @param ?TFields $fields
      *
      * @return TData
      */
