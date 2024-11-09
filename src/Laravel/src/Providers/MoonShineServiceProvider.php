@@ -188,9 +188,9 @@ final class MoonShineServiceProvider extends ServiceProvider
     {
         \Illuminate\Http\Request::macro('getScalar', function (string $key, mixed $default = null): mixed {
             $value = request()->input($key, $default);
-            $default = is_scalar($default) ? $default : null;
+            $default = \is_scalar($default) ? $default : null;
 
-            return is_scalar($value) ? $value : $default;
+            return \is_scalar($value) ? $value : $default;
         });
 
         Router::macro(

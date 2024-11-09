@@ -30,7 +30,7 @@ final readonly class Options implements Arrayable
                     properties: $this->getProperties($value),
                 );
 
-                if($labelOrValues instanceof OptionGroup) {
+                if ($labelOrValues instanceof OptionGroup) {
                     return $labelOrValues;
                 }
 

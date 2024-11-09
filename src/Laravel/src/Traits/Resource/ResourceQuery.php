@@ -216,7 +216,7 @@ trait ResourceQuery
 
         $field = $this->getIndexFields()->findByColumn($column);
 
-        if(\is_null($field)) {
+        if (\is_null($field)) {
             $column = $this->getSortColumn();
         }
 
