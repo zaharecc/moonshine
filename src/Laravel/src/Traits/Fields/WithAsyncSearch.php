@@ -209,4 +209,9 @@ trait WithAsyncSearch
             associatedWith: $column
         );
     }
+
+    public function asyncOnInit(): static
+    {
+        return $this->customAttributes(['data-async-on-init' => true]);
+    }
 }
