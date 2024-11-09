@@ -250,10 +250,10 @@ class FormPage extends CrudPage
                 static fn (FormBuilderContract $formBuilder): FormBuilderContract => $formBuilder
                     ->async(events: array_filter([
                         $resource->getListEventName(
-                            request()->input('_component_name', 'default'),
+                            request()->getScalar('_component_name', 'default'),
                             $isAsync && $resource->isItemExists() ? array_filter([
-                                'page' => request()->input('page'),
-                                'sort' => request()->input('sort'),
+                                'page' => request()->getScalar('page'),
+                                'sort' => request()->getScalar('sort'),
                             ]) : []
                         ),
                         ! $resource->isItemExists() && $resource->isCreateInModal()

@@ -19,13 +19,13 @@ class MoonShineRequest extends Request
     {
         return request()->route(
             'resourceItem',
-            request()->input('resourceItem')
+            request()->getScalar('resourceItem')
         );
     }
 
     public function getParentResourceId(): ?string
     {
-        return request()->input('_parentId');
+        return request()->getScalar('_parentId');
     }
 
     public function getParentRelationName(): ?string
@@ -66,7 +66,7 @@ class MoonShineRequest extends Request
 
     public function getFragmentLoad(): ?string
     {
-        return request()->input('_fragment-load');
+        return request()->getScalar('_fragment-load');
     }
 
     public function isFragmentLoad(?string $name = null): bool

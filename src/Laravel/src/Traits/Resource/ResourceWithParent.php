@@ -39,8 +39,8 @@ trait ResourceWithParent
             ?->{$relationName}()
             ->getForeignKeyName();
 
-        if (request()->filled($parentKey)) {
-            return $this->parentId = request()->input($parentKey);
+        if (!\is_null($parentKey) && request()->filled($parentKey)) {
+            return $this->parentId = request()->getScalar($parentKey);
         }
 
         if (\is_null($this->getItem())) {

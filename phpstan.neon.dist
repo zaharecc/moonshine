@@ -18,6 +18,7 @@ parameters:
         - '#getResource\(\) should return#'
         - '#getParentResource\(\) should return#'
         - '#when\(\) expects#'
+        - '#Call to an undefined method Illuminate\\Http\\Request::getScalar#'
     excludePaths:
         - ./src/Support/src/Traits/Makeable.php
         - ./src/Laravel/routes/moonshine.php

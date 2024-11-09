@@ -26,7 +26,7 @@ class RelationModelFieldRequest extends FormRequest
 
     public function getRelationName(): string
     {
-        return request()->input('_relation');
+        return request()->getScalar('_relation', '');
     }
 
     /**
@@ -38,7 +38,7 @@ class RelationModelFieldRequest extends FormRequest
             /** @var Fields $fields */
             $fields = $this->getPage()->getComponents();
 
-            if ($parentField = request()->input('_parent_field')) {
+            if ($parentField = request()->getScalar('_parent_field')) {
                 /** @var HasFieldsContract<Fields> $parent */
                 $parent = $fields
                     ->onlyFields()
@@ -100,7 +100,7 @@ class RelationModelFieldRequest extends FormRequest
             ->getDataInstance()
             ->newModelQuery()
             ->findOrFail(
-                request()->input($resource->getDataInstance()->getKeyName())
+                request()->getScalar($resource->getDataInstance()->getKeyName())
             );
     }
 }

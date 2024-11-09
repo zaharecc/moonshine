@@ -96,6 +96,7 @@
         "rector": "vendor/bin/rector process --clear-cache",
         "rector:dry": "vendor/bin/rector process --clear-cache --dry-run",
         "test": "vendor/bin/pest",
+        "test:bail": "vendor/bin/pest --bail",
         "test:fresh": [
             "rm -rf vendor/orchestra",
             "composer install",

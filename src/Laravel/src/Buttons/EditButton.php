@@ -33,8 +33,8 @@ final class EditButton
                 array_filter([
                     '_component_name' => $componentName ?? $resource->getListComponentName(),
                     '_async_form' => $isAsync,
-                    'page' => $isAsync ? request()->input('page') : null,
-                    'sort' => $isAsync ? request()->input('sort') : null,
+                    'page' => $isAsync ? request()->getScalar('page') : null,
+                    'sort' => $isAsync ? request()->getScalar('sort') : null,
                 ]),
                 fragment: 'crud-form'
             );

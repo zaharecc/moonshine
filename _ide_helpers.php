@@ -21,3 +21,14 @@ namespace Illuminate\Routing {
         //
     }
 }
+
+namespace Illuminate\Http {
+
+    /**
+     * @method \mixed getScalar(string $key, mixed $default = null)
+     */
+    class Request
+    {
+        //
+    }
+}

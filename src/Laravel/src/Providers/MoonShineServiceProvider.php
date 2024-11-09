@@ -184,8 +184,15 @@ final class MoonShineServiceProvider extends ServiceProvider
         return $this;
     }
 
-    protected function registerRouterMacro(): self
+    protected function registerMacros(): self
     {
+        \Illuminate\Http\Request::macro('getScalar', function (string $key, mixed $default = null): mixed {
+            $value = request()->input($key, $default);
+            $default = is_scalar($default) ? $default : null;
+
+            return is_scalar($value) ? $value : $default;
+        });
+
         Router::macro(
             'moonshine',
             fn (Closure $callback, bool $withResource = false, bool $withPage = false, bool $withAuthenticate = false) => $this->group(
@@ -240,7 +247,7 @@ final class MoonShineServiceProvider extends ServiceProvider
     {
         $this
             ->registerBindings()
-            ->registerRouterMacro();
+            ->registerMacros();
 
         $this->mergeConfigFrom(
             MoonShine::path('/config/moonshine.php'),

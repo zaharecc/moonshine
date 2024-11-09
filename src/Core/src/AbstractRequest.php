@@ -33,6 +33,14 @@ class AbstractRequest implements RequestContract
         );
     }
 
+    public function getScalar(string $key, mixed $default = null): mixed
+    {
+        $value = $this->get($key, $default);
+        $default = is_scalar($default) ? $default : null;
+
+        return is_scalar($value) ? $value : $default;
+    }
+
     public function getSession(string $key, mixed $default = null): mixed
     {
         return $default;

@@ -45,8 +45,8 @@ final class DeleteButton
                         events: $resource->getListEventName(
                             $componentName ?? $resource->getListComponentName(),
                             $isAsync ? array_filter([
-                                    'page' => request()->input('page'),
-                                    'sort' => request()->input('sort'),
+                                    'page' => request()->getScalar('page'),
+                                    'sort' => request()->getScalar('sort'),
                                 ]) : []
                         )
                     )

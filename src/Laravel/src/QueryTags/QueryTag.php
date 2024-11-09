@@ -73,7 +73,7 @@ final class QueryTag implements HasCanSeeContract, HasIconContract, HasLabelCont
             return true;
         }
 
-        return request()->input('query-tag') === $this->getUri();
+        return request()->getScalar('query-tag') === $this->getUri();
     }
 
     public function apply(Builder $builder): Builder

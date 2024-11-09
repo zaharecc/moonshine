@@ -285,7 +285,7 @@ abstract class CrudResource extends Resource implements CrudResourceContract
 
     public function isListComponentRequest(): bool
     {
-        return request()->ajax() && request()->input('_component_name') === $this->getListComponentName();
+        return request()->ajax() && request()->getScalar('_component_name') === $this->getListComponentName();
     }
 
     public function getListEventName(?string $name = null, array $params = []): string

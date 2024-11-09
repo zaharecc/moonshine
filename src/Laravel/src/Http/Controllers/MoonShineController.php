@@ -96,11 +96,13 @@ abstract class MoonShineController extends BaseController
 
         if (! $class instanceof Model) {
             return $table->getRows()->first(
-                static fn (TableRowContract $row): bool => $row->getKey() === request()->input('_key'),
+                static fn (TableRowContract $row): bool => $row->getKey() === request()->getScalar('_key'),
             );
         }
 
-        $item = $class::query()->find(request()->input('_key'));
+        $item = $class::query()->find(
+            request()->getScalar('_key')
+        );
 
         if (blank($item)) {
             return '';

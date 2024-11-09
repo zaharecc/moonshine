@@ -46,7 +46,7 @@ final class Search extends MoonShineComponent
     {
         return [
             'action' => $this->action,
-            'value' => moonshine()->getRequest()->get($this->key, ''),
+            'value' => moonshine()->getRequest()->getScalar($this->key, ''),
             'placeholder' => $this->placeholder,
             'isEnabled' => $this->isSearchEnabled(),
         ];

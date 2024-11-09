@@ -53,8 +53,8 @@ final readonly class FiltersForm implements FormContract
             }
         }
 
-        $sort = \is_string(request()->input('sort')) ? request()->input('sort') : null;
-        $queryTag = \is_string(request()->input('query-tag')) ? request()->input('query-tag') : null;
+        $sort = request()->getScalar('sort');
+        $queryTag = request()->getScalar('query-tag');
 
         return FormBuilder::make($action, FormMethod::GET)
             ->name('filters')
