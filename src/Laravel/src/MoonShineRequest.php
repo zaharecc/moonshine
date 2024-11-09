@@ -17,12 +17,15 @@ class MoonShineRequest extends Request
 
     public function getItemID(): int|string|null
     {
-        return request('resourceItem');
+        return request()->route(
+            'resourceItem',
+            request()->input('resourceItem')
+        );
     }
 
     public function getParentResourceId(): ?string
     {
-        return request('_parentId');
+        return request()->input('_parentId');
     }
 
     public function getParentRelationName(): ?string

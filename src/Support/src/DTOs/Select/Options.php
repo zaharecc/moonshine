@@ -22,13 +22,17 @@ final readonly class Options implements Arrayable
     public function getValues(): Collection
     {
         return collect($this->values)
-            ->map(function (array|string|Option $labelOrValues, int|string $valueOrLabel): OptionGroup|Option {
+            ->map(function (array|string|OptionGroup|Option $labelOrValues, int|string $valueOrLabel): OptionGroup|Option {
                 $toOption = fn (string $label, string $value): Option => new Option(
                     label: $label,
                     value: $value,
                     selected: $this->isSelected($value),
                     properties: $this->getProperties($value),
                 );
+
+                if($labelOrValues instanceof OptionGroup) {
+                    return $labelOrValues;
+                }
 
                 if (\is_array($labelOrValues)) {
                     $options = [];

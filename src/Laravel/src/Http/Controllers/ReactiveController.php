@@ -60,7 +60,7 @@ final class ReactiveController extends MoonShineController
 
         $fields->fill(
             $values->toArray(),
-            $casted ? new ModelDataWrapper($casted) : null
+            $casted ? new ModelDataWrapper($casted->forceFill($values->toArray())) : null
         );
 
         foreach ($fields as $field) {

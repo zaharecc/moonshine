@@ -53,26 +53,29 @@ final readonly class FiltersForm implements FormContract
             }
         }
 
+        $sort = \is_string(request()->input('sort')) ? request()->input('sort') : null;
+        $queryTag = \is_string(request()->input('query-tag')) ? request()->input('query-tag') : null;
+
         return FormBuilder::make($action, FormMethod::GET)
             ->name('filters')
             ->fillCast($values, $resource->getCaster())
             ->fields(
                 $filters
                     ->when(
-                        request()->input('sort'),
+                        $sort,
                         static fn ($fields): Fields => $fields
                             ->prepend(
                                 Hidden::make(column: 'sort')->setValue(
-                                    request()->input('sort')
+                                    $sort
                                 )
                             )
                     )
                     ->when(
-                        request()->input('query-tag'),
+                        $queryTag,
                         static fn ($fields): Fields => $fields
                             ->prepend(
                                 Hidden::make(column: 'query-tag')->setValue(
-                                    request()->input('query-tag')
+                                    $queryTag
                                 )
                             )
                     )
