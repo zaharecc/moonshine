@@ -83,7 +83,7 @@ interface TableBuilderContract extends
 
     public function reorderable(
         ?string $url = null,
-        string $key = 'id',
+        ?string $key = null,
         ?string $group = null
     ): static;
 
