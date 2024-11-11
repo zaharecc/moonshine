@@ -24,8 +24,7 @@ final class Paginator extends MoonShineComponent
 
     public function __construct(
         private readonly PaginatorContract|CursorPaginator $paginator
-    )
-    {
+    ) {
         parent::__construct();
     }
 
