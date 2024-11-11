@@ -286,6 +286,7 @@ final class MoonShineServiceProvider extends ServiceProvider
         }
 
         Blade::componentNamespace('MoonShine\UI\Components', 'moonshine');
+        Blade::componentNamespace('MoonShine\Laravel\Components', 'moonshine-laravel');
 
         $this
             ->registerBladeDirectives()
