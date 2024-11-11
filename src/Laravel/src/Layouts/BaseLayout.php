@@ -63,7 +63,7 @@ abstract class BaseLayout extends AbstractLayout
                 ])->class('menu-heading-logo'),
 
                 Div::make([
-										ThemeSwitcher::make(),
+                    ThemeSwitcher::make(),
 
                     Div::make([
                         Burger::make(),
