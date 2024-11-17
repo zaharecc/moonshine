@@ -20,6 +20,10 @@ interface HasLinkContract
 
     public function isWithoutIcon(): bool;
 
+    /**
+     * @param  string|(Closure(string $value, static $ctx): string)  $link
+     * @param  string|(Closure(string $value, static $ctx): string)  $name
+     */
     public function link(
         string|Closure $link,
         string|Closure $name = '',
