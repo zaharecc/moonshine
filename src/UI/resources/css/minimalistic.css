@@ -56,17 +56,6 @@ body.theme-minimalistic {
         }
       }
     }
-
-    .search-form {
-      @apply h-[34px];
-
-      &-field {
-        @apply rounded-md;
-      }
-      &-icon {
-        @apply right-2 h-4 w-4;
-      }
-    }
   }
 
   .layout-content {
@@ -75,27 +64,15 @@ body.theme-minimalistic {
 
   /* Sidebar menu */
   .layout-menu {
-    @apply left-2.5 !w-[3.625rem] pt-0 xl:!w-[16.75rem];
+    @apply left-2.5 !w-[3.625rem] pt-0 transition-none xl:!w-[16.75rem];
     height: calc(100vh - 1rem);
-
-    :where(.menu-inner-dropdown) {
-      .menu-inner-dropdown {
-        @apply !border-l-0 !border-r-0;
-      }
-    }
 
     &._is-minimized {
       @apply lg:!w-[3.625rem];
-
-      .menu-inner-dropdown {
-        .menu-inner-link {
-          @apply lg:!px-1;
-        }
-      }
     }
 
     .menu {
-      @apply overflow-y-scroll pl-4 pr-2 md:px-6 lg:pl-0 lg:pr-5;
+      @apply overflow-y-scroll px-4 md:px-6 lg:pl-0 lg:pr-5;
     }
 
     .menu-heading {
@@ -106,14 +83,11 @@ body.theme-minimalistic {
           @apply h-8 lg:h-10;
         }
       }
-      &-mode-btn {
-        @apply text-dark-600 hover:text-black dark:text-slate-400 dark:hover:text-white;
-        > svg {
-          @apply h-5 w-5;
+
+      &-burger {
+        > button {
+          @apply text-dark-600 hover:text-black dark:text-slate-400 dark:hover:text-white;
         }
-      }
-      &-burger > button {
-        @apply text-dark-600 hover:text-black dark:text-slate-400 dark:hover:text-white;
       }
     }
 
@@ -151,7 +125,7 @@ body.theme-minimalistic {
       }
 
       &-dropdown {
-        @apply mt-1 border border-dark-200 bg-dark-50 dark:bg-dark-700;
+        @apply mb-1 mt-1 border border-solid border-dark-200 bg-dark-50 pb-0 dark:bg-dark-700;
 
         .menu-inner-divider {
           @apply before:bg-dark-200;
@@ -161,27 +135,21 @@ body.theme-minimalistic {
         .menu-inner-button {
           @apply px-1 py-1 text-3xs;
         }
+
+        .menu-inner-dropdown {
+          .menu-inner-dropdown {
+            @apply !border-l-0 !border-r-0;
+          }
+        }
       }
     }
 
-    .menu-profile {
+    .profile {
       @apply py-2;
 
-      &-main {
-        @apply gap-x-2.5;
-      }
-      &-photo {
-        @apply h-9 w-9;
-      }
       &-info {
         > .name {
-          @apply text-3xs leading-[1.25] text-black dark:text-slate-400 dark:hover:text-white;
-        }
-      }
-      &-exit {
-        @apply text-dark-600 hover:text-secondary dark:text-slate-400 dark:hover:text-white;
-        > svg {
-          @apply h-5 w-5;
+          @apply text-black hover:text-secondary;
         }
       }
     }
@@ -235,7 +203,7 @@ body.theme-minimalistic {
       }
 
       &-dropdown {
-        @apply mt-1 border border-dark-200 bg-dark-50 shadow-none dark:bg-dark-700;
+        @apply mt-1 border border-solid border-dark-200 bg-dark-50 pb-1 shadow-none dark:bg-dark-700;
 
         .menu-inner-divider {
           @apply pl-0 before:bg-dark-300 dark:before:bg-dark-200;
@@ -245,36 +213,11 @@ body.theme-minimalistic {
         .menu-inner-button {
           @apply px-1.5 py-1 text-3xs;
         }
-      }
-    }
 
-    .menu-profile {
-      @apply py-2;
-
-      &-main {
-        @apply gap-x-2.5;
-      }
-      &-photo {
-        @apply h-9 w-9;
-      }
-      &-info {
-        > .name {
-          @apply text-3xs leading-[1.25] text-black dark:text-slate-400 dark:hover:text-white;
-        }
-      }
-      &-exit {
-        @apply text-dark-600 hover:text-secondary dark:text-slate-400 dark:hover:text-white;
-        > svg {
-          @apply h-5 w-5;
-        }
-      }
-    }
-
-    .menu-mode {
-      &-btn {
-        @apply text-dark-600 hover:text-secondary dark:text-slate-400 dark:hover:text-white;
-        > svg {
-          @apply h-5 w-5;
+        .menu-inner-dropdown {
+          .menu-inner-dropdown {
+            @apply !border-l-0 !border-r-0;
+          }
         }
       }
     }
@@ -301,6 +244,7 @@ body.theme-minimalistic {
   /* Mobile menu */
   .layout-menu-mobile {
     @apply border-b border-dark-200 bg-gray-50 px-4 dark:bg-dark-800;
+
     .menu-heading {
       @apply border-b border-dark-200;
     }
@@ -423,6 +367,78 @@ body.theme-minimalistic {
     }
   }
 
+  /* User profile */
+  .profile {
+    &-main {
+      @apply gap-x-2.5;
+    }
+
+    &-photo {
+      @apply h-8 w-8;
+    }
+
+    &-info {
+      > .name {
+        @apply text-3xs leading-[1.25] text-black dark:text-slate-200 dark:hover:text-white;
+      }
+
+      > .email {
+        @apply leading-[1.25];
+      }
+    }
+
+    &-exit {
+      @apply text-dark-600 hover:text-secondary dark:text-slate-400 dark:hover:text-white;
+
+      > svg {
+        @apply h-5 w-5;
+      }
+    }
+  }
+
+  /* Theme switcher */
+  .theme-switcher {
+    &-btn {
+      @apply h-5 w-5;
+
+      > svg {
+        @apply h-5 w-5;
+      }
+    }
+  }
+
+  /* Languages switcher */
+  .languages {
+    &-icon {
+      &.dropdown-btn {
+        @apply pr-3;
+      }
+
+      > svg:first-child {
+        @apply h-5 w-5;
+      }
+    }
+  }
+
+  /* Search form */
+  .search-form {
+    @apply h-9;
+
+    &-field {
+      &.form-input {
+        @apply pr-8;
+      }
+    }
+
+    &-submit {
+      @apply px-1.5;
+
+      > svg {
+        @apply h-5 w-5;
+      }
+    }
+  }
+
   /* Box cards */
   .box {
     &-title {
@@ -495,7 +511,7 @@ body.theme-minimalistic {
     }
   }
 
-  .table-sticky > table > thead {
+  .table-sticky > table > thead:before {
     @apply dark:bg-dark-800;
   }
 
