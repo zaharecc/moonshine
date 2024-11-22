@@ -146,6 +146,11 @@ class BelongsToMany extends ModelRelationField implements
                 ->onClick(static fn (): string => 'checkAll', 'prevent')
                 ->primary()
                 ->icon('check'),
+
+            ActionButton::make('')
+                ->onClick(static fn (): string => 'uncheckAll', 'prevent')
+                ->error()
+                ->icon('x-mark'),
         ]);
     }
 
