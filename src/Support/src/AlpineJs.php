@@ -89,7 +89,7 @@ final readonly class AlpineJs
     public static function asyncWithQueryParamsAttributes(): array
     {
         return [
-            'data-async-with-query-params' => true
+            'data-async-with-query-params' => true,
         ];
     }
 
