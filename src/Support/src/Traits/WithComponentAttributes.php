@@ -135,7 +135,7 @@ trait WithComponentAttributes
     public function xModel(?string $column = null): static
     {
         if ($this instanceof FieldContract) {
-            return $this->x('model', $this->getColumn());
+            return $this->x('model', $column ?? $this->getColumn());
         }
 
         return $this->x('model', $column);

@@ -13,7 +13,9 @@ use Illuminate\Database\Eloquent\Relations\MorphOneOrMany;
 use MoonShine\Contracts\Core\DependencyInjection\FieldsContract;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FieldContract;
+use MoonShine\Contracts\UI\FormBuilderContract;
 use MoonShine\Contracts\UI\HasFieldsContract;
+use MoonShine\Contracts\UI\TableBuilderContract;
 use MoonShine\Laravel\Collections\Fields;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\UI\Components\FormBuilder;
@@ -47,6 +49,12 @@ class HasOne extends ModelRelationField implements HasFieldsContract
     protected bool $outsideComponent = true;
 
     protected bool $isAsync = true;
+
+    protected ?Closure $redirectAfter = null;
+
+    protected ?Closure $modifyForm = null;
+
+    protected ?Closure $modifyTable = null;
 
     public function hasWrapper(): bool
     {
@@ -115,6 +123,10 @@ class HasOne extends ModelRelationField implements HasFieldsContract
             ->preview()
             ->simple()
             ->vertical()
+            ->when(
+                ! \is_null($this->modifyTable),
+                fn (TableBuilderContract $tableBuilder) => value($this->modifyTable, $tableBuilder)
+            )
             ->render();
     }
 
@@ -137,6 +149,47 @@ class HasOne extends ModelRelationField implements HasFieldsContract
 
             return $fields->toArray();
         };
+    }
+
+    /**
+     * @param  Closure(int $parentId, static $field): string  $callback
+     */
+    public function redirectAfter(Closure $callback): static
+    {
+        $this->redirectAfter = $callback;
+
+        return $this;
+    }
+
+    public function getRedirectAfter(Model|int|null|string $parentId): string
+    {
+        if (! \is_null($this->redirectAfter)) {
+            return (string) value($this->redirectAfter, $parentId, $this);
+        }
+
+        return moonshineRequest()
+                   ->getResource()
+                   ?->getFormPageUrl($parentId) ?? '';
+    }
+
+    /**
+     * @param  Closure(FormBuilderContract $table): FormBuilderContract  $callback
+     */
+    public function modifyForm(Closure $callback): static
+    {
+        $this->modifyForm = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @param  Closure(TableBuilderContract $table): TableBuilderContract  $callback
+     */
+    public function modifyTable(Closure $callback): static
+    {
+        $this->modifyTable = $callback;
+
+        return $this;
     }
 
     /**
@@ -171,10 +224,8 @@ class HasOne extends ModelRelationField implements HasFieldsContract
             $item?->getKey()
         );
 
-        $redirectAfter = toPage(
-            page: $parentResource->getFormPage(),
-            resource: $parentResource,
-            params: ['resourceItem' => $parentItem->getKey()]
+        $redirectAfter = $this->getRedirectAfter(
+            $parentItem->getKey()
         );
 
         $isAsync = ! \is_null($item) && ($this->isAsync() || $resource->isAsync());
@@ -231,7 +282,11 @@ class HasOne extends ModelRelationField implements HasFieldsContract
                     && $element->isToOne()
                     && $element->getColumn() === $relation->getForeignKeyName()
             ))
-            ->submit(__('moonshine::ui.save'), ['class' => 'btn-primary btn-lg']);
+            ->submit(__('moonshine::ui.save'), ['class' => 'btn-primary btn-lg'])
+            ->when(
+                ! \is_null($this->modifyForm),
+                fn (FormBuilderContract $form) => value($this->modifyForm, $form)
+            );
     }
 
     /**
