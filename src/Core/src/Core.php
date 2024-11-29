@@ -6,6 +6,7 @@ namespace MoonShine\Core;
 
 use Closure;
 use Illuminate\Support\Traits\Conditionable;
+use MoonShine\Contracts\AssetManager\AssetManagerContract;
 use MoonShine\Contracts\Core\DependencyInjection\ConfiguratorContract;
 use MoonShine\Contracts\Core\DependencyInjection\CoreContract;
 use MoonShine\Contracts\Core\DependencyInjection\FieldsContract;
@@ -18,6 +19,7 @@ use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Contracts\Core\ResourceContract;
 use MoonShine\Contracts\Core\ResourcesContract;
 use MoonShine\Contracts\Core\StatefulContract;
+use MoonShine\Contracts\MenuManager\MenuManagerContract;
 use MoonShine\Core\Pages\Pages;
 use MoonShine\Core\Resources\Resources;
 use MoonShine\Support\Memoize\MemoizeRepository;
@@ -142,6 +144,9 @@ abstract class Core implements CoreContract, StatefulContract
         });
 
         $this->getRouter()->flushState();
+
+        $this->getContainer(AssetManagerContract::class)?->flushState();
+        $this->getContainer(MenuManagerContract::class)?->flushState();
 
         MemoizeRepository::getInstance()->flushState();
     }

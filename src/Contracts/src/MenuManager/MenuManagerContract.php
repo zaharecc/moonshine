@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace MoonShine\Contracts\MenuManager;
 
 use Closure;
+use MoonShine\Contracts\Core\StatefulContract;
 
-interface MenuManagerContract
+interface MenuManagerContract extends StatefulContract
 {
     public function add(array|MenuElementContract $data): static;
 
