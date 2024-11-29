@@ -121,10 +121,8 @@ final class AssetManager implements AssetManagerContract
             ];
         }
 
-        if($this->assetsModifiers !== []) {
-            foreach ($this->assetsModifiers as $assetsModifier) {
-                $assets = $assetsModifier($assets);
-            }
+        foreach ($this->assetsModifiers as $assetsModifier) {
+            $assets = $assetsModifier($assets);
         }
 
         return AssetElements::make($assets);
