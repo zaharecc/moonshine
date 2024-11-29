@@ -165,7 +165,7 @@ describe('Layouts', function () {
 
     it('favicon', function () {
         compare(
-            Favicon::make()->assets(['test.js'])->bodyColor('#fff'),
+            Favicon::make()->customAssets(['test.js'])->bodyColor('#fff'),
             ['custom-assets' => ['test.js'], 'body-color' => '#fff']
         );
     });
