@@ -30,7 +30,7 @@ final class AssetManager implements AssetManagerContract
      */
     private array $appendedAssets = [];
 
-    /** @var array<Closure>  */
+    /** @var array<Closure> */
     private array $assetsModifiers = [];
 
     public function __construct(
@@ -107,14 +107,14 @@ final class AssetManager implements AssetManagerContract
     {
         $assets = $this->assets;
 
-        if($this->prependedAssets !== []) {
+        if ($this->prependedAssets !== []) {
             $assets = [
                 ...$this->prependedAssets,
                 ...$assets,
             ];
         }
 
-        if($this->appendedAssets !== []) {
+        if ($this->appendedAssets !== []) {
             $assets = [
                 ...$assets,
                 ...$this->appendedAssets,
