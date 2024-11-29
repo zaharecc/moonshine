@@ -116,14 +116,14 @@ class IndexPage extends CrudPage
 
         $metrics = $this->getResource()->getMetrics();
 
-        if($metrics === []) {
+        if ($metrics === []) {
             return null;
         }
 
         $components = Div::make($metrics)->class('layout-metrics');
 
 
-        if(!\is_null($fragment = $this->getResource()->getFragmentMetrics())) {
+        if (! \is_null($fragment = $this->getResource()->getFragmentMetrics())) {
             return $fragment([$components]);
         }
 
