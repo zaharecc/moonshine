@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace MoonShine\Laravel\Resources;
 
+use Closure;
+use Illuminate\Support\Collection;
 use MoonShine\Contracts\Core\CrudPageContract;
 use MoonShine\Contracts\Core\CrudResourceContract;
 use MoonShine\Contracts\Core\DependencyInjection\FieldsContract;
@@ -12,6 +14,7 @@ use MoonShine\Contracts\Core\TypeCasts\DataCasterContract;
 use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
 use MoonShine\Core\Resources\Resource;
 use MoonShine\Core\TypeCasts\MixedDataCaster;
+use MoonShine\Laravel\Components\Fragment;
 use MoonShine\Laravel\Pages\Crud\DetailPage;
 use MoonShine\Laravel\Pages\Crud\FormPage;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
@@ -250,7 +253,22 @@ abstract class CrudResource extends Resource implements CrudResourceContract
      */
     public function getMetrics(): array
     {
-        return $this->metrics();
+        return Collection::make($this->metrics())
+            ->ensure(Metric::class)
+            ->toArray();
+    }
+
+    /**
+     * @return ?Closure(array $components): Fragment
+     */
+    protected function fragmentMetrics(): ?Closure
+    {
+        return null;
+    }
+
+    public function getFragmentMetrics(): ?Closure
+    {
+        return $this->fragmentMetrics();
     }
 
     /**
@@ -279,7 +297,7 @@ abstract class CrudResource extends Resource implements CrudResourceContract
         return rescue(
             fn (): string => $this->getIndexPage()?->getListComponentName(),
             "index-table-{$this->getUriKey()}",
-            false
+            false,
         );
     }
 
@@ -295,7 +313,7 @@ abstract class CrudResource extends Resource implements CrudResourceContract
         return rescue(
             fn (): string => AlpineJs::event($this->getIndexPage()?->getListEventName() ?? '', $name, $params),
             AlpineJs::event(JsEvent::TABLE_UPDATED, $name, $params),
-            false
+            false,
         );
     }
 
