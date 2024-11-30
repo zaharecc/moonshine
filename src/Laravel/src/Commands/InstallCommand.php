@@ -333,7 +333,7 @@ class InstallCommand extends MoonShineCommand
 
     private function registerServiceProvider(): void
     {
-        if (method_exists(ServiceProvider::class, 'addProviderToBootstrapFile')) {
+        if (method_exists(ServiceProvider::class, 'addProviderToBootstrapFile') && file_exists(base_path('bootstrap/app.php'))) {
             // @phpstan-ignore-next-line
             ServiceProvider::addProviderToBootstrapFile(\App\Providers\MoonShineServiceProvider::class);
 
