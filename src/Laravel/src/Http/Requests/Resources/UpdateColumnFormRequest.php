@@ -42,18 +42,18 @@ final class UpdateColumnFormRequest extends MoonShineFormRequest
     {
         $resource = $this->getResource();
 
-        if(is_null($resource)) {
+        if (\is_null($resource)) {
             return null;
         }
 
         $data = $resource->getCastedData();
 
-        if(is_null($data)) {
+        if (\is_null($data)) {
             return null;
         }
 
         $fields = $resource->getIndexFields();
-        $fields->each(fn(FieldContract $field): FieldContract => $field instanceof FieldsWrapperContract ? $field->fillData($data) : $field);
+        $fields->each(fn (FieldContract $field): FieldContract => $field instanceof FieldsWrapperContract ? $field->fillData($data) : $field);
 
         return $fields
             ->withoutWrappers()
