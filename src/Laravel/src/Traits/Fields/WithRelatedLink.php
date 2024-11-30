@@ -43,7 +43,7 @@ trait WithRelatedLink
 
     protected function isRelatedLink(): bool
     {
-        if($this->isRelatedLink === false) {
+        if ($this->isRelatedLink === false) {
             return false;
         }
 

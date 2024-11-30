@@ -140,7 +140,7 @@ trait ResourceModelQuery
      */
     protected function queryBuilderFeatures(): void
     {
-        if($this->isDisabledQueryFeatures()) {
+        if ($this->isDisabledQueryFeatures()) {
             return;
         }
 
