@@ -55,6 +55,16 @@ trait WithAssets
      */
     public function addAssets(array $assets): static
     {
+        $this->getAssetManager()->add($assets);
+
+        return $this;
+    }
+
+    /**
+     * @param list<AssetElementContract> $assets
+     */
+    public function pushAssets(array $assets): static
+    {
         $this->assets = array_merge($this->assets, $assets);
 
         return $this;
