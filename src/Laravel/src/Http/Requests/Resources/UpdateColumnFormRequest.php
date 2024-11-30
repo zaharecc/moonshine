@@ -9,8 +9,6 @@ use MoonShine\Core\Exceptions\ResourceException;
 use MoonShine\Laravel\Enums\Ability;
 use MoonShine\Laravel\Enums\Action;
 use MoonShine\Laravel\Http\Requests\MoonShineFormRequest;
-use MoonShine\Laravel\TypeCasts\ModelDataWrapper;
-use MoonShine\UI\Components\FormBuilder;
 use MoonShine\UI\Contracts\FieldsWrapperContract;
 use Throwable;
 
@@ -55,7 +53,7 @@ final class UpdateColumnFormRequest extends MoonShineFormRequest
         }
 
         $fields = $resource->getIndexFields();
-        $fields->each(fn(FieldContract $field) => $field instanceof FieldsWrapperContract ? $field->fillData($data) : $field);
+        $fields->each(fn(FieldContract $field): FieldContract => $field instanceof FieldsWrapperContract ? $field->fillData($data) : $field);
 
         return $fields
             ->withoutWrappers()
