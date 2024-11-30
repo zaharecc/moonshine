@@ -346,19 +346,23 @@ class HasMany extends ModelRelationField implements HasFieldsContract
         $resource = clone $this->getResource()
             ->disableSaveQueryState();
 
-        $resource->disableQueryFeatures();
+        if(\is_null($this->modifyBuilder) && $this->getRelatedModel()?->relationLoaded($this->getRelationName()) === true) {
+            $items = $this->toRelatedCollection();
+        } else {
+            $resource->disableQueryFeatures();
 
-        $casted = $this->getRelatedModel();
-        $relation = $casted?->{$this->getRelationName()}();
+            $casted = $this->getRelatedModel();
+            $relation = $casted?->{$this->getRelationName()}();
 
-        /** @var Builder $query */
-        $query = \is_null($this->modifyBuilder)
-            ? $relation
-            : value($this->modifyBuilder, $relation);
+            /** @var Builder $query */
+            $query = \is_null($this->modifyBuilder)
+                ? $relation
+                : value($this->modifyBuilder, $relation);
 
-        $resource->customQueryBuilder($query->limit($this->getLimit()));
+            $resource->customQueryBuilder($query->limit($this->getLimit()));
 
-        $items = $resource->getQuery()->get();
+            $items = $resource->getQuery()->get();
+        }
 
         return TableBuilder::make(items: $items)
             ->fields($this->getFieldsOnPreview())
