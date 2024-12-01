@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace MoonShine\Laravel\Traits\Fields;
 
 use Closure;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use MoonShine\Contracts\UI\ActionButtonContract;
 use MoonShine\Laravel\Fields\Relationships\BelongsToMany;
@@ -37,16 +36,20 @@ trait WithRelatedLink
         return $this;
     }
 
+    public function toRelatedCollection(): Collection
+    {
+        return $this->getRelatedModel()?->{$this->getRelationName()} ?? new Collection();
+    }
+
     protected function isRelatedLink(): bool
     {
-        if (\is_callable($this->isRelatedLink) && \is_null($this->toValue())) {
-            return (bool) value($this->isRelatedLink, 0, $this);
+        if ($this->isRelatedLink === false) {
+            return false;
         }
 
         if (\is_callable($this->isRelatedLink)) {
-            $count = $this->toValue() instanceof Collection
-                ? $this->toValue()->count()
-                : $this->toValue()->total();
+            $value = $this->toRelatedCollection();
+            $count = $value->count();
 
             return (bool) value($this->isRelatedLink, $count, $this);
         }
@@ -75,22 +78,20 @@ trait WithRelatedLink
     {
         $relationName = $this->getRelatedLinkRelation();
 
-        $value = $this->toValue();
-        $count = $value instanceof LengthAwarePaginator
-            ? $value->total()
-            : $value->count();
+        $value = $this->toRelatedCollection();
+        $count = $value->count();
 
         return ActionButton::make(
             '',
             url: $this->getResource()->getIndexPageUrl([
                 '_parentId' => $relationName . '-' . $this->getRelatedModel()?->getKey(),
-            ])
+            ]),
         )
             ->badge($count)
             ->icon('eye')
             ->when(
                 ! \is_null($this->modifyRelatedLink),
-                fn (ActionButtonContract $button) => value($this->modifyRelatedLink, $button, $preview)
+                fn (ActionButtonContract $button) => value($this->modifyRelatedLink, $button, $preview),
             );
     }
 

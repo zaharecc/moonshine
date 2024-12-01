@@ -33,6 +33,8 @@ trait ResourceModelQuery
 
     protected ?Builder $customQueryBuilder = null;
 
+    protected bool $disableQueryFeatures = false;
+
     /**
      * @throws Throwable
      */
@@ -138,6 +140,10 @@ trait ResourceModelQuery
      */
     protected function queryBuilderFeatures(): void
     {
+        if ($this->isDisabledQueryFeatures()) {
+            return;
+        }
+
         $this
             ->withCache()
             ->withTags()
@@ -146,6 +152,18 @@ trait ResourceModelQuery
             ->withParentResource()
             ->withOrder()
             ->withCachedQueryParams();
+    }
+
+    public function isDisabledQueryFeatures(): bool
+    {
+        return $this->disableQueryFeatures;
+    }
+
+    public function disableQueryFeatures(): static
+    {
+        $this->disableQueryFeatures = true;
+
+        return $this;
     }
 
     public function isItemExists(): bool
