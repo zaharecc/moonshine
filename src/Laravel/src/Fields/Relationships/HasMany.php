@@ -347,7 +347,7 @@ class HasMany extends ModelRelationField implements HasFieldsContract
             ->disableSaveQueryState();
 
         // If the records are already in memory (eager load) and there is no modifier, then we take the records from memory
-        if(\is_null($this->modifyBuilder) && $this->getRelatedModel()?->relationLoaded($this->getRelationName()) === true) {
+        if (\is_null($this->modifyBuilder) && $this->getRelatedModel()?->relationLoaded($this->getRelationName()) === true) {
             $items = $this->toRelatedCollection();
         } else {
             $resource->disableQueryFeatures();
