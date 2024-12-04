@@ -46,6 +46,7 @@ use MoonShine\Laravel\Commands\MakeControllerCommand;
 use MoonShine\Laravel\Commands\MakeFieldCommand;
 use MoonShine\Laravel\Commands\MakeHandlerCommand;
 use MoonShine\Laravel\Commands\MakeLayoutCommand;
+use MoonShine\Laravel\Commands\MakeLoginFormCommand;
 use MoonShine\Laravel\Commands\MakePageCommand;
 use MoonShine\Laravel\Commands\MakePolicyCommand;
 use MoonShine\Laravel\Commands\MakeResourceCommand;
@@ -96,6 +97,7 @@ final class MoonShineServiceProvider extends ServiceProvider
         MakeTypeCastCommand::class,
         PublishCommand::class,
         MakePolicyCommand::class,
+        MakeLoginFormCommand::class,
     ];
 
     /**
