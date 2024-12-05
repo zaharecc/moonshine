@@ -133,17 +133,18 @@ class MorphTo extends BelongsTo
             return '';
         }
 
-        if (\is_null($item) || \is_null($item->{$this->getRelationName()})) {
+        $value = $item->{$this->getRelationName()};
+
+        if (\is_null($item) || \is_null($value)) {
             return '';
         }
 
-        return str($this->types[$item->{$this->getMorphType()}] ?? $item->{$this->getMorphType()})
+        $column = $this->getSearchColumn($value::class);
+        $type = $item->{$this->getMorphType()};
+
+        return str($this->types[$type] ?? $type)
             ->append('(')
-            ->append(
-                $item
-                    ->{$this->getRelationName()}
-                    ->{$this->getSearchColumn($item->{$this->getRelationName()}::class)}
-            )
+            ->append(data_get($value, $column))
             ->append(')')
             ->value();
     }
