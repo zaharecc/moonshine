@@ -24,6 +24,7 @@ class PublishCommand extends MoonShineCommand
                 'assets' => 'Assets',
                 'assets-template' => 'Assets template',
                 'resources' => 'System Resources (MoonShineUserResource, MoonShineUserRoleResource)',
+                'forms' => 'Forms'
             ],
             required: true
         );
@@ -77,6 +78,13 @@ class PublishCommand extends MoonShineCommand
             $this->publishSystemResource('MoonShineUserRoleResource', 'MoonshineUserRole');
 
             info('Resources published');
+        }
+
+        if (\in_array('forms', $types, true)) {
+            $this->call(MakeLoginFormCommand::class);
+            $this->call(MakeFiltersFormCommand::class);
+
+            info('Forms published');
         }
 
         return self::SUCCESS;
