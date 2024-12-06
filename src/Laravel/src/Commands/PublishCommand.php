@@ -81,8 +81,8 @@ class PublishCommand extends MoonShineCommand
         }
 
         if (\in_array('forms', $types, true)) {
-            $this->call(MakeLoginFormCommand::class);
-            $this->call(MakeFiltersFormCommand::class);
+            $this->publishSystemForm('LoginForm', 'login');
+            $this->publishSystemForm('FiltersForm', 'filters');
 
             info('Forms published');
         }
@@ -92,20 +92,9 @@ class PublishCommand extends MoonShineCommand
 
     private function publishSystemResource(string $name, string $model): void
     {
-        $classPath = "src/Resources/$name.php";
-        $fullClassPath = moonshineConfig()->getDir("/Resources/$name.php");
-        $targetNamespace = moonshineConfig()->getNamespace('\Resources');
-
-        (new Filesystem())->put(
-            $fullClassPath,
-            file_get_contents(MoonShine::path($classPath))
-        );
-
-        $this->replaceInFile(
-            'namespace MoonShine\Laravel\Resources;',
-            "namespace $targetNamespace;",
-            $fullClassPath
-        );
+        $copyInfo = $this->copySystemClass($name, 'Resources');
+        $fullClassPath = $copyInfo['full_class_path'];
+        $targetNamespace = $copyInfo['target_namespace'];
 
         $this->replaceInFile(
             "use MoonShine\Laravel\Models\\$model;",
@@ -124,5 +113,52 @@ class PublishCommand extends MoonShineCommand
         if (! str_contains($provider, "$targetNamespace\\$name")) {
             self::addResourceOrPageToProviderFile($name);
         }
+    }
+
+    private function publishSystemForm(string $className, string $configKey): void
+    {
+        if (! is_dir($this->getDirectory() . "/Forms")) {
+            $this->makeDir($this->getDirectory() . "/Forms");
+        }
+
+        $this->copySystemClass($className, 'Forms');
+
+        $current = config("moonshine.forms.$configKey", "$className::class");
+        $replace = "'$configKey' => " . moonshineConfig()->getNamespace('\Forms\\' . $className) . "::class";
+
+        file_put_contents(
+            config_path('moonshine.php'),
+            str_replace(
+                "'$configKey' => $current::class",
+                $replace,
+                file_get_contents(config_path('moonshine.php'))
+            )
+        );
+    }
+
+    /**
+     * @return array{full_class_path: string, target_namespace: string}
+     */
+    private function copySystemClass(string $name, string $dir): array
+    {
+        $classPath = "src/$dir/$name.php";
+        $fullClassPath = moonshineConfig()->getDir("/$dir/$name.php");
+        $targetNamespace = moonshineConfig()->getNamespace("\\$dir");
+
+        (new Filesystem())->put(
+            $fullClassPath,
+            file_get_contents(MoonShine::path($classPath))
+        );
+
+        $this->replaceInFile(
+            "namespace MoonShine\Laravel\\$dir;",
+            "namespace $targetNamespace;",
+            $fullClassPath
+        );
+
+        return [
+            'full_class_path' => $fullClassPath,
+            'target_namespace' => $targetNamespace,
+        ];
     }
 }
