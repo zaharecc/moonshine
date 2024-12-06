@@ -81,8 +81,23 @@ class PublishCommand extends MoonShineCommand
         }
 
         if (\in_array('forms', $types, true)) {
-            $this->publishSystemForm('LoginForm', 'login');
-            $this->publishSystemForm('FiltersForm', 'filters');
+
+            $formTypes = multiselect(
+                'Forms',
+                [
+                    'login' => 'LoginForm',
+                    'filters' => 'FiltersForm',
+                ],
+                required: true
+            );
+
+            if (\in_array('login', $formTypes, true)) {
+                $this->publishSystemForm('LoginForm', 'login');
+            }
+
+            if (\in_array('filters', $formTypes, true)) {
+                $this->publishSystemForm('FiltersForm', 'filters');
+            }
 
             info('Forms published');
         }
@@ -124,12 +139,14 @@ class PublishCommand extends MoonShineCommand
         $this->copySystemClass($className, 'Forms');
 
         $current = config("moonshine.forms.$configKey", "$className::class");
+        $currentShort = class_basename($current);
+
         $replace = "'$configKey' => " . moonshineConfig()->getNamespace('\Forms\\' . $className) . "::class";
 
         file_put_contents(
             config_path('moonshine.php'),
             str_replace(
-                "'$configKey' => $current::class",
+                ["'$configKey' => $current::class", "'$configKey' => $currentShort::class"],
                 $replace,
                 file_get_contents(config_path('moonshine.php'))
             )
