@@ -24,7 +24,7 @@ class PublishCommand extends MoonShineCommand
                 'assets' => 'Assets',
                 'assets-template' => 'Assets template',
                 'resources' => 'System Resources (MoonShineUserResource, MoonShineUserRoleResource)',
-                'forms' => 'System Forms (LoginFrom, FiltersForm)'
+                'forms' => 'System Forms (LoginFrom, FiltersForm)',
             ],
             required: true
         );
