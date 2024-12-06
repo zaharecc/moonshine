@@ -37,72 +37,64 @@ class PublishCommand extends MoonShineCommand
         }
 
         if (\in_array('assets-template', $types, true)) {
-            $this->copyStub(
-                'assets/css',
-                resource_path('css/app.css')
-            );
-
-            $this->copyStub(
-                'assets/postcss.config.preset',
-                base_path('postcss.config.js')
-            );
-
-            $this->copyStub(
-                'assets/tailwind.config.preset',
-                base_path('tailwind.config.js')
-            );
-
-            if (confirm('Install modules automatically? (tailwindcss, autoprefixer, postcss)')) {
-                $this->flushNodeModules();
-
-                self::updateNodePackages(static fn ($packages) => [
-                        '@tailwindcss/typography' => '^0.5',
-                        '@tailwindcss/line-clamp' => '^0.4',
-                        '@tailwindcss/aspect-ratio' => '^0.4',
-                        'tailwindcss' => '^3',
-                        'autoprefixer' => '^10',
-                        'postcss' => '^8',
-                    ] + $packages);
-
-                $this->installNodePackages();
-
-                info('Node packages installed');
-            }
-
-            info('App.css, postcss/tailwind.config published');
-            info("Don't forget to add to MoonShineServiceProvider `Vite::asset('resources/css/app.css')`");
+            $this->publishAssetsTemplate();
         }
 
         if (\in_array('resources', $types, true)) {
-            $this->publishSystemResource('MoonShineUserResource', 'MoonshineUser');
-            $this->publishSystemResource('MoonShineUserRoleResource', 'MoonshineUserRole');
-
-            info('Resources published');
+            $this->publishResources();
         }
 
         if (\in_array('forms', $types, true)) {
-
-            $formTypes = multiselect(
-                'Forms',
-                [
-                    'login' => 'LoginForm',
-                    'filters' => 'FiltersForm',
-                ],
-                required: true
-            );
-
-            if (\in_array('login', $formTypes, true)) {
-                $this->publishSystemForm('LoginForm', 'login');
-            }
-
-            if (\in_array('filters', $formTypes, true)) {
-                $this->publishSystemForm('FiltersForm', 'filters');
-            }
-
-            info('Forms published');
+            $this->publishForms();
         }
 
         return self::SUCCESS;
+    }
+
+    private function publishAssetsTemplate(): void
+    {
+        $this->copyStub(
+            'assets/css',
+            resource_path('css/app.css')
+        );
+
+        $this->copyStub(
+            'assets/postcss.config.preset',
+            base_path('postcss.config.js')
+        );
+
+        $this->copyStub(
+            'assets/tailwind.config.preset',
+            base_path('tailwind.config.js')
+        );
+
+        if (confirm('Install modules automatically? (tailwindcss, autoprefixer, postcss)')) {
+            $this->flushNodeModules();
+
+            self::updateNodePackages(static fn ($packages) => [
+                    '@tailwindcss/typography' => '^0.5',
+                    '@tailwindcss/line-clamp' => '^0.4',
+                    '@tailwindcss/aspect-ratio' => '^0.4',
+                    'tailwindcss' => '^3',
+                    'autoprefixer' => '^10',
+                    'postcss' => '^8',
+                ] + $packages);
+
+            $this->installNodePackages();
+
+            info('Node packages installed');
+        }
+
+        info('App.css, postcss/tailwind.config published');
+        info("Don't forget to add to MoonShineServiceProvider `Vite::asset('resources/css/app.css')`");
+    }
+
+    private function publishResources(): void
+    {
+        $this->publishSystemResource('MoonShineUserResource', 'MoonshineUser');
+        $this->publishSystemResource('MoonShineUserRoleResource', 'MoonshineUserRole');
+
+        info('Resources published');
     }
 
     private function publishSystemResource(string $name, string $model): void
@@ -128,6 +120,28 @@ class PublishCommand extends MoonShineCommand
         if (! str_contains($provider, "$targetNamespace\\$name")) {
             self::addResourceOrPageToProviderFile($name);
         }
+    }
+
+    private function publishForms(): void
+    {
+        $formTypes = multiselect(
+            'Forms',
+            [
+                'login' => 'LoginForm',
+                'filters' => 'FiltersForm',
+            ],
+            required: true
+        );
+
+        if (\in_array('login', $formTypes, true)) {
+            $this->publishSystemForm('LoginForm', 'login');
+        }
+
+        if (\in_array('filters', $formTypes, true)) {
+            $this->publishSystemForm('FiltersForm', 'filters');
+        }
+
+        info('Forms published');
     }
 
     private function publishSystemForm(string $className, string $configKey): void
