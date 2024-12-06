@@ -24,6 +24,7 @@ class PublishCommand extends MoonShineCommand
                 'assets' => 'Assets',
                 'assets-template' => 'Assets template',
                 'resources' => 'System Resources (MoonShineUserResource, MoonShineUserRoleResource)',
+                'forms' => 'System Forms (LoginFrom, FiltersForm)'
             ],
             required: true
         );
@@ -36,68 +37,71 @@ class PublishCommand extends MoonShineCommand
         }
 
         if (\in_array('assets-template', $types, true)) {
-            $this->copyStub(
-                'assets/css',
-                resource_path('css/app.css')
-            );
-
-            $this->copyStub(
-                'assets/postcss.config.preset',
-                base_path('postcss.config.js')
-            );
-
-            $this->copyStub(
-                'assets/tailwind.config.preset',
-                base_path('tailwind.config.js')
-            );
-
-            if (confirm('Install modules automatically? (tailwindcss, autoprefixer, postcss)')) {
-                $this->flushNodeModules();
-
-                self::updateNodePackages(static fn ($packages) => [
-                        '@tailwindcss/typography' => '^0.5',
-                        '@tailwindcss/line-clamp' => '^0.4',
-                        '@tailwindcss/aspect-ratio' => '^0.4',
-                        'tailwindcss' => '^3',
-                        'autoprefixer' => '^10',
-                        'postcss' => '^8',
-                    ] + $packages);
-
-                $this->installNodePackages();
-
-                info('Node packages installed');
-            }
-
-            info('App.css, postcss/tailwind.config published');
-            info("Don't forget to add to MoonShineServiceProvider `Vite::asset('resources/css/app.css')`");
+            $this->publishAssetsTemplate();
         }
 
         if (\in_array('resources', $types, true)) {
-            $this->publishSystemResource('MoonShineUserResource', 'MoonshineUser');
-            $this->publishSystemResource('MoonShineUserRoleResource', 'MoonshineUserRole');
+            $this->publishResources();
+        }
 
-            info('Resources published');
+        if (\in_array('forms', $types, true)) {
+            $this->publishForms();
         }
 
         return self::SUCCESS;
     }
 
+    private function publishAssetsTemplate(): void
+    {
+        $this->copyStub(
+            'assets/css',
+            resource_path('css/app.css')
+        );
+
+        $this->copyStub(
+            'assets/postcss.config.preset',
+            base_path('postcss.config.js')
+        );
+
+        $this->copyStub(
+            'assets/tailwind.config.preset',
+            base_path('tailwind.config.js')
+        );
+
+        if (confirm('Install modules automatically? (tailwindcss, autoprefixer, postcss)')) {
+            $this->flushNodeModules();
+
+            self::updateNodePackages(static fn ($packages) => [
+                    '@tailwindcss/typography' => '^0.5',
+                    '@tailwindcss/line-clamp' => '^0.4',
+                    '@tailwindcss/aspect-ratio' => '^0.4',
+                    'tailwindcss' => '^3',
+                    'autoprefixer' => '^10',
+                    'postcss' => '^8',
+                ] + $packages);
+
+            $this->installNodePackages();
+
+            info('Node packages installed');
+        }
+
+        info('App.css, postcss/tailwind.config published');
+        info("Don't forget to add to MoonShineServiceProvider `Vite::asset('resources/css/app.css')`");
+    }
+
+    private function publishResources(): void
+    {
+        $this->publishSystemResource('MoonShineUserResource', 'MoonshineUser');
+        $this->publishSystemResource('MoonShineUserRoleResource', 'MoonshineUserRole');
+
+        info('Resources published');
+    }
+
     private function publishSystemResource(string $name, string $model): void
     {
-        $classPath = "src/Resources/$name.php";
-        $fullClassPath = moonshineConfig()->getDir("/Resources/$name.php");
-        $targetNamespace = moonshineConfig()->getNamespace('\Resources');
-
-        (new Filesystem())->put(
-            $fullClassPath,
-            file_get_contents(MoonShine::path($classPath))
-        );
-
-        $this->replaceInFile(
-            'namespace MoonShine\Laravel\Resources;',
-            "namespace $targetNamespace;",
-            $fullClassPath
-        );
+        $copyInfo = $this->copySystemClass($name, 'Resources');
+        $fullClassPath = $copyInfo['full_class_path'];
+        $targetNamespace = $copyInfo['target_namespace'];
 
         $this->replaceInFile(
             "use MoonShine\Laravel\Models\\$model;",
@@ -116,5 +120,76 @@ class PublishCommand extends MoonShineCommand
         if (! str_contains($provider, "$targetNamespace\\$name")) {
             self::addResourceOrPageToProviderFile($name);
         }
+    }
+
+    private function publishForms(): void
+    {
+        $formTypes = multiselect(
+            'Forms',
+            [
+                'login' => 'LoginForm',
+                'filters' => 'FiltersForm',
+            ],
+            required: true
+        );
+
+        if (\in_array('login', $formTypes, true)) {
+            $this->publishSystemForm('LoginForm', 'login');
+        }
+
+        if (\in_array('filters', $formTypes, true)) {
+            $this->publishSystemForm('FiltersForm', 'filters');
+        }
+
+        info('Forms published');
+    }
+
+    private function publishSystemForm(string $className, string $configKey): void
+    {
+        if (! is_dir($this->getDirectory() . "/Forms")) {
+            $this->makeDir($this->getDirectory() . "/Forms");
+        }
+
+        $this->copySystemClass($className, 'Forms');
+
+        $current = config("moonshine.forms.$configKey", "$className::class");
+        $currentShort = class_basename($current);
+
+        $replace = "'$configKey' => " . moonshineConfig()->getNamespace('\Forms\\' . $className) . "::class";
+
+        file_put_contents(
+            config_path('moonshine.php'),
+            str_replace(
+                ["'$configKey' => $current::class", "'$configKey' => $currentShort::class"],
+                $replace,
+                file_get_contents(config_path('moonshine.php'))
+            )
+        );
+    }
+
+    /**
+     * @return array{full_class_path: string, target_namespace: string}
+     */
+    private function copySystemClass(string $name, string $dir): array
+    {
+        $classPath = "src/$dir/$name.php";
+        $fullClassPath = moonshineConfig()->getDir("/$dir/$name.php");
+        $targetNamespace = moonshineConfig()->getNamespace("\\$dir");
+
+        (new Filesystem())->put(
+            $fullClassPath,
+            file_get_contents(MoonShine::path($classPath))
+        );
+
+        $this->replaceInFile(
+            "namespace MoonShine\Laravel\\$dir;",
+            "namespace $targetNamespace;",
+            $fullClassPath
+        );
+
+        return [
+            'full_class_path' => $fullClassPath,
+            'target_namespace' => $targetNamespace,
+        ];
     }
 }
