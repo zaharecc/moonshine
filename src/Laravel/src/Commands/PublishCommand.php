@@ -24,7 +24,8 @@ class PublishCommand extends MoonShineCommand
                 'assets' => 'Assets',
                 'assets-template' => 'Assets template',
                 'resources' => 'System Resources (MoonShineUserResource, MoonShineUserRoleResource)',
-                'forms' => 'System Forms (LoginFrom, FiltersForm)'
+                'forms' => 'System Forms (LoginFrom, FiltersForm)',
+                'pages' => 'System Pages (ProfilePage, LoginPage, ErrorPage)',
             ],
             required: true
         );
@@ -46,6 +47,10 @@ class PublishCommand extends MoonShineCommand
 
         if (\in_array('forms', $types, true)) {
             $this->publishForms();
+        }
+
+        if (\in_array('pages', $types, true)) {
+            $this->publishPages();
         }
 
         return self::SUCCESS;
@@ -156,6 +161,62 @@ class PublishCommand extends MoonShineCommand
         $currentShort = class_basename($current);
 
         $replace = "'$configKey' => " . moonshineConfig()->getNamespace('\Forms\\' . $className) . "::class";
+
+        file_put_contents(
+            config_path('moonshine.php'),
+            str_replace(
+                ["'$configKey' => $current::class", "'$configKey' => $currentShort::class"],
+                $replace,
+                file_get_contents(config_path('moonshine.php'))
+            )
+        );
+    }
+
+    private function publishPages(): void
+    {
+        $pageTypes = multiselect(
+            'Pages',
+            [
+                'profile' => 'ProfilePage',
+                'login' => 'LoginPage',
+                'error' => 'ErrorPage',
+            ],
+            required: true
+        );
+
+        if (\in_array('profile', $pageTypes, true)) {
+            $this->publishSystemPage('ProfilePage', 'profile');
+        }
+
+        if (\in_array('login', $pageTypes, true)) {
+            $this->publishSystemPage('LoginPage', 'login');
+        }
+
+        if (\in_array('error', $pageTypes, true)) {
+            $this->publishSystemPage('ErrorPage', 'error');
+        }
+
+        info('Pages published');
+    }
+
+    private function publishSystemPage(string $className, string $configKey): void
+    {
+        if (! is_dir($this->getDirectory() . "/Pages")) {
+            $this->makeDir($this->getDirectory() . "/Pages");
+        }
+
+        $copyInfo = $this->copySystemClass($className, 'Pages');
+
+        $this->replaceInFile(
+            "namespace {$copyInfo['target_namespace']};\n",
+            "namespace {$copyInfo['target_namespace']};\n\nuse MoonShine\Laravel\Pages\Page;",
+            $copyInfo['full_class_path']
+        );
+
+        $current = config("moonshine.pages.$configKey", "$className::class");
+        $currentShort = class_basename($current);
+
+        $replace = "'$configKey' => " . moonshineConfig()->getNamespace('\Pages\\' . $className) . "::class";
 
         file_put_contents(
             config_path('moonshine.php'),
