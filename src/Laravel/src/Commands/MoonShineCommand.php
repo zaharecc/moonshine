@@ -58,7 +58,7 @@ abstract class MoonShineCommand extends Command
 
         $content = str(file_get_contents($to));
 
-        if ($content->contains('\\'.$class)) {
+        if ($content->contains('\\' . $class)) {
             return;
         }
 
