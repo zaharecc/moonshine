@@ -9,9 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use MoonShine\Contracts\UI\ApplyContract;
 use MoonShine\Contracts\UI\FieldContract;
-use MoonShine\UI\Exceptions\FieldException;
+use MoonShine\Laravel\Exceptions\FileFieldException;
 use MoonShine\UI\Fields\File;
-use Throwable;
 
 /**
  * @implements ApplyContract<File>
@@ -57,17 +56,13 @@ final class FileModelApply implements ApplyContract
         };
     }
 
-    /**
-     * @throws Throwable
-     */
     public function store(File $field, UploadedFile $file): string
     {
         $extension = $file->extension();
 
-        throw_if(
-            ! $field->isAllowedExtension($extension),
-            new FieldException("$extension not allowed")
-        );
+        if(! $field->isAllowedExtension($extension)) {
+            throw FileFieldException::extensionNotAllowed($extension);
+        }
 
         if ($field->isKeepOriginalFileName()) {
             return $file->storeAs(
@@ -86,7 +81,7 @@ final class FileModelApply implements ApplyContract
         }
 
         if (! $result = $file->store($field->getDir(), $field->getOptions())) {
-            throw new FieldException('Failed to save file, check your permissions');
+            throw FileFieldException::failedSave();
         }
 
         return $result;

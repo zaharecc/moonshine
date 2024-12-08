@@ -8,6 +8,7 @@ use Closure;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use MoonShine\Laravel\Exceptions\ModelRelationFieldException;
 use MoonShine\Support\DTOs\Select\Options;
 use MoonShine\UI\Exceptions\FieldException;
 use Throwable;
@@ -53,10 +54,9 @@ trait WithRelatedValues
     {
         $relation = $this->getRelation();
 
-        throw_if(
-            \is_null($relation),
-            new FieldException('Relation is required')
-        );
+        if(is_null($relation)) {
+            throw ModelRelationFieldException::relationRequired();
+        }
 
         $related = $relation->getRelated();
         $query = $related->newQuery();

@@ -19,7 +19,7 @@ class DummyHandler extends Handler
     public function handle(): Response
     {
         if (! $this->hasResource()) {
-            throw new ActionButtonException('Resource is required for action');
+            throw ActionButtonException::resourceRequired();
         }
 
         if ($this->isQueue()) {

@@ -13,6 +13,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\LazyCollection;
 use MoonShine\Contracts\UI\ApplyContract;
 use MoonShine\Core\Exceptions\ResourceException;
+use MoonShine\Laravel\Exceptions\CrudResourceException;
 use MoonShine\Laravel\QueryTags\QueryTag;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Laravel\Support\DBOperators;
@@ -327,7 +328,7 @@ trait ResourceModelQuery
         }
 
         if (! method_exists($this->getDataInstance(), $relationName)) {
-            throw new ResourceException("Relation $relationName not found for current resource");
+            throw CrudResourceException::relationNotFound($relationName);
         }
 
         $relation = $this->getDataInstance()->{$relationName}();

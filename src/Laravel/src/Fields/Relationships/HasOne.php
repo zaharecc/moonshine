@@ -17,6 +17,7 @@ use MoonShine\Contracts\UI\FormBuilderContract;
 use MoonShine\Contracts\UI\HasFieldsContract;
 use MoonShine\Contracts\UI\TableBuilderContract;
 use MoonShine\Laravel\Collections\Fields;
+use MoonShine\Laravel\Exceptions\ModelRelationFieldException;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\UI\Components\FormBuilder;
 use MoonShine\UI\Components\Table\TableBuilder;
@@ -209,7 +210,7 @@ class HasOne extends ModelRelationField implements HasFieldsContract
         // $item->load($resource->getWith());
 
         if (\is_null($parentResource)) {
-            throw new FieldException('Parent resource is required');
+            throw ModelRelationFieldException::parentResourceRequired();
         }
 
         $parentItem = $parentResource->getItemOrInstance();

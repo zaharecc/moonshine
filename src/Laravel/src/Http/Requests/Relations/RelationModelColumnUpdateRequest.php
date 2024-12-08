@@ -18,10 +18,9 @@ class RelationModelColumnUpdateRequest extends RelationModelFieldRequest
     {
         $resource = $this->getField()?->getResource();
 
-        throw_if(
-            \is_null($resource),
-            ResourceException::notDeclared()
-        );
+        if(\is_null($resource)) {
+            throw ResourceException::notDeclared();
+        }
 
         if (! $resource->hasAction(Action::UPDATE)) {
             return false;

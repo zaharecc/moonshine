@@ -140,7 +140,7 @@ trait ResourceWithFields
 
         $filters->each(static function ($filter): void {
             if (\in_array($filter::class, FieldsWithoutFilters::LIST)) {
-                throw new FilterException("You can't use " . $filter::class . " inside filters.");
+                throw FilterException::notAcceptable($filter::class);
             }
         });
 

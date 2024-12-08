@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace MoonShine\Laravel\Pages;
 
 use MoonShine\Contracts\UI\FormBuilderContract;
-use MoonShine\Core\Exceptions\MoonShineException;
 use MoonShine\Laravel\Http\Controllers\ProfileController;
 use MoonShine\Laravel\MoonShineAuth;
 use MoonShine\Laravel\Traits\WithComponentsPusher;
@@ -78,9 +77,6 @@ class ProfilePage extends Page
         ];
     }
 
-    /**
-     * @throws MoonShineException
-     */
     protected function components(): iterable
     {
         return [
@@ -89,15 +85,12 @@ class ProfilePage extends Page
         ];
     }
 
-    /**
-     * @throws MoonShineException
-     */
     public function getForm(): FormBuilderContract
     {
         $user = MoonShineAuth::getGuard()->user() ?? MoonShineAuth::getModel();
 
         if (\is_null($user)) {
-            throw new MoonShineException('Model is required');
+            throw new \LogicException('Model is required');
         }
 
         return FormBuilder::make(action([ProfileController::class, 'store']))
