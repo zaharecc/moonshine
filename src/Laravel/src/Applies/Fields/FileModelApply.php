@@ -60,7 +60,7 @@ final class FileModelApply implements ApplyContract
     {
         $extension = $file->extension();
 
-        if(! $field->isAllowedExtension($extension)) {
+        if (! $field->isAllowedExtension($extension)) {
             throw FileFieldException::extensionNotAllowed($extension);
         }
 

@@ -65,7 +65,7 @@ class BelongsTo extends ModelRelationField implements
                 ? $this->getResource()->getFormPage()
                 : $this->getResource()->getDetailPage();
 
-            if(\is_null($page)) {
+            if (\is_null($page)) {
                 throw PageException::required();
             }
 
