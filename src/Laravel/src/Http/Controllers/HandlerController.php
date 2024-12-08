@@ -15,7 +15,7 @@ final class HandlerController extends MoonShineController
     {
         $resource = $request->getResource();
 
-        if(! $resource) {
+        if (! $resource) {
             throw ResourceException::required();
         }
 

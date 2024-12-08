@@ -110,7 +110,7 @@ final readonly class MoonShineEndpoints implements EndpointsContract
             $params += ['_fragment-load' => $fragment];
         }
 
-        if(\is_null($page) && \is_null($resource)) {
+        if (\is_null($page) && \is_null($resource)) {
             throw EndpointException::pageOrResourceRequired();
         }
 
@@ -136,7 +136,7 @@ final readonly class MoonShineEndpoints implements EndpointsContract
                 : moonshine()->getPages()->findByClass($page);
         }
 
-        if(\is_null($targetPage)) {
+        if (\is_null($targetPage)) {
             throw EndpointException::pageRequired();
         }
 

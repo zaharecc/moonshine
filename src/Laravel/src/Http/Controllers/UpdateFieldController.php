@@ -46,7 +46,7 @@ class UpdateFieldController extends MoonShineController
             ->onlyFields()
             ->findByColumn($request->input('field'));
 
-        if(\is_null($field) || \is_null($resource)) {
+        if (\is_null($field) || \is_null($resource)) {
             throw CrudResourceException::resourceOrFieldRequired();
         }
 

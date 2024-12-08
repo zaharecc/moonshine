@@ -53,7 +53,7 @@ trait WithRelatedValues
     {
         $relation = $this->getRelation();
 
-        if(is_null($relation)) {
+        if (\is_null($relation)) {
             throw ModelRelationFieldException::relationRequired();
         }
 

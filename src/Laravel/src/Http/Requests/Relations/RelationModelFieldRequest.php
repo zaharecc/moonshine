@@ -91,7 +91,7 @@ class RelationModelFieldRequest extends FormRequest
     {
         $field = $this->getField();
 
-        if(\is_null($field)) {
+        if (\is_null($field)) {
             throw FieldException::notFound();
         }
 

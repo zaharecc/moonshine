@@ -63,7 +63,7 @@ trait HasResource
 
     protected function validateResource(): void
     {
-        if(! $this->hasResource()) {
+        if (! $this->hasResource()) {
             throw ResourceException::required();
         }
     }
