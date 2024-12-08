@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use MoonShine\Laravel\Exceptions\ModelRelationFieldException;
 use MoonShine\Support\DTOs\Select\Options;
-use MoonShine\UI\Exceptions\FieldException;
 use Throwable;
 
 trait WithRelatedValues

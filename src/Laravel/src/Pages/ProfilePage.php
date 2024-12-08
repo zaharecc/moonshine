@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MoonShine\Laravel\Pages;
 
+use LogicException;
 use MoonShine\Contracts\UI\FormBuilderContract;
 use MoonShine\Laravel\Http\Controllers\ProfileController;
 use MoonShine\Laravel\MoonShineAuth;
@@ -90,7 +91,7 @@ class ProfilePage extends Page
         $user = MoonShineAuth::getGuard()->user() ?? MoonShineAuth::getModel();
 
         if (\is_null($user)) {
-            throw new \LogicException('Model is required');
+            throw new LogicException('Model is required');
         }
 
         return FormBuilder::make(action([ProfileController::class, 'store']))

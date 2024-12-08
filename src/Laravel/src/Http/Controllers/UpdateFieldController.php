@@ -14,7 +14,6 @@ use MoonShine\Laravel\Exceptions\ModelRelationFieldException;
 use MoonShine\Laravel\Http\Requests\Relations\RelationModelColumnUpdateRequest;
 use MoonShine\Laravel\Http\Requests\Resources\UpdateColumnFormRequest;
 use MoonShine\Laravel\Resources\CrudResource;
-use MoonShine\UI\Exceptions\FieldException;
 use Throwable;
 
 class UpdateFieldController extends MoonShineController

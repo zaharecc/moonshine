@@ -6,7 +6,6 @@ namespace MoonShine\Core\Traits;
 
 use MoonShine\Contracts\Core\ResourceContract;
 use MoonShine\Core\Exceptions\ResourceException;
-use Throwable;
 
 /**
  * @template T of ResourceContract
