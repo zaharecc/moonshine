@@ -7,6 +7,7 @@ namespace MoonShine\Laravel\Fields\Relationships;
 use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use MoonShine\Laravel\Exceptions\ModelRelationFieldException;
 use MoonShine\Support\DTOs\Select\Options;
 use MoonShine\UI\Exceptions\FieldException;
 
@@ -62,7 +63,7 @@ class MorphTo extends BelongsTo
     public function getTypes(): Options
     {
         if ($this->types === []) {
-            throw new FieldException('Morph types is required');
+            throw ModelRelationFieldException::morphTypesRequired();
         }
 
         return new Options(
@@ -133,17 +134,18 @@ class MorphTo extends BelongsTo
             return '';
         }
 
-        if (\is_null($item) || \is_null($item->{$this->getRelationName()})) {
+        $value = $item->{$this->getRelationName()};
+
+        if (\is_null($item) || \is_null($value)) {
             return '';
         }
 
-        return str($this->types[$item->{$this->getMorphType()}] ?? $item->{$this->getMorphType()})
+        $column = $this->getSearchColumn($value::class);
+        $type = $item->{$this->getMorphType()};
+
+        return str($this->types[$type] ?? $type)
             ->append('(')
-            ->append(
-                $item
-                    ->{$this->getRelationName()}
-                    ->{$this->getSearchColumn($item->{$this->getRelationName()}::class)}
-            )
+            ->append(data_get($value, $column))
             ->append(')')
             ->value();
     }

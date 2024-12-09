@@ -256,7 +256,7 @@ final class MoonShineConfigurator implements ConfiguratorContract
 
     public function isAuthEnabled(): bool
     {
-        return $this->get('auth.enabled', false);
+        return $this->get('auth.enabled', true);
     }
 
     public function authEnable(): self

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace MoonShine\Core\Exceptions;
 
-use Exception;
+use LogicException;
 
-class MoonShineException extends Exception
+class MoonShineException extends LogicException
 {
 }

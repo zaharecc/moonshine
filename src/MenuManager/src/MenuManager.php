@@ -103,4 +103,10 @@ final class MenuManager implements MenuManagerContract
                 static fn (MenuElementsContract $elements): MenuElementsContract => $elements->topMode()
             );
     }
+
+    public function flushState(): void
+    {
+        $this->items = [];
+        $this->conditionItems = [];
+    }
 }

@@ -8,24 +8,19 @@ use MoonShine\Core\Exceptions\ResourceException;
 use MoonShine\Laravel\Contracts\Resource\HasHandlersContract;
 use MoonShine\Laravel\MoonShineRequest;
 use Symfony\Component\HttpFoundation\Response;
-use Throwable;
 
 final class HandlerController extends MoonShineController
 {
-    /**
-     * @throws Throwable
-     */
     public function __invoke(string $resourceUri, string $handlerUri, MoonShineRequest $request): Response
     {
         $resource = $request->getResource();
 
-        throw_if(
-            ! $resource,
-            ResourceException::required()
-        );
+        if (! $resource) {
+            throw ResourceException::required();
+        }
 
         if (! $resource instanceof HasHandlersContract) {
-            throw new ResourceException('Resource with HasHandlersContract required');
+            throw ResourceException::handlerContractRequired();
         }
 
         $handler = $resource

@@ -6,7 +6,6 @@ namespace MoonShine\Core\Traits;
 
 use MoonShine\Contracts\Core\ResourceContract;
 use MoonShine\Core\Exceptions\ResourceException;
-use Throwable;
 
 /**
  * @template T of ResourceContract
@@ -62,14 +61,10 @@ trait HasResource
         return $this->resource;
     }
 
-    /**
-     * @throws Throwable
-     */
     protected function validateResource(): void
     {
-        throw_if(
-            ! $this->hasResource(),
-            ResourceException::required()
-        );
+        if (! $this->hasResource()) {
+            throw ResourceException::required();
+        }
     }
 }

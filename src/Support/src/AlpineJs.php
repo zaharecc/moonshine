@@ -86,14 +86,21 @@ final readonly class AlpineJs
         ]);
     }
 
-    public static function requestWithFieldValue(
+    public static function asyncWithQueryParamsAttributes(): array
+    {
+        return [
+            'data-async-with-query-params' => true,
+        ];
+    }
+
+    public static function onChangeSaveField(
         string $url,
         string $column,
         string $value = '',
         array $additionally = []
     ): array {
         return [
-            '@change' => "requestWithFieldValue(`$url`, `$column`, $value);"
+            '@change' => "saveField(`$url`, `$column`, $value);"
                 . implode(';', array_filter($additionally)),
         ];
     }

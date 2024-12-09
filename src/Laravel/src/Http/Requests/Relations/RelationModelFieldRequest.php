@@ -91,7 +91,9 @@ class RelationModelFieldRequest extends FormRequest
     {
         $field = $this->getField();
 
-        throw_if(\is_null($field), FieldException::notFound());
+        if (\is_null($field)) {
+            throw FieldException::notFound();
+        }
 
         /* @var \MoonShine\Laravel\Resources\ModelResource $resource */
         $resource = $field->getResource();

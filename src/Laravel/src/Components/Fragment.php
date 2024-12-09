@@ -17,9 +17,6 @@ use MoonShine\UI\Components\AbstractWithComponents;
 use MoonShine\UI\Traits\HasAsync;
 use Throwable;
 
-/**
- * @method static static make(iterable $components = [])
- */
 class Fragment extends AbstractWithComponents implements HasAsyncContract
 {
     use HasAsync;
@@ -62,6 +59,13 @@ class Fragment extends AbstractWithComponents implements HasAsyncContract
             $page,
             $resource,
             $params
+        );
+    }
+
+    public function withQueryParams(): static
+    {
+        return $this->customAttributes(
+            AlpineJs::asyncWithQueryParamsAttributes()
         );
     }
 

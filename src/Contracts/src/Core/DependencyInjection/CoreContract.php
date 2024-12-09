@@ -26,7 +26,7 @@ interface CoreContract
     /**
      * @template T
      * @param class-string<T>|null $id
-     * @return T|ContainerInterface
+     * @return null|T|ContainerInterface
      */
     public function getContainer(?string $id = null, mixed $default = null, ...$parameters): mixed;
 

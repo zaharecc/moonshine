@@ -15,4 +15,9 @@ final class ResourceException extends MoonShineException
     {
         return new self('Resource is not declared. Declare the resource in the MoonShineServiceProvider');
     }
+
+    public static function handlerContractRequired(): self
+    {
+        return new self('Resource with HasHandlersContract required');
+    }
 }

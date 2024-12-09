@@ -27,9 +27,4 @@ final class MoonShineNotFoundException extends MoonShineException
 
         return response((string) $page)->setStatusCode(Response::HTTP_NOT_FOUND);
     }
-
-    public static function pageNotFound(): self
-    {
-        return new self('Page not found');
-    }
 }

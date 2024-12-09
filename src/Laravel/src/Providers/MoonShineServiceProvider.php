@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Compilers\BladeCompiler;
-use Laravel\Octane\Events\RequestHandled;
 use MoonShine\AssetManager\AssetManager;
 use MoonShine\ColorManager\ColorManager;
 use MoonShine\Contracts\AssetManager\AssetManagerContract;
@@ -296,9 +295,10 @@ final class MoonShineServiceProvider extends ServiceProvider
 
         // Octane events
         tap($this->app['events'], static function ($event): void {
-            $event->listen(RequestHandled::class, static function (RequestHandled $event): void {
-                moonshine()->flushState();
-            });
+            $event->listen(
+                'Laravel\Octane\Events\RequestHandled',
+                static fn () => moonshine()->flushState()
+            );
         });
     }
 }

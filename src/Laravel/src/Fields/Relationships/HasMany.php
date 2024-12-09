@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MoonShine\Laravel\Fields\Relationships;
 
 use Closure;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOneOrMany;
@@ -20,6 +21,7 @@ use MoonShine\Contracts\UI\HasFieldsContract;
 use MoonShine\Contracts\UI\TableBuilderContract;
 use MoonShine\Laravel\Buttons\HasManyButton;
 use MoonShine\Laravel\Collections\Fields;
+use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Laravel\Traits\Fields\WithRelatedLink;
 use MoonShine\UI\Components\ActionGroup;
 use MoonShine\UI\Components\Table\TableBuilder;
@@ -340,13 +342,28 @@ class HasMany extends ModelRelationField implements HasFieldsContract
      */
     protected function getTablePreview(): TableBuilderContract
     {
-        $items = $this->toValue();
+        /** @var ModelResource $resource */
+        $resource = clone $this->getResource()
+            ->disableSaveQueryState();
 
-        if (filled($items)) {
-            $items = $items->take($this->getLimit());
+        // If the records are already in memory (eager load) and there is no modifier, then we take the records from memory
+        if (\is_null($this->modifyBuilder) && $this->getRelatedModel()?->relationLoaded($this->getRelationName()) === true) {
+            $items = $this->toRelatedCollection();
+        } else {
+            $resource->disableQueryFeatures();
+
+            $casted = $this->getRelatedModel();
+            $relation = $casted?->{$this->getRelationName()}();
+
+            /** @var Builder $query */
+            $query = \is_null($this->modifyBuilder)
+                ? $relation
+                : value($this->modifyBuilder, $relation);
+
+            $resource->customQueryBuilder($query->limit($this->getLimit()));
+
+            $items = $resource->getQuery()->get();
         }
-
-        $resource = $this->getResource();
 
         return TableBuilder::make(items: $items)
             ->fields($this->getFieldsOnPreview())
@@ -490,7 +507,7 @@ class HasMany extends ModelRelationField implements HasFieldsContract
 
     protected function resolveRawValue(): mixed
     {
-        return collect($this->toValue())
+        return $this->toRelatedCollection()
             ->map(fn (Model $item) => data_get($item, $this->getResourceColumn()))
             ->implode(';');
     }
@@ -500,12 +517,6 @@ class HasMany extends ModelRelationField implements HasFieldsContract
      */
     protected function resolvePreview(): Renderable|string
     {
-        // resolve value before call toValue
-        if (\is_null($this->toValue())) {
-            $casted = $this->getRelatedModel();
-            $this->setValue($casted?->{$this->getRelationName()});
-        }
-
         return $this->isRelatedLink()
             ? $this->getRelatedLink()->render()
             : $this->getTablePreview()->render();
@@ -532,11 +543,7 @@ class HasMany extends ModelRelationField implements HasFieldsContract
                 : value($this->modifyBuilder, $relation)
         );
 
-        $items = $resource->getItems();
-
-        $this->setValue($items);
-
-        return $items;
+        return $resource->getItems();
     }
 
     /**
@@ -544,11 +551,6 @@ class HasMany extends ModelRelationField implements HasFieldsContract
      */
     public function getComponent(): ComponentContract
     {
-        // resolve value before call toValue
-        if (\is_null($this->toValue())) {
-            $this->setValue($this->getValue());
-        }
-
         return $this->isRelatedLink()
             ? $this->getRelatedLink()
             : $this->getTableValue();

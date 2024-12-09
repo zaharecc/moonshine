@@ -8,7 +8,7 @@ use MoonShine\Contracts\Core\CrudResourceContract;
 use MoonShine\Contracts\Core\DependencyInjection\EndpointsContract;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Contracts\Core\ResourceContract;
-use MoonShine\Core\Exceptions\MoonShineException;
+use MoonShine\Core\Exceptions\EndpointException;
 use MoonShine\Core\Pages\Pages;
 use MoonShine\Laravel\DependencyInjection\MoonShineRouter;
 use MoonShine\Support\UriKey;
@@ -110,10 +110,9 @@ final readonly class MoonShineEndpoints implements EndpointsContract
             $params += ['_fragment-load' => $fragment];
         }
 
-        throw_if(
-            \is_null($page) && \is_null($resource),
-            new MoonShineException('Page or resource must not be null')
-        );
+        if (\is_null($page) && \is_null($resource)) {
+            throw EndpointException::pageOrResourceRequired();
+        }
 
         if (! \is_null($resource)) {
             $targetResource = $resource instanceof ResourceContract
@@ -137,10 +136,9 @@ final readonly class MoonShineEndpoints implements EndpointsContract
                 : moonshine()->getPages()->findByClass($page);
         }
 
-        throw_if(
-            \is_null($targetPage),
-            new MoonShineException('Page not exists')
-        );
+        if (\is_null($targetPage)) {
+            throw EndpointException::pageRequired();
+        }
 
         return $redirect
             ? redirect($targetPage->getRoute($params))

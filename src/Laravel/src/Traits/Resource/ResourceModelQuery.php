@@ -13,6 +13,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\LazyCollection;
 use MoonShine\Contracts\UI\ApplyContract;
 use MoonShine\Core\Exceptions\ResourceException;
+use MoonShine\Laravel\Exceptions\CrudResourceException;
 use MoonShine\Laravel\QueryTags\QueryTag;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Laravel\Support\DBOperators;
@@ -32,6 +33,8 @@ trait ResourceModelQuery
     protected ?Builder $queryBuilder = null;
 
     protected ?Builder $customQueryBuilder = null;
+
+    protected bool $disableQueryFeatures = false;
 
     /**
      * @throws Throwable
@@ -138,6 +141,10 @@ trait ResourceModelQuery
      */
     protected function queryBuilderFeatures(): void
     {
+        if ($this->isDisabledQueryFeatures()) {
+            return;
+        }
+
         $this
             ->withCache()
             ->withTags()
@@ -146,6 +153,18 @@ trait ResourceModelQuery
             ->withParentResource()
             ->withOrder()
             ->withCachedQueryParams();
+    }
+
+    public function isDisabledQueryFeatures(): bool
+    {
+        return $this->disableQueryFeatures;
+    }
+
+    public function disableQueryFeatures(): static
+    {
+        $this->disableQueryFeatures = true;
+
+        return $this;
     }
 
     public function isItemExists(): bool
@@ -309,7 +328,7 @@ trait ResourceModelQuery
         }
 
         if (! method_exists($this->getDataInstance(), $relationName)) {
-            throw new ResourceException("Relation $relationName not found for current resource");
+            throw CrudResourceException::relationNotFound($relationName);
         }
 
         $relation = $this->getDataInstance()->{$relationName}();

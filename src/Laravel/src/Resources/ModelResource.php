@@ -191,7 +191,7 @@ abstract class ModelResource extends CrudResource implements
                 $item = $this->afterSave($item, $fields);
             }
         } catch (QueryException $queryException) {
-            throw new ResourceException($queryException->getMessage());
+            throw new ResourceException($queryException->getMessage(), previous: $queryException);
         }
 
         $this->setItem($item);

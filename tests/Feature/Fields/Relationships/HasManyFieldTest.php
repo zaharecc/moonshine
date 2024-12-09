@@ -5,17 +5,18 @@ declare(strict_types=1);
 uses()->group('model-relation-fields');
 uses()->group('has-many-field');
 
+use Illuminate\Database\Eloquent\Relations\Relation;
 use MoonShine\Laravel\Fields\Relationships\HasMany;
 use MoonShine\Laravel\Pages\Crud\FormPage;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
+use MoonShine\Tests\Fixtures\Models\Comment;
 use MoonShine\Tests\Fixtures\Models\Item;
 use MoonShine\Tests\Fixtures\Resources\TestCommentResource;
 use MoonShine\Tests\Fixtures\Resources\TestResourceBuilder;
-use MoonShine\UI\Fields\Field;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
 
-it('onlyLink preview', function () {
+it('relatedLink preview', function () {
     createItem(countComments: 6);
 
     $resource = TestResourceBuilder::new(Item::class)->setTestFields([
@@ -31,7 +32,7 @@ it('onlyLink preview', function () {
     ;
 });
 
-it('onlyLink preview empty', function () {
+it('relatedLink preview empty', function () {
     createItem(countComments: 0);
 
     $resource = TestResourceBuilder::new(Item::class)->setTestFields([
@@ -47,7 +48,7 @@ it('onlyLink preview empty', function () {
     ;
 });
 
-it('onlyLink value', function () {
+it('relatedLink value', function () {
     $item = createItem(countComments: 16);
 
     $resource = TestResourceBuilder::new(Item::class)->setTestFields([
@@ -64,7 +65,7 @@ it('onlyLink value', function () {
     ;
 });
 
-it('onlyLink value empty', function () {
+it('relatedLink value empty', function () {
     $item = createItem(countComments: 0);
 
     $resource = TestResourceBuilder::new(Item::class)->setTestFields([
@@ -80,7 +81,7 @@ it('onlyLink value empty', function () {
     ;
 });
 
-it('onlyLink preview condition', function () {
+it('relatedLink preview condition', function () {
     $item = createItem(countComments: 6);
 
     $resource = TestResourceBuilder::new(Item::class)->setTestFields([
@@ -102,15 +103,15 @@ it('onlyLink preview condition', function () {
     ;
 });
 
-it('onlyLink value condition', function () {
+it('relatedLink value condition', function () {
     $item = createItem(countComments: 16);
 
     $resource = TestResourceBuilder::new(Item::class)->setTestFields([
         ID::make(),
         Text::make('Name'),
         HasMany::make('Comments title', 'comments', resource: TestCommentResource::class)
-            ->relatedLink(condition: static function (int $count, Field $field): bool {
-                return $field->toValue()->total() > 20;
+            ->relatedLink(condition: static function (int $count, HasMany $field): bool {
+                return $field->toRelatedCollection()->count() > 20;
             })
         ,
     ]);
@@ -162,4 +163,39 @@ it('stop getting id from url', function () {
 
     expect($hasMany->getResource()->getItemID())
         ->toBeNull();
+});
+
+it('modify builder', function () {
+    $item = createItem(countComments: 2);
+
+    $comments = Comment::query()->get();
+
+    $commentFirst = $comments->first();
+    $commentLast = $comments->last();
+
+    $resource = TestResourceBuilder::new(Item::class)->setTestFields([
+        ID::make(),
+        Text::make('Name'),
+        HasMany::make('Comments title', 'comments', resource: TestCommentResource::class)
+            ->modifyBuilder(
+                fn (Relation $relation) => $relation->where('id', $commentFirst->id)
+            )
+        ,
+    ]);
+
+    asAdmin()
+        ->get($this->moonshineCore->getRouter()->getEndpoints()->toPage(page: IndexPage::class, resource: $resource))
+        ->assertOk()
+        ->assertSee('Comments title')
+        ->assertSee($commentFirst->content)
+        ->assertDontSee($commentLast->content)
+    ;
+
+    asAdmin()
+        ->get($this->moonshineCore->getRouter()->getEndpoints()->toPage(page: FormPage::class, resource: $resource, params: ['resourceItem' => $item->id]))
+        ->assertOk()
+        ->assertSee('Comments title')
+        ->assertSee($commentFirst->content)
+        ->assertDontSee($commentLast->content)
+    ;
 });
