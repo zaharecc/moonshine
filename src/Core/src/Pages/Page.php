@@ -329,6 +329,6 @@ abstract class Page implements PageContract
 
     public function getView(): string
     {
-        return 'moonshine::layouts.app';
+        return 'moonshine::page';
     }
 }
