@@ -10,7 +10,6 @@ use MoonShine\UI\Components\Badge;
 use MoonShine\UI\Components\Boolean;
 use MoonShine\UI\Components\FormBuilder;
 use MoonShine\UI\Components\Link;
-use MoonShine\UI\Components\Url;
 use MoonShine\UI\Fields\Preview;
 
 uses()->group('fields');
