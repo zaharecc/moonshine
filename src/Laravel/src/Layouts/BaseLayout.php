@@ -108,6 +108,8 @@ abstract class BaseLayout extends AbstractLayout
                     Burger::make(),
                 ])->class('menu-burger'),
             ])->class('menu-actions'),
+        ])->customAttributes([
+            ':class' => "asideMenuOpen && '_is-opened'",
         ]);
     }
 
