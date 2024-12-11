@@ -185,7 +185,7 @@ final class MoonShineConfigurator implements ConfiguratorContract
 
     public function isUseMigrations(): bool
     {
-        return $this->get('use_migrations', false);
+        return $this->get('use_migrations', true);
     }
 
     public function useMigrations(): self
