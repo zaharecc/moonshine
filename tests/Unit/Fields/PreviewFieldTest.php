@@ -9,7 +9,7 @@ use MoonShine\Tests\Fixtures\Resources\TestResourceBuilder;
 use MoonShine\UI\Components\Badge;
 use MoonShine\UI\Components\Boolean;
 use MoonShine\UI\Components\FormBuilder;
-use MoonShine\UI\Components\Url;
+use MoonShine\UI\Components\Link;
 use MoonShine\UI\Fields\Preview;
 
 uses()->group('fields');
@@ -107,7 +107,7 @@ it('boolean value', function (): void {
 it('link value', function (): void {
     expect((string) $this->field->link('/')->preview())
         ->toBe(
-            (string) Url::make('/', $this->item->no_input)->render()
+            (string) Link::make('/', $this->item->no_input)->render()
         );
 });
 

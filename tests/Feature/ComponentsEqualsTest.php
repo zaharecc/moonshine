@@ -56,7 +56,6 @@ use MoonShine\UI\Components\Tabs;
 use MoonShine\UI\Components\Tabs\Tab;
 use MoonShine\UI\Components\Thumbnails;
 use MoonShine\UI\Components\Title;
-use MoonShine\UI\Components\Url;
 use MoonShine\UI\Components\When;
 
 uses()->group('components');
@@ -522,13 +521,6 @@ describe('Basic', function () {
         compare(
             Title::make('Title'),
             slot: 'Title'
-        );
-    });
-
-    it('url', function () {
-        compare(
-            Url::make('/', 'Link', icon: 'users', blank: true)->withoutIcon(),
-            ['href' => '/', 'value' => 'Link', 'icon' => 'users', 'blank' => true, 'without-icon' => true]
         );
     });
 
