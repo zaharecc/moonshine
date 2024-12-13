@@ -102,7 +102,7 @@ abstract class BaseLayout extends AbstractLayout
                 ),
 
                 Div::make()->class('menu-inner-divider'),
-                ThemeSwitcher::make()->top(),
+                ThemeSwitcher::make(),
 
                 Div::make([
                     Burger::make(),

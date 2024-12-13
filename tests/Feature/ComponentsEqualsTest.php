@@ -287,8 +287,7 @@ describe('Layouts', function () {
 
     it('theme-switcher', function () {
         compare(
-            ThemeSwitcher::make()->top(),
-            ['top' => true]
+            ThemeSwitcher::make()
         );
     });
 
