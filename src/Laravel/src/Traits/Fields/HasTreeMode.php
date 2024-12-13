@@ -56,6 +56,7 @@ trait HasTreeMode
                 $this->setAttribute('name', $this->getNameAttribute((string) $item->getKey()));
 
                 $element = Checkbox::make($label)
+                    ->formName($this->getFormName())
                     ->simpleMode()
                     ->customAttributes($this->getAttributes()->jsonSerialize())
                     ->setValue($item->getKey());
