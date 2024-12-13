@@ -90,7 +90,7 @@ abstract class MoonShineCommand extends Command
     {
         $replace = "'$key' => $value,";
 
-        $pattern = "/['\"]".$key."['\"]\s*=>\s*[^'\"]+?,/";
+        $pattern = "/['\"]" . $key . "['\"]\s*=>\s*[^'\"]+?,/";
 
         file_put_contents(
             config_path('moonshine.php'),
