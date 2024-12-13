@@ -157,18 +157,9 @@ class PublishCommand extends MoonShineCommand
 
         $this->copySystemClass($className, 'Forms');
 
-        $current = config("moonshine.forms.$configKey", "$className::class");
-        $currentShort = class_basename($current);
-
-        $replace = "'$configKey' => " . moonshineConfig()->getNamespace('\Forms\\' . $className) . "::class";
-
-        file_put_contents(
-            config_path('moonshine.php'),
-            str_replace(
-                ["'$configKey' => $current::class", "'$configKey' => $currentShort::class"],
-                $replace,
-                file_get_contents(config_path('moonshine.php'))
-            )
+        $this->replaceInConfig(
+            $configKey,
+            moonshineConfig()->getNamespace('\Forms\\' . $className) . "::class"
         );
     }
 
@@ -213,18 +204,9 @@ class PublishCommand extends MoonShineCommand
             $copyInfo['full_class_path']
         );
 
-        $current = config("moonshine.pages.$configKey", "$className::class");
-        $currentShort = class_basename($current);
-
-        $replace = "'$configKey' => " . moonshineConfig()->getNamespace('\Pages\\' . $className) . "::class";
-
-        file_put_contents(
-            config_path('moonshine.php'),
-            str_replace(
-                ["'$configKey' => $current::class", "'$configKey' => $currentShort::class"],
-                $replace,
-                file_get_contents(config_path('moonshine.php'))
-            )
+        $this->replaceInConfig(
+            $configKey,
+            moonshineConfig()->getNamespace('\Pages\\' . $className) . "::class"
         );
     }
 

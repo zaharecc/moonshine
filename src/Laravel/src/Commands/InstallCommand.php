@@ -115,20 +115,18 @@ class InstallCommand extends MoonShineCommand
         );
 
         if (! $this->authEnabled) {
-            $this->replaceInFile(
-                "'enabled' => true,",
-                "'enabled' => false,",
-                config_path('moonshine.php'),
+            $this->replaceInConfig(
+                'enabled',
+                'false'
             );
 
             $this->components->task('Authentication disabled');
         }
 
         if ($this->authEnabled) {
-            $this->replaceInFile(
-                "'enabled' => false,",
-                "'enabled' => true,",
-                config_path('moonshine.php'),
+            $this->replaceInConfig(
+                'enabled',
+                'true'
             );
 
             $this->components->task('Authentication enabled');
@@ -144,32 +142,28 @@ class InstallCommand extends MoonShineCommand
         );
 
         if (! $this->useMigrations) {
-            $this->replaceInFile(
-                "'use_migrations' => true,",
-                "'use_migrations' => false,",
-                config_path('moonshine.php'),
+            $this->replaceInConfig(
+                'use_migrations',
+                'false'
             );
 
-            $this->replaceInFile(
-                "'use_database_notifications' => true,",
-                "'use_database_notifications' => false,",
-                config_path('moonshine.php'),
+            $this->replaceInConfig(
+                'use_database_notifications',
+                'false'
             );
 
             $this->components->task('Installed without default migrations');
         }
 
         if ($this->useMigrations) {
-            $this->replaceInFile(
-                "'use_migrations' => false,",
-                "'use_migrations' => true,",
-                config_path('moonshine.php'),
+            $this->replaceInConfig(
+                'use_migrations',
+                'true'
             );
 
-            $this->replaceInFile(
-                "'use_database_notifications' => false,",
-                "'use_database_notifications' => true,",
-                config_path('moonshine.php'),
+            $this->replaceInConfig(
+                'use_database_notifications',
+                'true'
             );
 
             $this->components->task('Installed with system migrations');
@@ -191,40 +185,36 @@ class InstallCommand extends MoonShineCommand
         );
 
         if (! $confirm) {
-            $this->replaceInFile(
-                "'use_notifications' => true,",
-                "'use_notifications' => false,",
-                config_path('moonshine.php'),
+            $this->replaceInConfig(
+                'use_notifications',
+                'false'
             );
 
             $this->components->task('Notifications disabled');
         }
 
         if ($confirm) {
-            $this->replaceInFile(
-                "'use_notifications' => false,",
-                "'use_notifications' => true,",
-                config_path('moonshine.php'),
+            $this->replaceInConfig(
+                'use_notifications',
+                'true'
             );
 
             $this->components->task('Notifications enabled');
         }
 
         if (! $confirmDatabase) {
-            $this->replaceInFile(
-                "'use_database_notifications' => true,",
-                "'use_database_notifications' => false,",
-                config_path('moonshine.php'),
+            $this->replaceInConfig(
+                'use_database_notifications',
+                'false'
             );
         }
 
         if ($confirmDatabase) {
             $this->call(NotificationTableCommand::class);
 
-            $this->replaceInFile(
-                "'use_database_notifications' => false,",
-                "'use_database_notifications' => true,",
-                config_path('moonshine.php'),
+            $this->replaceInConfig(
+                'use_database_notifications',
+                'true'
             );
         }
     }
@@ -285,10 +275,9 @@ class InstallCommand extends MoonShineCommand
             '--without-register' => true,
         ]);
 
-        $this->replaceInFile(
-            "'dashboard' => Dashboard::class",
-            "'dashboard' => " . moonshineConfig()->getNamespace('\Pages\Dashboard') . "::class",
-            config_path('moonshine.php'),
+        $this->replaceInConfig(
+            'dashboard',
+            moonshineConfig()->getNamespace('\Pages\Dashboard') . "::class"
         );
 
         $this->components->task('Dashboard created');
@@ -297,7 +286,7 @@ class InstallCommand extends MoonShineCommand
 
     protected function initLayout(): void
     {
-        $compact = $this->confirmAction('Want to use a minimalist theme?', skipOption: 'default-layout', autoEnable: $this->testsMode);
+        $compact = $this->confirmAction('Want to use a minimalist theme?', skipOption: 'default-layout', autoEnable: $this->testsMode, default: false);
 
         $this->call(MakeLayoutCommand::class, [
             'className' => 'MoonShineLayout',
@@ -315,6 +304,7 @@ class InstallCommand extends MoonShineCommand
         ?string $skipOption = null,
         ?Closure $condition = null,
         bool $autoEnable = false,
+        bool $default = true,
     ): bool {
         if ($autoEnable) {
             return true;
@@ -328,7 +318,7 @@ class InstallCommand extends MoonShineCommand
 
         $skipByOption = ! \is_null($skipOption) && $this->option($skipOption) === true;
 
-        return $additionallyCondition && ! $skipByOption && confirm($message);
+        return $additionallyCondition && ! $skipByOption && confirm($message, default: $default);
     }
 
     private function registerServiceProvider(): void

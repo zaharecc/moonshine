@@ -63,16 +63,9 @@ class MakeLayoutCommand extends MoonShineCommand
         );
 
         if ($this->option('default') || confirm('Use the default template in the system?')) {
-            $current = config('moonshine.layout', 'AppLayout::class');
-            $currentShort = class_basename($current);
-            $replace = "'layout' => " . moonshineConfig()->getNamespace('\Layouts\\' . $className) . "::class";
-
-            file_put_contents(
-                config_path('moonshine.php'),
-                str_replace([
-                    "'layout' => $current::class",
-                    "'layout' => $currentShort::class",
-                ], $replace, file_get_contents(config_path('moonshine.php')))
+            $this->replaceInConfig(
+                'layout',
+                moonshineConfig()->getNamespace('\Layouts\\' . $className) . "::class"
             );
         }
 

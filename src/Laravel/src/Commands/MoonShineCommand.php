@@ -85,4 +85,18 @@ abstract class MoonShineCommand extends Command
 
         file_put_contents($to, $content);
     }
+
+    protected function replaceInConfig(string $key, string $value): void
+    {
+        $replace = "'$key' => $value,";
+
+        $pattern = "/['\"]".$key."['\"]\s*=>\s*[^'\"]+?,/";
+
+        file_put_contents(
+            config_path('moonshine.php'),
+            preg_replace([
+                $pattern,
+            ], $replace, file_get_contents(config_path('moonshine.php')))
+        );
+    }
 }
