@@ -25,7 +25,7 @@ class MenuDivider extends MenuElement
         return false;
     }
 
-    public function viewData(): array
+    protected function viewData(): array
     {
         return [
             'label' => $this->getLabel(),

@@ -191,7 +191,7 @@ class MenuItem extends MenuElement
     /**
      * @throws Throwable
      */
-    public function viewData(): array
+    protected function viewData(): array
     {
         $viewData = [
             'url' => $this->getUrl(),
