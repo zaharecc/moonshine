@@ -68,10 +68,10 @@ interface TableBuilderContract extends
     public function isEditable(): bool;
 
     /**
-     * @param  ?Closure(FieldContract $field, ComponentContract $default, static $ctx): ComponentContract  $title
-     * @param  ?Closure(FieldContract $field, ComponentContract $default, static $ctx): ComponentContract   $value
+     * @param  null|int|Closure(FieldContract $field, ComponentContract $default, static $ctx): ComponentContract  $title
+     * @param  null|int|Closure(FieldContract $field, ComponentContract $default, static $ctx): ComponentContract  $value
      */
-    public function vertical(?Closure $title = null, ?Closure $value = null): static;
+    public function vertical(null|Closure|int $title = null, null|Closure|int $value = null): static;
 
     public function isVertical(): bool;
 

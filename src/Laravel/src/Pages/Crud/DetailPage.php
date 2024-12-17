@@ -154,7 +154,7 @@ class DetailPage extends CrudPage
         return TableBuilder::make($fields)
             ->cast($this->getResource()->getCaster())
             ->items([$item])
-            ->vertical()
+            ->vertical(title: $this->getResource()->isDetailInModal() ? 3 : 2)
             ->simple()
             ->preview();
     }
