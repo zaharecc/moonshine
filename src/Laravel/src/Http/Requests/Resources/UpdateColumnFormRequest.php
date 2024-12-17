@@ -74,12 +74,12 @@ final class UpdateColumnFormRequest extends MoonShineFormRequest
 
         $valueRules = ['present'];
 
-        if(\is_string($fieldRules)) {
+        if (\is_string($fieldRules)) {
             $valueRules[] = $valueRules;
         }
 
-        if(\is_array($fieldRules)) {
-            $valueRules = \array_merge($valueRules, $fieldRules);
+        if (\is_array($fieldRules)) {
+            $valueRules = array_merge($valueRules, $fieldRules);
         }
 
         return [
