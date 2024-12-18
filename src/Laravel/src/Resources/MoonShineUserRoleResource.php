@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace MoonShine\Laravel\Resources;
 
 use MoonShine\Laravel\Models\MoonshineUserRole;
+use MoonShine\Laravel\Enums\Action;
 use MoonShine\Support\Attributes\Icon;
 use MoonShine\Support\ListOf;
-use MoonShine\UI\Components\ActionButton;
 use MoonShine\UI\Components\Layout\Box;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
@@ -35,9 +35,9 @@ class MoonShineUserRoleResource extends ModelResource
         return __('moonshine::ui.resource.role');
     }
 
-    protected function indexButtons(): ListOf
+    protected function activeActions(): ListOf
     {
-        return parent::indexButtons()->except(fn (ActionButton $btn): bool => $btn->getName() === 'detail-button');
+        return parent::activeActions()->except(Action::VIEW);
     }
 
     protected function indexFields(): iterable
