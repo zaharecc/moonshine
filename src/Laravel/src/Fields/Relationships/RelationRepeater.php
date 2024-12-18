@@ -22,6 +22,7 @@ use MoonShine\UI\Contracts\DefaultValueTypes\CanBeObject;
 use MoonShine\UI\Contracts\HasDefaultValueContract;
 use MoonShine\UI\Contracts\RemovableContract;
 use MoonShine\UI\Fields\Field;
+use MoonShine\UI\Traits\Fields\HasVerticalMode;
 use MoonShine\UI\Traits\Fields\WithDefaultValue;
 use MoonShine\UI\Traits\Removable;
 use MoonShine\UI\Traits\WithFields;
@@ -42,6 +43,7 @@ class RelationRepeater extends ModelRelationField implements
     use WithFields;
     use Removable;
     use WithDefaultValue;
+    use HasVerticalMode;
 
     protected string $view = 'moonshine::fields.json';
 
@@ -50,8 +52,6 @@ class RelationRepeater extends ModelRelationField implements
     protected bool $hasOld = false;
 
     protected bool $resolveValueOnce = true;
-
-    protected bool $isVertical = false;
 
     protected bool $isCreatable = true;
 
@@ -78,18 +78,6 @@ class RelationRepeater extends ModelRelationField implements
         $this->fields(
             $this->getResource()?->getFormFields()?->onlyFields() ?? []
         );
-    }
-
-    public function vertical(Closure|bool|null $condition = null): static
-    {
-        $this->isVertical = value($condition, $this) ?? true;
-
-        return $this;
-    }
-
-    public function isVertical(): bool
-    {
-        return $this->isVertical;
     }
 
     public function creatable(
@@ -257,7 +245,7 @@ class RelationRepeater extends ModelRelationField implements
             ->cast($this->getResource()?->getCaster())
             ->when(
                 $this->isVertical(),
-                static fn (TableBuilderContract $table): TableBuilderContract => $table->vertical()
+                fn (TableBuilderContract $table): TableBuilderContract => $table->vertical($this->verticalTitleSpan, $this->verticalValueSpan)
             )
             ->when(
                 ! \is_null($this->modifyTable),
