@@ -67,9 +67,24 @@ final class UpdateColumnFormRequest extends MoonShineFormRequest
      */
     public function rules(): array
     {
+        $fieldRules = data_get(
+            $this->getResource()?->getRules(),
+            request()->getScalar('field'),
+        );
+
+        $valueRules = ['present'];
+
+        if (\is_string($fieldRules)) {
+            $valueRules[] = $valueRules;
+        }
+
+        if (\is_array($fieldRules)) {
+            $valueRules = array_merge($valueRules, $fieldRules);
+        }
+
         return [
             'field' => ['required'],
-            'value' => ['present'],
+            'value' => $valueRules,
         ];
     }
 
