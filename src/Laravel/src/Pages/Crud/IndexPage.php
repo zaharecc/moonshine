@@ -237,7 +237,7 @@ class IndexPage extends CrudPage
                 $table->sticky();
             })
             ->when($this->getResource()->isLazy(), function (TableBuilderContract $table): void {
-                $table->lazy()->whenAsync(fn(TableBuilderContract $t) => $t->items($this->getResource()->getItems()));
+                $table->lazy()->whenAsync(fn(TableBuilderContract $t): TableBuilder => $t->items($this->getResource()->getItems()));
             })
             ->when($this->getResource()->isColumnSelection(), function (TableBuilderContract $table): void {
                 $table->columnSelection();
