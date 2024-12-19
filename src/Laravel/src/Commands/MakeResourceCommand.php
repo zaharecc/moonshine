@@ -22,28 +22,24 @@ class MakeResourceCommand extends MoonShineCommand
      */
     public function handle(): int
     {
-        $name = str(
-            text(
-                'Name',
-                'ArticleResource',
-                $this->argument('name') ?? '',
-                required: true,
-            )
+        $name = $this->argument('name') ?? text(
+            'Resource name',
+            'ArticleResource',
+            required: true,
         );
 
-        $name = $name->ucfirst()
+        $name = str($name)
+            ->ucfirst()
             ->remove('resource', false)
             ->value();
 
         $model = $this->qualifyModel($this->option('model') ?? $name);
         $title = $this->option('title') ?? str($name)->singular()->plural()->value();
-        $moonshineDir = $this->getDirectory();
+        $resourcesDir = $this->getDirectory('/Resources');
 
-        $resource = "$moonshineDir/Resources/{$name}Resource.php";
+        $resource = "$resourcesDir/{$name}Resource.php";
 
-        if (! is_dir("$moonshineDir/Resources")) {
-            $this->makeDir("$moonshineDir/Resources");
-        }
+        $this->makeDirectory($resourcesDir);
 
         $stub = select('Resource type', [
             'ModelResourceDefault' => 'Default model resource',
@@ -61,7 +57,7 @@ class MakeResourceCommand extends MoonShineCommand
 
         if ($this->option('test') || $this->option('pest')) {
             $testStub = $this->option('pest') ? 'pest' : 'test';
-            $testPath = base_path('tests/Feature/') . $name . 'ResourceTest.php';
+            $testPath = base_path("tests/Feature/{$name}ResourceTest.php");
 
             $this->copyStub($testStub, $testPath, $replace);
 
@@ -90,11 +86,7 @@ class MakeResourceCommand extends MoonShineCommand
         $this->copyStub($stub, $resource, $replace);
 
         info(
-            "{$name}Resource file was created: " . str_replace(
-                base_path(),
-                '',
-                $resource
-            )
+            "{$name}Resource file was created: " . $this->getRelativePath($resource)
         );
 
         self::addResourceOrPageToProviderFile(
