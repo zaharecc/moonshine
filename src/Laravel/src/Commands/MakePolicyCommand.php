@@ -34,6 +34,7 @@ class MakePolicyCommand extends MoonShineCommand
                     ->map(static fn ($file) => $file->getBasename('.php'))
                     ->values()
                     ->all(),
+                required: true,
             );
         }
 
