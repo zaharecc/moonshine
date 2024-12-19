@@ -27,13 +27,16 @@ class MakePolicyCommand extends MoonShineCommand
     {
         $modelPath = is_dir(app_path('Models')) ? app_path('Models') : app_path();
 
-        $className = suggest(
-            'Model',
-            collect((new Finder())->files()->depth(0)->in($modelPath))
-                ->map(static fn ($file) => $file->getBasename('.php'))
-                ->values()
-                ->all()
-        );
+        if (! $className = $this->argument('className')) {
+            $className = suggest(
+                label: 'Model',
+                options: collect((new Finder())->files()->depth(0)->in($modelPath))
+                    ->map(static fn ($file) => $file->getBasename('.php'))
+                    ->values()
+                    ->all(),
+                required: true,
+            );
+        }
 
         $model = $this->qualifyModel($className);
         $className = class_basename($model) . "Policy";
