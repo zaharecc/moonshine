@@ -11,3 +11,4 @@ updates:
       interval: "daily"
     ignore:
       - dependency-name: "laravel/framework"
+      - dependency-name: "moonshine/import-export"
