@@ -43,13 +43,13 @@ class MakeComponentCommand extends MoonShineCommand
         $componentsDir = $this->getDirectory('/Components');
         $componentPath = "$componentsDir/$className.php";
 
-        $this->makeDirectory($componentsDir);
+        $this->ensureMakeDir($componentsDir);
 
         $view = str_replace('.blade.php', '', $view);
         $viewPath = resource_path('views/' . str_replace('.', DIRECTORY_SEPARATOR, $view));
         $viewPath .= '.blade.php';
 
-        $this->makeDirectory(
+        $this->ensureMakeDir(
             \dirname($viewPath)
         );
 

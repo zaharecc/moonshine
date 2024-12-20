@@ -37,7 +37,7 @@ class MakeLayoutCommand extends MoonShineCommand
         $layoutsDir = $this->getDirectory() . "/$dir";
         $layoutPath = "$layoutsDir/$className.php";
 
-        $this->makeDirectory($layoutsDir);
+        $this->ensureMakeDir($layoutsDir);
 
         $compact = ! $this->option('full') && ($this->option('compact') || confirm('Want to use a minimalist theme?'));
 
