@@ -369,7 +369,7 @@ class RelationRepeater extends ModelRelationField implements
         );
 
         foreach ($items as $item) {
-            if(empty($item[$relatedKeyName])) {
+            if (empty($item[$relatedKeyName])) {
                 unset($item[$relatedKeyName]);
                 $model->{$relationName}()->create($item);
             } else {
