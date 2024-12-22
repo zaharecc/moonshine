@@ -178,7 +178,7 @@ trait ResourceWithButtons
             DeleteButton::for(
                 $this,
                 componentName: $componentName,
-                redirectAfterDelete: $redirectAfterDelete,
+                redirectAfterDelete: $isAsync ? null : $redirectAfterDelete,
                 isAsync: $isAsync,
                 modalName: $modalName
             )
@@ -200,7 +200,7 @@ trait ResourceWithButtons
             MassDeleteButton::for(
                 $this,
                 componentName: $componentName,
-                redirectAfterDelete: $redirectAfterDelete,
+                redirectAfterDelete: $isAsync ? null : $redirectAfterDelete,
                 isAsync: $isAsync,
                 modalName: $modalName
             )

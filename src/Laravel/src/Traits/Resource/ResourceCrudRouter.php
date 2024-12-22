@@ -126,18 +126,14 @@ trait ResourceCrudRouter
             ? []
             : ['resourceItem' => $this->getCastedData()?->getKey()];
 
-        if (! \is_null($this->redirectAfterSave)) {
-            return $this
-                ->getPages()
-                ->findByType($this->redirectAfterSave)
-                ?->getRoute($params);
-        }
-
-        return $this->getFormPageUrl(params: $params);
+        return $this
+            ->getPages()
+            ->findByType($this->redirectAfterSave)
+            ?->getRoute($params);
     }
 
-    public function getRedirectAfterDelete(): ?string
+    public function getRedirectAfterDelete(): string
     {
-        return null;
+        return $this->getIndexPageUrl();
     }
 }

@@ -162,15 +162,19 @@ class HasOne extends ModelRelationField implements HasFieldsContract
         return $this;
     }
 
-    public function getRedirectAfter(Model|int|null|string $parentId): string
+    public function getRedirectAfter(Model|int|null|string $parentId): ?string
     {
         if (! \is_null($this->redirectAfter)) {
             return (string) value($this->redirectAfter, $parentId, $this);
         }
 
+        if($this->isAsync()) {
+            return null;
+        }
+
         return moonshineRequest()
-                   ->getResource()
-                   ?->getFormPageUrl($parentId) ?? '';
+           ->getResource()
+           ?->getFormPageUrl($parentId);
     }
 
     /**
@@ -257,7 +261,7 @@ class HasOne extends ModelRelationField implements HasFieldsContract
                 )
                     ->toArray()
             )
-            ->redirect($isAsync ? null : $redirectAfter)
+            ->redirect($redirectAfter)
             ->fillCast(
                 $item?->toArray() ?? array_filter([
                 $relation->getForeignKeyName() => $this->getRelatedModel()?->getKey(),

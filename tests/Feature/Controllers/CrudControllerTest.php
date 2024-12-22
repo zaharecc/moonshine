@@ -90,7 +90,7 @@ describe('without special fields', function () {
             $this->itemResource->getRoute('crud.update', $item->getKey()),
             ['name' => 'New test name']
         )
-            ->assertRedirect();
+            ->assertRedirect($this->itemResource->getFormPageUrl($item->getKey()));
 
         $item->refresh();
 
@@ -104,7 +104,7 @@ describe('without special fields', function () {
         asAdmin()->delete(
             $this->itemResource->getRoute('crud.destroy', $item->getKey())
         )
-            ->assertRedirect();
+            ->assertRedirect($this->itemResource->getIndexPageUrl());
     });
 
     it('when component crud delete', function () {
@@ -136,7 +136,7 @@ describe('without special fields', function () {
         asAdmin()->delete(
             $this->itemResource->getRoute('crud.destroy', $item->getKey())
         )
-            ->assertRedirect();
+            ->assertRedirect($this->itemResource->getIndexPageUrl());
     });
 
     it('crud mass delete', function () {
@@ -147,7 +147,8 @@ describe('without special fields', function () {
         asAdmin()->delete(
             $this->itemResource->getRoute('crud.massDelete', query: ['ids' => $ids])
         )
-            ->assertRedirect();
+            ->assertRedirect($this->itemResource->getIndexPageUrl())
+        ;
 
         $items = Item::query()->get()->toArray();
 
