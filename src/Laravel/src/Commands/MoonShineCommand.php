@@ -18,13 +18,6 @@ abstract class MoonShineCommand extends Command
         return moonshineConfig()->getDir($path);
     }
 
-    protected function makeDir(string $path): void
-    {
-        if (! is_dir($path)) {
-            parent::makeDir($path);
-        }
-    }
-
     protected function getRelativePath(string $path): string
     {
         return str_replace(base_path(), '', $path);
