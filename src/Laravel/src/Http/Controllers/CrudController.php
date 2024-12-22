@@ -90,7 +90,6 @@ final class CrudController extends MoonShineController
 
         $redirectRoute = $request->input('_redirect', $resource->getRedirectAfterDelete());
 
-
         try {
             $resource->delete($resource->getItemOrFail());
         } catch (Throwable $e) {
@@ -100,7 +99,7 @@ final class CrudController extends MoonShineController
         if ($request->ajax() || $request->wantsJson()) {
             return $this->json(
                 message: __('moonshine::ui.deleted'),
-                redirect: $request->input('_redirect')
+                redirect: $redirectRoute
             );
         }
 
@@ -108,6 +107,10 @@ final class CrudController extends MoonShineController
             __('moonshine::ui.deleted'),
             ToastType::SUCCESS
         );
+
+        if(\is_null($redirectRoute)) {
+            return back();
+        }
 
         return redirect($redirectRoute);
     }
@@ -128,7 +131,7 @@ final class CrudController extends MoonShineController
         if ($request->ajax() || $request->wantsJson()) {
             return $this->json(
                 message: __('moonshine::ui.deleted'),
-                redirect: $request->input('_redirect')
+                redirect: $redirectRoute
             );
         }
 
@@ -136,6 +139,10 @@ final class CrudController extends MoonShineController
             __('moonshine::ui.deleted'),
             ToastType::SUCCESS
         );
+
+        if(\is_null($redirectRoute)) {
+            return back();
+        }
 
         return redirect($redirectRoute);
     }
@@ -150,7 +157,7 @@ final class CrudController extends MoonShineController
         $resource = $request->getResource();
         $item = $resource->getItemOrInstance();
 
-        $redirectRoute = static fn ($resource): mixed => $request->input('_redirect', $resource->getRedirectAfterSave());
+        $redirectRoute = static fn ($resource): ?string => $request->input('_redirect', $resource->getRedirectAfterSave());
 
         try {
             $item = $resource->save($item);
@@ -161,13 +168,9 @@ final class CrudController extends MoonShineController
         $resource->setItem($item);
 
         if ($request->ajax() || $request->wantsJson()) {
-            $forceRedirect = $request->boolean('_force_redirect')
-                ? $redirectRoute($resource)
-                : null;
-
             return $this->json(
                 message: __('moonshine::ui.saved'),
-                redirect: $request->input('_redirect', $forceRedirect),
+                redirect: $redirectRoute($resource),
                 status: $resource->isRecentlyCreated() ? Response::HTTP_CREATED : Response::HTTP_OK
             );
         }
@@ -176,6 +179,10 @@ final class CrudController extends MoonShineController
             __('moonshine::ui.saved'),
             ToastType::SUCCESS
         );
+
+        if(\is_null($redirectRoute($resource))) {
+            return back();
+        }
 
         return redirect(
             $redirectRoute($resource)

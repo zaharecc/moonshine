@@ -15,7 +15,7 @@ use MoonShine\Support\Enums\PageType;
  */
 trait ResourceCrudRouter
 {
-    protected ?PageType $redirectAfterSave = PageType::FORM;
+    protected ?PageType $redirectAfterSave = null;
 
     /**
      * @param DataWrapperContract<T>|int|string|null $key
@@ -112,8 +112,16 @@ trait ResourceCrudRouter
         );
     }
 
-    public function getRedirectAfterSave(): string
+    public function getRedirectAfterSave(): ?string
     {
+        if(\is_null($this->redirectAfterSave) && !$this->isAsync()) {
+            $this->redirectAfterSave = PageType::FORM;
+        }
+
+        if(\is_null($this->redirectAfterSave)) {
+            return null;
+        }
+
         $params = \is_null($this->getItem()) || $this->redirectAfterSave === PageType::INDEX
             ? []
             : ['resourceItem' => $this->getCastedData()?->getKey()];
@@ -128,8 +136,8 @@ trait ResourceCrudRouter
         return $this->getFormPageUrl(params: $params);
     }
 
-    public function getRedirectAfterDelete(): string
+    public function getRedirectAfterDelete(): ?string
     {
-        return $this->getIndexPageUrl();
+        return null;
     }
 }
