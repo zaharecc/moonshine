@@ -6,8 +6,7 @@ namespace MoonShine\Laravel\Commands;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
-use function Laravel\Prompts\outro;
-use function Laravel\Prompts\suggest;
+use function Laravel\Prompts\{outro, suggest};
 
 use MoonShine\Laravel\MoonShineAuth;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -27,27 +26,29 @@ class MakePolicyCommand extends MoonShineCommand
     {
         $modelPath = is_dir(app_path('Models')) ? app_path('Models') : app_path();
 
-        if (! $className = $this->argument('className')) {
-            $className = suggest(
-                label: 'Model',
-                options: collect((new Finder())->files()->depth(0)->in($modelPath))
-                    ->map(static fn ($file) => $file->getBasename('.php'))
-                    ->values()
-                    ->all(),
-                required: true,
-            );
-        }
+        $className = $this->argument('className') ?? suggest(
+            label: 'Model',
+            options: collect((new Finder())->files()->depth(0)->in($modelPath))
+                ->map(static fn ($file) => $file->getBasename('.php'))
+                ->values()
+                ->all(),
+            required: true,
+        );
+
+        $className = str($className)
+            ->ucfirst()
+            ->remove('policy', false)
+            ->value();
 
         $model = $this->qualifyModel($className);
-        $className = class_basename($model) . "Policy";
+        $className = class_basename($model) . 'Policy';
 
-        $path = app_path("/Policies/$className.php");
+        $policiesDir = app_path('/Policies');
+        $policyPath = "$policiesDir/$className.php";
 
-        if (! is_dir(app_path('/Policies'))) {
-            $this->makeDir(app_path('/Policies'));
-        }
+        $this->makeDir($policiesDir);
 
-        $this->copyStub('Policy', $path, [
+        $this->copyStub('Policy', $policyPath, [
             'DummyClass' => $className,
             '{model-namespace}' => $model,
             '{model}' => class_basename($model),
@@ -56,11 +57,7 @@ class MakePolicyCommand extends MoonShineCommand
         ]);
 
         outro(
-            "$className was created: " . str_replace(
-                base_path(),
-                '',
-                $path
-            )
+            "$className was created: " . $this->getRelativePath($policyPath)
         );
 
         return self::SUCCESS;

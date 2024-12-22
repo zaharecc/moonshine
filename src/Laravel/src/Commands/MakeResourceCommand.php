@@ -22,31 +22,24 @@ class MakeResourceCommand extends MoonShineCommand
      */
     public function handle(): int
     {
-        $name = str(
-            text(
-                'Name',
-                'ArticleResource',
-                $this->argument('name') ?? '',
-                required: true,
-            )
+        $name = $this->argument('name') ?? text(
+            'Resource name',
+            'ArticleResource',
+            required: true,
         );
 
-        $dir = $name->ucfirst()
-            ->remove('Resource', false)
-            ->value();
-
-        $name = $name->ucfirst()
-            ->replace(['resource', 'Resource'], '')
+        $name = str($name)
+            ->ucfirst()
+            ->remove('resource', false)
             ->value();
 
         $model = $this->qualifyModel($this->option('model') ?? $name);
         $title = $this->option('title') ?? str($name)->singular()->plural()->value();
+        $resourcesDir = $this->getDirectory('/Resources');
 
-        $resource = $this->getDirectory() . "/Resources/{$name}Resource.php";
+        $resource = "$resourcesDir/{$name}Resource.php";
 
-        if (! is_dir($this->getDirectory() . "/Resources")) {
-            $this->makeDir($this->getDirectory() . "/Resources");
-        }
+        $this->makeDir($resourcesDir);
 
         $stub = select('Resource type', [
             'ModelResourceDefault' => 'Default model resource',
@@ -54,7 +47,7 @@ class MakeResourceCommand extends MoonShineCommand
             'Resource' => 'Empty resource',
         ], 'ModelResourceDefault');
 
-        $replaceData = [
+        $replace = [
             '{namespace}' => moonshineConfig()->getNamespace('\Resources'),
             '{model-namespace}' => $model,
             '{model}' => class_basename($model),
@@ -64,44 +57,36 @@ class MakeResourceCommand extends MoonShineCommand
 
         if ($this->option('test') || $this->option('pest')) {
             $testStub = $this->option('pest') ? 'pest' : 'test';
-            $testPath = base_path('tests/Feature/') . $name . 'ResourceTest.php';
+            $testPath = base_path("tests/Feature/{$name}ResourceTest.php");
 
-            $this->copyStub($testStub, $testPath, $replaceData);
+            $this->copyStub($testStub, $testPath, $replace);
 
             info('Test file was created');
         }
 
         if ($stub === 'ModelResourceWithPages') {
-            $pageDir = "Pages/$dir";
-
             $this->call(MakePageCommand::class, [
                 'className' => $name,
                 '--crud' => true,
                 '--without-register' => true,
             ]);
 
-            $pageNamespace = static fn (string $name): string => moonshineConfig()->getNamespace(
-                str_replace('/', '\\', "\\$pageDir\\$dir$name")
-            );
+            $pageNamespace = moonshineConfig()->getNamespace("\Pages\\$name\\$name");
 
-            $replaceData = [
-                    '{indexPage}' => "{$dir}IndexPage",
-                    '{formPage}' => "{$dir}FormPage",
-                    '{detailPage}' => "{$dir}DetailPage",
-                    '{index-page-namespace}' => $pageNamespace('IndexPage'),
-                    '{form-page-namespace}' => $pageNamespace('FormPage'),
-                    '{detail-page-namespace}' => $pageNamespace('DetailPage'),
-                ] + $replaceData;
+            $replace += [
+                '{indexPage}' => "{$name}IndexPage",
+                '{formPage}' => "{$name}FormPage",
+                '{detailPage}' => "{$name}DetailPage",
+                '{index-page-namespace}' => "{$pageNamespace}IndexPage",
+                '{form-page-namespace}' => "{$pageNamespace}FormPage",
+                '{detail-page-namespace}' => "{$pageNamespace}DetailPage",
+            ];
         }
 
-        $this->copyStub($stub, $resource, $replaceData);
+        $this->copyStub($stub, $resource, $replace);
 
         info(
-            "{$name}Resource file was created: " . str_replace(
-                base_path(),
-                '',
-                $resource
-            )
+            "{$name}Resource file was created: " . $this->getRelativePath($resource)
         );
 
         self::addResourceOrPageToProviderFile(

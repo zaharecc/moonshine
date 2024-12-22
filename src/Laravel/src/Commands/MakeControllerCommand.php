@@ -6,15 +6,14 @@ namespace MoonShine\Laravel\Commands;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
-use function Laravel\Prompts\outro;
-use function Laravel\Prompts\text;
+use function Laravel\Prompts\{outro, text};
 
 use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'moonshine:controller')]
 class MakeControllerCommand extends MoonShineCommand
 {
-    protected $signature = 'moonshine:controller {className?}';
+    protected $signature = 'moonshine:controller {name?}';
 
     protected $description = 'Create controller';
 
@@ -23,28 +22,23 @@ class MakeControllerCommand extends MoonShineCommand
      */
     public function handle(): int
     {
-        $className = $this->argument('className') ?? text(
+        $name = $this->argument('name') ?? text(
             'Class name',
             required: true
         );
 
-        $controller = $this->getDirectory() . "/Controllers/$className.php";
+        $controllersDir = $this->getDirectory('/Controllers');
+        $controllerPath = "$controllersDir/$name.php";
 
-        if (! is_dir($this->getDirectory() . '/Controllers')) {
-            $this->makeDir($this->getDirectory() . '/Controllers');
-        }
+        $this->makeDir($controllersDir);
 
-        $this->copyStub('Controller', $controller, [
+        $this->copyStub('Controller', $controllerPath, [
             '{namespace}' => moonshineConfig()->getNamespace('\Controllers'),
-            'DummyClass' => $className,
+            'DummyClass' => $name,
         ]);
 
         outro(
-            "$className was created: " . str_replace(
-                base_path(),
-                '',
-                $controller
-            )
+            "$name was created: " . $this->getRelativePath($controllerPath)
         );
 
         return self::SUCCESS;
