@@ -114,11 +114,11 @@ trait ResourceCrudRouter
 
     public function getRedirectAfterSave(): ?string
     {
-        if(\is_null($this->redirectAfterSave) && !$this->isAsync()) {
+        if (\is_null($this->redirectAfterSave) && ! $this->isAsync()) {
             $this->redirectAfterSave = PageType::FORM;
         }
 
-        if(\is_null($this->redirectAfterSave)) {
+        if (\is_null($this->redirectAfterSave)) {
             return null;
         }
 
