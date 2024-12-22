@@ -151,7 +151,7 @@ class PublishCommand extends MoonShineCommand
 
     private function publishSystemForm(string $className, string $configKey): void
     {
-        $this->ensureMakeDir($this->getDirectory('/Forms'));
+        $this->makeDir($this->getDirectory('/Forms'));
 
         $this->copySystemClass($className, 'Forms');
 
@@ -190,7 +190,7 @@ class PublishCommand extends MoonShineCommand
 
     private function publishSystemPage(string $className, string $configKey): void
     {
-        $this->ensureMakeDir($this->getDirectory('/Pages'));
+        $this->makeDir($this->getDirectory('/Pages'));
 
         $copyInfo = $this->copySystemClass($className, 'Pages');
 

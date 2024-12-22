@@ -39,7 +39,7 @@ class MakeResourceCommand extends MoonShineCommand
 
         $resource = "$resourcesDir/{$name}Resource.php";
 
-        $this->ensureMakeDir($resourcesDir);
+        $this->makeDir($resourcesDir);
 
         $stub = select('Resource type', [
             'ModelResourceDefault' => 'Default model resource',

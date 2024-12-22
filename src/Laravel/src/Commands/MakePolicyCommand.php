@@ -46,7 +46,7 @@ class MakePolicyCommand extends MoonShineCommand
         $policiesDir = app_path('/Policies');
         $policyPath = "$policiesDir/$className.php";
 
-        $this->ensureMakeDir($policiesDir);
+        $this->makeDir($policiesDir);
 
         $this->copyStub('Policy', $policyPath, [
             'DummyClass' => $className,

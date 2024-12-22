@@ -30,7 +30,7 @@ class MakeControllerCommand extends MoonShineCommand
         $controllersDir = $this->getDirectory('/Controllers');
         $controllerPath = "$controllersDir/$name.php";
 
-        $this->ensureMakeDir($controllersDir);
+        $this->makeDir($controllersDir);
 
         $this->copyStub('Controller', $controllerPath, [
             '{namespace}' => moonshineConfig()->getNamespace('\Controllers'),

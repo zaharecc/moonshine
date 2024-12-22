@@ -62,7 +62,7 @@ class MakeFieldCommand extends MoonShineCommand
         $fieldsDir = $this->getDirectory('/Fields');
         $fieldPath = "$fieldsDir/$className.php";
 
-        $this->ensureMakeDir($fieldsDir);
+        $this->makeDir($fieldsDir);
 
         $this->copyStub('Field', $fieldPath, [
             '{namespace}' => moonshineConfig()->getNamespace('\Fields'),
@@ -76,7 +76,7 @@ class MakeFieldCommand extends MoonShineCommand
         $viewPath = resource_path('views/' . str_replace('.', DIRECTORY_SEPARATOR, $view));
         $viewPath .= '.blade.php';
 
-        $this->ensureMakeDir(
+        $this->makeDir(
             \dirname($viewPath)
         );
 

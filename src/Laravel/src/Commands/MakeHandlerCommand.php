@@ -30,7 +30,7 @@ class MakeHandlerCommand extends MoonShineCommand
         $handlersDir = $this->getDirectory() . '/Handlers';
         $handlerPath = "$handlersDir/$className.php";
 
-        $this->ensureMakeDir($handlersDir);
+        $this->makeDir($handlersDir);
 
         $this->copyStub('Handler', $handlerPath, [
             '{namespace}' => moonshineConfig()->getNamespace('\Handlers'),

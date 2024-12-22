@@ -18,10 +18,10 @@ abstract class MoonShineCommand extends Command
         return moonshineConfig()->getDir($path);
     }
 
-    protected function ensureMakeDir(string $path): void
+    protected function makeDir(string $path): void
     {
         if (! is_dir($path)) {
-            $this->makeDir($path);
+            parent::makeDir($path);
         }
     }
 

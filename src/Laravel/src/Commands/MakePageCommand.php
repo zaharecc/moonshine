@@ -86,7 +86,7 @@ class MakePageCommand extends MoonShineCommand
         $pagesDir = $this->getDirectory("/$dir");
         $pagePath = "$pagesDir/$className.php";
 
-        $this->ensureMakeDir($pagesDir);
+        $this->makeDir($pagesDir);
 
         $this->copyStub($stub, $pagePath, [
             '{namespace}' => moonshineConfig()->getNamespace('\\' . str_replace('/', '\\', $dir)),

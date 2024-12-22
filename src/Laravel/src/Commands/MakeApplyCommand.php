@@ -30,7 +30,7 @@ class MakeApplyCommand extends MoonShineCommand
         $appliesDir = $this->getDirectory('/Applies');
         $apply = "$appliesDir/$className.php";
 
-        $this->ensureMakeDir($appliesDir);
+        $this->makeDir($appliesDir);
 
         $this->copyStub('Apply', $apply, [
             '{namespace}' => moonshineConfig()->getNamespace('\Applies'),
