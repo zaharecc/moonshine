@@ -15,7 +15,7 @@ beforeEach(function (): void {
     $this->itemResource = app(TestItemResource::class);
 });
 
-it('async search', function () {
+it('async search in form', function () {
     $item = createItem();
     $category = Category::factory()->create([
         'name' => 'test',
@@ -49,5 +49,25 @@ it('async search', function () {
                 ],
             ],
         ])
+    ;
+});
+
+it('async search in index', function () {
+    $item = createItem();
+    $category = Category::factory()->create([
+        'name' => 'test-index-find',
+    ]);
+    $item->categories()->attach($category);
+    $item->refresh();
+
+    asAdmin()->get($this->moonshineCore->getRouter()->to("async-search", [
+        'pageUri' => PageType::INDEX->value,
+        'resourceUri' => $this->itemResource->getUriKey(),
+        '_relation' => 'category',
+        'query' => 'index-f',
+    ]))
+        ->assertOk()
+        ->assertJsonIsArray()
+        ->assertJsonCount(1)
     ;
 });
