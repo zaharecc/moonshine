@@ -7,7 +7,6 @@ namespace MoonShine\Laravel\Http\Controllers;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
-use MoonShine\Contracts\Core\CrudResourceContract;
 use MoonShine\Laravel\Contracts\Notifications\MoonShineNotificationContract;
 use MoonShine\Laravel\Http\Requests\MoonShineFormRequest;
 use MoonShine\Laravel\Http\Requests\Resources\DeleteFormRequest;
