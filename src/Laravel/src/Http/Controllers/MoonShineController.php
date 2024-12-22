@@ -75,7 +75,7 @@ abstract class MoonShineController extends BaseController
 
         $this->toast(__($message), $type);
 
-        if(\is_null($redirectRoute)) {
+        if (\is_null($redirectRoute)) {
             return back()->withInput();
         }
 

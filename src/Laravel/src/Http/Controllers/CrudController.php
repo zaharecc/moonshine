@@ -150,10 +150,10 @@ final class CrudController extends MoonShineController
         $resource = $request->getResource();
         $item = $resource->getItemOrInstance();
 
-        $redirectRoute = static function (CrudResource $resource) use($request): ?string {
+        $redirectRoute = static function (CrudResource $resource) use ($request): ?string {
             $redirect = $request->input('_redirect', $resource->getRedirectAfterSave());
 
-            if(\is_null($redirect) && !$resource->isCreateInModal() && $resource->isRecentlyCreated()) {
+            if (\is_null($redirect) && ! $resource->isCreateInModal() && $resource->isRecentlyCreated()) {
                 return $resource->getFormPageUrl($resource->getCastedData());
             }
 
@@ -181,7 +181,7 @@ final class CrudController extends MoonShineController
             ToastType::SUCCESS
         );
 
-        if(\is_null($redirectRoute($resource))) {
+        if (\is_null($redirectRoute($resource))) {
             return back();
         }
 

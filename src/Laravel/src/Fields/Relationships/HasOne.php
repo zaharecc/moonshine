@@ -168,7 +168,7 @@ class HasOne extends ModelRelationField implements HasFieldsContract
             return (string) value($this->redirectAfter, $parentId, $this);
         }
 
-        if($this->isAsync()) {
+        if ($this->isAsync()) {
             return null;
         }
 
