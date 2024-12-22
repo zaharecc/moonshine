@@ -262,7 +262,9 @@ class BelongsToMany extends ModelRelationField implements
             return $this->getKeys();
         }
 
-        return ($this->memoizeValues ?? $this->resolveValuesQuery()->get())->map(function ($value) {
+        $values = $this->memoizeValues ?? ($this->isAsyncSearch() ? $this->toValue() : $this->resolveValuesQuery()->get());
+
+        return $values->map(function ($value) {
             if (! $this->isValueWithModels()) {
                 $data = $this->toValue();
 
