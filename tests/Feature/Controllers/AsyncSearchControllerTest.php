@@ -53,14 +53,16 @@ it('async search in form', function () {
 });
 
 it('async search in index', function () {
+    $name = 'test-index-find';
+
     $item = createItem();
     $category = Category::factory()->create([
-        'name' => 'test-index-find',
+        'name' => $name,
     ]);
     $item->categories()->attach($category);
     $item->refresh();
 
-    asAdmin()->get($this->moonshineCore->getRouter()->to("async-search", [
+    $response = asAdmin()->get($this->moonshineCore->getRouter()->to("async-search", [
         'pageUri' => PageType::INDEX->value,
         'resourceUri' => $this->itemResource->getUriKey(),
         '_relation' => 'category',
@@ -69,5 +71,16 @@ it('async search in index', function () {
         ->assertOk()
         ->assertJsonIsArray()
         ->assertJsonCount(1)
+        ->content()
+    ;
+
+    $result = json_decode($response, true);
+
+    expect($result[0])
+        ->toBeArray()
+        ->and($result[0]['label'])
+        ->not()->toBeNull()
+        ->and($result[0]['label'])
+        ->toBe($name)
     ;
 });
