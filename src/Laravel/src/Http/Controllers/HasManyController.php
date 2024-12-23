@@ -122,7 +122,11 @@ final class HasManyController extends MoonShineController
                     && $element->getColumn() === $relation->getForeignKeyName()
             ))
             ->buttons($field->getFormButtons())
-            ->redirect($redirectRoute);
+            ->redirect($redirectRoute)
+            ->when(
+                !$update && is_null($redirectRoute),
+                static fn (FormBuilderContract $form): FormBuilderContract => $form->withoutRedirect(),
+            );
     }
 
     /**

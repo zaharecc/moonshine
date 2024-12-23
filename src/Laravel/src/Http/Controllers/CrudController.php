@@ -150,7 +150,12 @@ final class CrudController extends MoonShineController
         $resource = $request->getResource();
         $item = $resource->getItemOrInstance();
 
-        $redirectRoute = static function (CrudResource $resource) use ($request): ?string {
+        $redirectRoute = static function (CrudResource $resource) use($request): ?string
+        {
+            if ($request->boolean('_without-redirect')) {
+                return null;
+            }
+
             $redirect = $request->input('_redirect', $resource->getRedirectAfterSave());
 
             if (\is_null($redirect) && ! $resource->isCreateInModal() && $resource->isRecentlyCreated()) {
@@ -171,7 +176,7 @@ final class CrudController extends MoonShineController
         if ($request->ajax() || $request->wantsJson()) {
             return $this->json(
                 message: __('moonshine::ui.saved'),
-                redirect: $request->input('_redirect'),
+                redirect: $redirectRoute($resource),
                 status: $resource->isRecentlyCreated() ? Response::HTTP_CREATED : Response::HTTP_OK
             );
         }
