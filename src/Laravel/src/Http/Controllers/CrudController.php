@@ -150,8 +150,7 @@ final class CrudController extends MoonShineController
         $resource = $request->getResource();
         $item = $resource->getItemOrInstance();
 
-        $redirectRoute = static function (CrudResource $resource) use($request): ?string
-        {
+        $redirectRoute = static function (CrudResource $resource) use ($request): ?string {
             if ($request->boolean('_without-redirect')) {
                 return null;
             }

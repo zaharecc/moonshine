@@ -27,7 +27,8 @@ abstract class MoonShineController extends BaseController
 
     public function __construct(
         protected MoonShineNotificationContract $notification,
-    ) {}
+    ) {
+    }
 
     protected function json(
         string $message = '',
@@ -41,7 +42,7 @@ abstract class MoonShineController extends BaseController
             ->toast($message, $messageType)
             ->when(
                 $redirect,
-                static fn(MoonShineJsonResponse $response): MoonShineJsonResponse => $response->redirect($redirect)
+                static fn (MoonShineJsonResponse $response): MoonShineJsonResponse => $response->redirect($redirect)
             );
     }
 
@@ -99,7 +100,7 @@ abstract class MoonShineController extends BaseController
 
         if (! $class instanceof Model) {
             return $table->getRows()->first(
-                static fn(TableRowContract $row): bool => $row->getKey() === request()->getScalar('_key'),
+                static fn (TableRowContract $row): bool => $row->getKey() === request()->getScalar('_key'),
             );
         }
 

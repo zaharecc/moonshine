@@ -124,7 +124,7 @@ final class HasManyController extends MoonShineController
             ->buttons($field->getFormButtons())
             ->redirect($redirectRoute)
             ->when(
-                !$update && is_null($redirectRoute),
+                ! $update && \is_null($redirectRoute),
                 static fn (FormBuilderContract $form): FormBuilderContract => $form->withoutRedirect(),
             );
     }
