@@ -115,6 +115,11 @@ class HasMany extends ModelRelationField implements HasFieldsContract
             return null;
         }
 
+        return $this->getDefaultRedirect($parentId);
+    }
+
+    public function getDefaultRedirect(Model|int|null|string $parentId): ?string
+    {
         return moonshineRequest()
             ->getResource()
             ?->getFormPageUrl($parentId);

@@ -171,7 +171,7 @@ final class CrudController extends MoonShineController
         if ($request->ajax() || $request->wantsJson()) {
             return $this->json(
                 message: __('moonshine::ui.saved'),
-                redirect: $redirectRoute($resource),
+                redirect: $request->input('_redirect'),
                 status: $resource->isRecentlyCreated() ? Response::HTTP_CREATED : Response::HTTP_OK
             );
         }
