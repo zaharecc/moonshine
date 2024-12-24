@@ -13,7 +13,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 #[AsCommand(name: 'moonshine:resource')]
 class MakeResourceCommand extends MoonShineCommand
 {
-    protected $signature = 'moonshine:resource {name?} {--m|model=} {--t|title=} {--test} {--pest}';
+    protected $signature = 'moonshine:resource {name?} {--type=} {--m|model=} {--t|title=} {--test} {--pest}';
 
     protected $description = 'Create resource';
 
@@ -41,11 +41,18 @@ class MakeResourceCommand extends MoonShineCommand
 
         $this->makeDir($resourcesDir);
 
-        $stub = select('Resource type', [
+        $types = [
             'ModelResourceDefault' => 'Default model resource',
             'ModelResourceWithPages' => 'Model resource with pages',
             'Resource' => 'Empty resource',
-        ], 'ModelResourceDefault');
+        ];
+
+        if($type = $this->option('type')) {
+            $keys = array_keys($types);
+            $stub = $keys[$type-1] ?? $keys[0];
+        } else {
+            $stub = select('Resource type', $types, 'ModelResourceDefault');
+        }
 
         $replace = [
             '{namespace}' => moonshineConfig()->getNamespace('\Resources'),
