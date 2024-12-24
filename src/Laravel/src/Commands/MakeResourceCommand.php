@@ -98,7 +98,7 @@ class MakeResourceCommand extends MoonShineCommand
             $title
         );
 
-        if($this->option('policy')) {
+        if ($this->option('policy')) {
             $this->call(MakePolicyCommand::class, [
                 'className' => class_basename($model),
             ]);
