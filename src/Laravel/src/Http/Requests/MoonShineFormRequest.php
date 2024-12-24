@@ -35,8 +35,10 @@ class MoonShineFormRequest extends FormRequest
     public function messages(): array
     {
         if ($this->hasResource()) {
+            $messages = __('moonshine::validation');
+
             return array_merge(
-                __('moonshine::validation') ?? [],
+                is_array($messages) ? $messages : [],
                 $this->getResource()?->validationMessages() ?? []
             );
         }
