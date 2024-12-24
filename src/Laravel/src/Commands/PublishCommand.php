@@ -157,7 +157,8 @@ class PublishCommand extends MoonShineCommand
 
         $this->replaceInConfig(
             $configKey,
-            moonshineConfig()->getNamespace('\Forms\\' . $className) . "::class"
+            moonshineConfig()->getNamespace('\Forms\\' . $className) . "::class",
+            $className
         );
     }
 
@@ -202,7 +203,8 @@ class PublishCommand extends MoonShineCommand
 
         $this->replaceInConfig(
             $configKey,
-            moonshineConfig()->getNamespace('\Pages\\' . $className) . "::class"
+            moonshineConfig()->getNamespace('\Pages\\' . $className) . "::class",
+            $className
         );
     }
 
