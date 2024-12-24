@@ -98,9 +98,9 @@ abstract class MoonShineCommand extends Command
     ): void {
         $replace = "'$key' => $value,";
 
-        $pattern = ! \is_null($classReplace) ?
-            "/['\"]" . $key . "['\"]\s*=>\s*" . $classReplace . "::class,/"
-            : "/['\"]" . $key . "['\"]\s*=>\s*[^'\"]+?,/";
+        $pattern = \is_null($classReplace) ?
+            "/['\"]" . $key . "['\"]\s*=>\s*[^'\"]+?,/"
+            : "/['\"]" . $key . "['\"]\s*=>\s*" . $classReplace . "::class,/";
 
         file_put_contents(
             config_path('moonshine.php'),
