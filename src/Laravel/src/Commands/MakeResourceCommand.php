@@ -47,9 +47,9 @@ class MakeResourceCommand extends MoonShineCommand
             'Resource' => 'Empty resource',
         ];
 
-        if($type = $this->option('type')) {
+        if ($type = $this->option('type')) {
             $keys = array_keys($types);
-            $stub = $keys[$type-1] ?? $keys[0];
+            $stub = $keys[$type - 1] ?? $keys[0];
         } else {
             $stub = select('Resource type', $types, 'ModelResourceDefault');
         }
