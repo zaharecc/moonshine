@@ -7,9 +7,7 @@ namespace MoonShine\Laravel\Commands;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\File;
 
-use function Laravel\Prompts\outro;
-use function Laravel\Prompts\select;
-use function Laravel\Prompts\text;
+use function Laravel\Prompts\{outro, select, text};
 
 use MoonShine\UI\Fields\Field;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -61,13 +59,12 @@ class MakeFieldCommand extends MoonShineCommand
             Field::class
         );
 
-        $field = $this->getDirectory() . "/Fields/$className.php";
+        $fieldsDir = $this->getDirectory('/Fields');
+        $fieldPath = "$fieldsDir/$className.php";
 
-        if (! is_dir($this->getDirectory() . '/Fields')) {
-            $this->makeDir($this->getDirectory() . '/Fields');
-        }
+        $this->makeDir($fieldsDir);
 
-        $this->copyStub('Field', $field, [
+        $this->copyStub('Field', $fieldPath, [
             '{namespace}' => moonshineConfig()->getNamespace('\Fields'),
             '{view}' => $view,
             '{extend}' => $extends,
@@ -79,26 +76,18 @@ class MakeFieldCommand extends MoonShineCommand
         $viewPath = resource_path('views/' . str_replace('.', DIRECTORY_SEPARATOR, $view));
         $viewPath .= '.blade.php';
 
-        if (! is_dir(\dirname($viewPath))) {
-            $this->makeDir(\dirname($viewPath));
-        }
+        $this->makeDir(
+            \dirname($viewPath)
+        );
 
         $this->copyStub('view', $viewPath);
 
         outro(
-            "$className was created: " . str_replace(
-                base_path(),
-                '',
-                $field
-            )
+            "$className was created: " . $this->getRelativePath($fieldPath)
         );
 
         outro(
-            "View was created: " . str_replace(
-                base_path(),
-                '',
-                $viewPath
-            )
+            "View was created: " . $this->getRelativePath($viewPath)
         );
 
         return self::SUCCESS;

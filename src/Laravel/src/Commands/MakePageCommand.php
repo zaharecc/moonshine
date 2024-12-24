@@ -6,9 +6,7 @@ namespace MoonShine\Laravel\Commands;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
-use function Laravel\Prompts\outro;
-use function Laravel\Prompts\select;
-use function Laravel\Prompts\text;
+use function Laravel\Prompts\{outro, select, text};
 
 use Symfony\Component\Console\Attribute\AsCommand;
 
@@ -85,13 +83,12 @@ class MakePageCommand extends MoonShineCommand
         $dir = \is_null($dir) ? 'Pages' : $dir;
         $extends = $extends === null || $extends === '' || $extends === '0' ? 'Page' : $extends;
 
-        $page = $this->getDirectory() . "/$dir/$className.php";
+        $pagesDir = $this->getDirectory("/$dir");
+        $pagePath = "$pagesDir/$className.php";
 
-        if (! is_dir($this->getDirectory() . "/$dir")) {
-            $this->makeDir($this->getDirectory() . "/$dir");
-        }
+        $this->makeDir($pagesDir);
 
-        $this->copyStub($stub, $page, [
+        $this->copyStub($stub, $pagePath, [
             '{namespace}' => moonshineConfig()->getNamespace('\\' . str_replace('/', '\\', $dir)),
             'DummyPage' => $className,
             'DummyTitle' => $className,
@@ -99,11 +96,7 @@ class MakePageCommand extends MoonShineCommand
         ]);
 
         outro(
-            "$className was created: " . str_replace(
-                base_path(),
-                '',
-                $page
-            )
+            "$className was created: " . $this->getRelativePath($pagePath)
         );
 
         if (! $this->option('without-register')) {

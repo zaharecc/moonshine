@@ -26,7 +26,7 @@ class MakeUserCommand extends MoonShineCommand
         $password = $this->option('password') ?? password('Password');
 
         if ($username && $name && $password) {
-            MoonShineAuth::getModel()->query()->create([
+            MoonShineAuth::getModel()::query()->create([
                 moonshineConfig()->getUserField('username', 'email') => $username,
                 moonshineConfig()->getUserField('name') => $name,
                 moonshineConfig()->getUserField('password') => Hash::make($password),
@@ -53,8 +53,7 @@ class MakeUserCommand extends MoonShineCommand
                 required: true
             );
 
-            $exists = MoonShineAuth::getModel()
-                ->query()
+            $exists = MoonShineAuth::getModel()::query()
                 ->where(
                     moonshineConfig()->getUserField('username', 'email'),
                     $username,

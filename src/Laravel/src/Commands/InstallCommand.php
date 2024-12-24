@@ -72,7 +72,7 @@ class InstallCommand extends MoonShineCommand
         }
 
         if (! $this->testsMode) {
-            confirm('Can you quickly star our GitHub repository? 🙏🏻', true);
+            confirm('Can you quickly star our GitHub repository? 🙏🏻');
 
             $this->components->bulletList([
                 'Star or contribute to MoonShine: https://github.com/moonshine-software/moonshine',
@@ -259,7 +259,7 @@ class InstallCommand extends MoonShineCommand
             );
         }
 
-        $this->makeDir($this->getDirectory() . '/Resources');
+        $this->makeDir($this->getDirectory('/Resources'));
 
         $this->components->task('Resources directory created');
     }
@@ -283,10 +283,14 @@ class InstallCommand extends MoonShineCommand
         $this->components->task('Dashboard created');
     }
 
-
     protected function initLayout(): void
     {
-        $compact = $this->confirmAction('Want to use a minimalist theme?', skipOption: 'default-layout', autoEnable: $this->testsMode, default: false);
+        $compact = $this->confirmAction(
+            'Want to use a minimalist theme?',
+            skipOption: 'default-layout',
+            autoEnable: $this->testsMode,
+            default: false,
+        );
 
         $this->call(MakeLayoutCommand::class, [
             'className' => 'MoonShineLayout',
@@ -323,7 +327,10 @@ class InstallCommand extends MoonShineCommand
 
     private function registerServiceProvider(): void
     {
-        if (method_exists(ServiceProvider::class, 'addProviderToBootstrapFile') && file_exists(base_path('bootstrap/app.php'))) {
+        if (
+            method_exists(ServiceProvider::class, 'addProviderToBootstrapFile')
+            && file_exists(base_path('bootstrap/app.php'))
+        ) {
             // @phpstan-ignore-next-line
             ServiceProvider::addProviderToBootstrapFile(\App\Providers\MoonShineServiceProvider::class);
 

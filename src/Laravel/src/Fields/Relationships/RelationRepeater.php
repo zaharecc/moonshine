@@ -10,12 +10,15 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Collection;
 use MoonShine\Contracts\Core\DependencyInjection\FieldsContract;
 use MoonShine\Contracts\UI\ActionButtonContract;
+use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Contracts\UI\HasFieldsContract;
 use MoonShine\Contracts\UI\TableBuilderContract;
 use MoonShine\Laravel\Collections\Fields;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\UI\Components\ActionButton;
+use MoonShine\UI\Components\Layout\Column;
+use MoonShine\UI\Components\Layout\Div;
 use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\UI\Contracts\DefaultValueTypes\CanBeArray;
 use MoonShine\UI\Contracts\DefaultValueTypes\CanBeObject;
@@ -60,8 +63,6 @@ class RelationRepeater extends ModelRelationField implements
     protected ?ActionButtonContract $creatableButton = null;
 
     protected array $buttons = [];
-
-    protected bool $deleteWhenEmpty = false;
 
     protected ?Closure $modifyTable = null;
 
@@ -206,24 +207,19 @@ class RelationRepeater extends ModelRelationField implements
      */
     protected function resolveValue(): mixed
     {
-        $emptyRow = $this->getResource()?->getDataInstance();
-
-        // because the TableBuilder filters the values
-        if (blank($emptyRow)) {
-            $emptyRow = [null];
-        }
-
         $value = $this->isPreviewMode()
             ? $this->toFormattedValue()
             : $this->toValue();
 
-        $values = is_iterable($value)
-            ? $value
-            : [$value ?? $emptyRow];
+        $values = Collection::make(
+            is_iterable($value)
+                ? $value
+                : []
+        );
 
-        return collect($values)->when(
+        return $values->when(
             ! $this->isPreviewMode() && ! $this->isCreatable() && blank($values),
-            static fn ($values): Collection => $values->push($emptyRow)
+            static fn ($values): Collection => $values->push([null])
         );
     }
 
@@ -245,7 +241,13 @@ class RelationRepeater extends ModelRelationField implements
             ->cast($this->getResource()?->getCaster())
             ->when(
                 $this->isVertical(),
-                fn (TableBuilderContract $table): TableBuilderContract => $table->vertical($this->verticalTitleSpan, $this->verticalValueSpan)
+                fn (TableBuilderContract $table): TableBuilderContract => $table->vertical(
+                    title: fn (FieldContract $field, ComponentContract $default): Column => Column::make([
+                        Div::make([
+                            $field->getLabel(),
+                        ]),
+                    ])->columnSpan($this->verticalTitleSpan),
+                )
             )
             ->when(
                 ! \is_null($this->modifyTable),
@@ -362,18 +364,18 @@ class RelationRepeater extends ModelRelationField implements
             static fn (Builder $q) => $q->whereNotIn(
                 $relatedQualifiedKeyName,
                 $ids
-            )->delete()
-        );
-
-        $model->{$relationName}()->when(
-            empty($ids) && $this->deleteWhenEmpty,
+            )->delete(),
             static fn (Builder $q) => $q->delete()
         );
 
-        $items->each(static fn ($item) => $model->{$relationName}()->updateOrCreate(
-            [$relatedQualifiedKeyName => $item[$relatedKeyName] ?? null],
-            $item
-        ));
+        foreach ($items as $item) {
+            if (empty($item[$relatedKeyName])) {
+                unset($item[$relatedKeyName]);
+                $model->{$relationName}()->create($item);
+            } else {
+                $model->{$relationName}()->where($relatedKeyName, $item[$relatedKeyName])->update($item);
+            }
+        }
 
         return $model;
     }
@@ -419,7 +421,7 @@ class RelationRepeater extends ModelRelationField implements
                     fn (TableBuilderContract $table): TableBuilderContract => $table->creatable(
                         limit: $this->getCreateLimit(),
                         button: $this->getCreateButton()
-                    )
+                    )->removeAfterClone()
                 )
                 ->buttons($this->getButtons())
                 ->simple(),

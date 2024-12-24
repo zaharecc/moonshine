@@ -27,23 +27,18 @@ class MakeHandlerCommand extends MoonShineCommand
             required: true
         );
 
-        $path = $this->getDirectory() . "/Handlers/$className.php";
+        $handlersDir = $this->getDirectory() . '/Handlers';
+        $handlerPath = "$handlersDir/$className.php";
 
-        if (! is_dir($this->getDirectory() . '/Handlers')) {
-            $this->makeDir($this->getDirectory() . '/Handlers');
-        }
+        $this->makeDir($handlersDir);
 
-        $this->copyStub('Handler', $path, [
+        $this->copyStub('Handler', $handlerPath, [
             '{namespace}' => moonshineConfig()->getNamespace('\Handlers'),
             'DummyHandler' => $className,
         ]);
 
         outro(
-            "$className was created: " . str_replace(
-                base_path(),
-                '',
-                $path
-            )
+            "$className was created: " . $this->getRelativePath($handlerPath)
         );
 
         return self::SUCCESS;

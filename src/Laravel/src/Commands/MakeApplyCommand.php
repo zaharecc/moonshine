@@ -6,8 +6,7 @@ namespace MoonShine\Laravel\Commands;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
-use function Laravel\Prompts\outro;
-use function Laravel\Prompts\text;
+use function Laravel\Prompts\{outro, text};
 
 use Symfony\Component\Console\Attribute\AsCommand;
 
@@ -28,11 +27,10 @@ class MakeApplyCommand extends MoonShineCommand
             required: true
         );
 
-        $apply = $this->getDirectory() . "/Applies/$className.php";
+        $appliesDir = $this->getDirectory('/Applies');
+        $apply = "$appliesDir/$className.php";
 
-        if (! is_dir($this->getDirectory() . '/Applies')) {
-            $this->makeDir($this->getDirectory() . '/Applies');
-        }
+        $this->makeDir($appliesDir);
 
         $this->copyStub('Apply', $apply, [
             '{namespace}' => moonshineConfig()->getNamespace('\Applies'),
@@ -40,11 +38,7 @@ class MakeApplyCommand extends MoonShineCommand
         ]);
 
         outro(
-            "$className was created: " . str_replace(
-                base_path(),
-                '',
-                $apply
-            )
+            "$className was created: " . $this->getRelativePath($apply)
         );
 
         return self::SUCCESS;

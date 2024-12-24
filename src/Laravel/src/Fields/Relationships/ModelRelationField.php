@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Stringable;
 use MoonShine\Contracts\Core\HasResourceContract;
 use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
+use MoonShine\Contracts\UI\HasFieldsContract;
 use MoonShine\Core\Traits\HasResource;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\UI\Exceptions\FieldException;
@@ -85,6 +86,11 @@ abstract class ModelRelationField extends Field implements HasResourceContract
             $this->setResource($this->findResource());
         } else {
             $this->setResource($resource);
+        }
+
+        // required to create field entities and load assets
+        if ($this instanceof HasFieldsContract && ! $this->isMorph()) {
+            $this->getResource()?->getFormFields();
         }
     }
 

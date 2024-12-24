@@ -27,23 +27,18 @@ class MakeTypeCastCommand extends MoonShineCommand
             required: true
         );
 
-        $path = $this->getDirectory() . "/TypeCasts/$className.php";
+        $typeCastsDir = $this->getDirectory('/TypeCasts');
+        $typeCastPath = "$typeCastsDir/$className.php";
 
-        if (! is_dir($this->getDirectory() . '/TypeCasts')) {
-            $this->makeDir($this->getDirectory() . '/TypeCasts');
-        }
+        $this->makeDir($typeCastsDir);
 
-        $this->copyStub('TypeCast', $path, [
+        $this->copyStub('TypeCast', $typeCastPath, [
             '{namespace}' => moonshineConfig()->getNamespace('\TypeCasts'),
             'DummyCast' => $className,
         ]);
 
         outro(
-            "$className was created: " . str_replace(
-                base_path(),
-                '',
-                $path
-            )
+            "$className was created: " . $this->getRelativePath($typeCastPath)
         );
 
         return self::SUCCESS;

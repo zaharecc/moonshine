@@ -6,8 +6,7 @@ namespace MoonShine\Laravel\Commands;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
-use function Laravel\Prompts\outro;
-use function Laravel\Prompts\text;
+use function Laravel\Prompts\{outro, text};
 
 use Symfony\Component\Console\Attribute\AsCommand;
 
@@ -41,42 +40,33 @@ class MakeComponentCommand extends MoonShineCommand
             required: true
         );
 
-        $component = $this->getDirectory() . "/Components/$className.php";
+        $componentsDir = $this->getDirectory('/Components');
+        $componentPath = "$componentsDir/$className.php";
 
-        if (! is_dir($this->getDirectory() . '/Components')) {
-            $this->makeDir($this->getDirectory() . '/Components');
-        }
+        $this->makeDir($componentsDir);
 
         $view = str_replace('.blade.php', '', $view);
         $viewPath = resource_path('views/' . str_replace('.', DIRECTORY_SEPARATOR, $view));
         $viewPath .= '.blade.php';
 
-        if (! is_dir(\dirname($viewPath))) {
-            $this->makeDir(\dirname($viewPath));
-        }
+        $this->makeDir(
+            \dirname($viewPath)
+        );
 
         $this->copyStub('view', $viewPath);
 
-        $this->copyStub('Component', $component, [
+        $this->copyStub('Component', $componentPath, [
             '{namespace}' => moonshineConfig()->getNamespace('\Components'),
             '{view}' => $view,
             'DummyClass' => $className,
         ]);
 
         outro(
-            "$className was created: " . str_replace(
-                base_path(),
-                '',
-                $component
-            )
+            "$className was created: " . $this->getRelativePath($componentPath)
         );
 
         outro(
-            "View was created: " . str_replace(
-                base_path(),
-                '',
-                $viewPath
-            )
+            "View was created: " . $this->getRelativePath($viewPath)
         );
 
         return self::SUCCESS;

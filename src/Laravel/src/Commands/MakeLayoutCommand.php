@@ -6,9 +6,7 @@ namespace MoonShine\Laravel\Commands;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
-use function Laravel\Prompts\confirm;
-use function Laravel\Prompts\outro;
-use function Laravel\Prompts\text;
+use function Laravel\Prompts\{confirm, outro, text};
 
 use Symfony\Component\Console\Attribute\AsCommand;
 
@@ -36,18 +34,17 @@ class MakeLayoutCommand extends MoonShineCommand
             $dir = 'Layouts';
         }
 
-        $layout = $this->getDirectory() . "/$dir/$className.php";
+        $layoutsDir = $this->getDirectory() . "/$dir";
+        $layoutPath = "$layoutsDir/$className.php";
 
-        if (! is_dir($this->getDirectory() . "/$dir")) {
-            $this->makeDir($this->getDirectory() . "/$dir");
-        }
+        $this->makeDir($layoutsDir);
 
         $compact = ! $this->option('full') && ($this->option('compact') || confirm('Want to use a minimalist theme?'));
 
         $extendClassName = $compact ? 'CompactLayout' : 'AppLayout';
         $extends = "MoonShine\Laravel\Layouts\\$extendClassName";
 
-        $this->copyStub('Layout', $layout, [
+        $this->copyStub('Layout', $layoutPath, [
             '{namespace}' => moonshineConfig()->getNamespace('\\' . str_replace('/', '\\', $dir)),
             '{extend}' => $extends,
             '{extendShort}' => class_basename($extends),
@@ -55,11 +52,7 @@ class MakeLayoutCommand extends MoonShineCommand
         ]);
 
         outro(
-            "$className was created: " . str_replace(
-                base_path(),
-                '',
-                $layout
-            )
+            "$className was created: " . $this->getRelativePath($layoutPath)
         );
 
         if ($this->option('default') || confirm('Use the default template in the system?')) {
