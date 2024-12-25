@@ -39,4 +39,11 @@ class DummyField extends {extendShort}
             return data_set($item, $this->getColumn(), $this->getRequestValue());
         };
     }
+
+    protected function viewData(): array
+    {
+        return [
+            //
+        ];
+    }
 }
