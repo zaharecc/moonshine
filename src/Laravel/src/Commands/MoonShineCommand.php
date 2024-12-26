@@ -91,11 +91,16 @@ abstract class MoonShineCommand extends Command
         file_put_contents($to, $content);
     }
 
-    protected function replaceInConfig(string $key, string $value): void
-    {
+    protected function replaceInConfig(
+        string $key,
+        string $value,
+        ?string $classReplace = null
+    ): void {
         $replace = "'$key' => $value,";
 
-        $pattern = "/['\"]" . $key . "['\"]\s*=>\s*[^'\"]+?,/";
+        $pattern = \is_null($classReplace) ?
+            "/['\"]" . $key . "['\"]\s*=>\s*[^'\"]+?,/"
+            : "/['\"]" . $key . "['\"]\s*=>\s*" . $classReplace . "::class,/";
 
         file_put_contents(
             config_path('moonshine.php'),

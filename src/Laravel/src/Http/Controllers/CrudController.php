@@ -14,6 +14,7 @@ use MoonShine\Laravel\Http\Requests\Resources\MassDeleteFormRequest;
 use MoonShine\Laravel\Http\Requests\Resources\StoreFormRequest;
 use MoonShine\Laravel\Http\Requests\Resources\UpdateFormRequest;
 use MoonShine\Laravel\MoonShineRequest;
+use MoonShine\Laravel\Resources\CrudResource;
 use MoonShine\Support\Enums\ToastType;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -90,7 +91,6 @@ final class CrudController extends MoonShineController
 
         $redirectRoute = $request->input('_redirect', $resource->getRedirectAfterDelete());
 
-
         try {
             $resource->delete($resource->getItemOrFail());
         } catch (Throwable $e) {
@@ -150,7 +150,19 @@ final class CrudController extends MoonShineController
         $resource = $request->getResource();
         $item = $resource->getItemOrInstance();
 
-        $redirectRoute = static fn ($resource): mixed => $request->input('_redirect', $resource->getRedirectAfterSave());
+        $redirectRoute = static function (CrudResource $resource) use ($request): ?string {
+            if ($request->boolean('_without-redirect')) {
+                return null;
+            }
+
+            $redirect = $request->input('_redirect', $resource->getRedirectAfterSave());
+
+            if (\is_null($redirect) && ! $resource->isCreateInModal() && $resource->isRecentlyCreated()) {
+                return $resource->getFormPageUrl($resource->getCastedData());
+            }
+
+            return $redirect;
+        };
 
         try {
             $item = $resource->save($item);
@@ -161,13 +173,9 @@ final class CrudController extends MoonShineController
         $resource->setItem($item);
 
         if ($request->ajax() || $request->wantsJson()) {
-            $forceRedirect = $request->boolean('_force_redirect')
-                ? $redirectRoute($resource)
-                : null;
-
             return $this->json(
                 message: __('moonshine::ui.saved'),
-                redirect: $request->input('_redirect', $forceRedirect),
+                redirect: $redirectRoute($resource),
                 status: $resource->isRecentlyCreated() ? Response::HTTP_CREATED : Response::HTTP_OK
             );
         }
@@ -176,6 +184,10 @@ final class CrudController extends MoonShineController
             __('moonshine::ui.saved'),
             ToastType::SUCCESS
         );
+
+        if (\is_null($redirectRoute($resource))) {
+            return back();
+        }
 
         return redirect(
             $redirectRoute($resource)

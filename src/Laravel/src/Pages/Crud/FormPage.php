@@ -233,12 +233,6 @@ class FormPage extends CrudPage
                             Hidden::make('_method')->setValue('PUT')
                         )
                     )
-                    ->when(
-                        ! $resource->isItemExists() && ! $resource->isCreateInModal(),
-                        static fn (Fields $fields): Fields => $fields->push(
-                            Hidden::make('_force_redirect')->setValue(true)
-                        )
-                    )
                     ->toArray(),
             ])
             ->when(

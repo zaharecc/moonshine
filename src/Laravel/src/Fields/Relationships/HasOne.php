@@ -162,15 +162,24 @@ class HasOne extends ModelRelationField implements HasFieldsContract
         return $this;
     }
 
-    public function getRedirectAfter(Model|int|null|string $parentId): string
+    public function getRedirectAfter(Model|int|null|string $parentId): ?string
     {
         if (! \is_null($this->redirectAfter)) {
             return (string) value($this->redirectAfter, $parentId, $this);
         }
 
+        if ($this->isAsync() && ! \is_null($this->toValue())) {
+            return null;
+        }
+
+        return $this->getDefaultRedirect($parentId);
+    }
+
+    public function getDefaultRedirect(Model|int|null|string $parentId): ?string
+    {
         return moonshineRequest()
-                   ->getResource()
-                   ?->getFormPageUrl($parentId) ?? '';
+            ->getResource()
+            ?->getFormPageUrl($parentId);
     }
 
     /**
@@ -257,7 +266,7 @@ class HasOne extends ModelRelationField implements HasFieldsContract
                 )
                     ->toArray()
             )
-            ->redirect($isAsync ? null : $redirectAfter)
+            ->redirect($redirectAfter)
             ->fillCast(
                 $item?->toArray() ?? array_filter([
                 $relation->getForeignKeyName() => $this->getRelatedModel()?->getKey(),
@@ -272,7 +281,7 @@ class HasOne extends ModelRelationField implements HasFieldsContract
                     ? []
                     : [
                     $resource->getDeleteButton(
-                        redirectAfterDelete: $redirectAfter,
+                        redirectAfterDelete: $this->getDefaultRedirect($parentItem->getKey()),
                         isAsync: false,
                         modalName: "has-one-{$this->getRelationName()}",
                     )->class('btn-lg'),

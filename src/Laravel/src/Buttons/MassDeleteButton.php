@@ -17,7 +17,7 @@ final class MassDeleteButton
     public static function for(
         CrudResource $resource,
         string $componentName = null,
-        string $redirectAfterDelete = '',
+        ?string $redirectAfterDelete = null,
         bool $isAsync = true,
         string $modalName = 'resource-mass-delete-modal',
     ): ActionButtonContract {

@@ -18,7 +18,7 @@ final class DeleteButton
     public static function for(
         CrudResource $resource,
         ?string $componentName = null,
-        string $redirectAfterDelete = '',
+        ?string $redirectAfterDelete = null,
         bool $isAsync = true,
         string $modalName = 'resource-delete-modal',
     ): ActionButtonContract {
