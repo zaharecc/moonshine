@@ -21,7 +21,7 @@ class DummyResource extends ModelResource
     protected string $model = {model}::class;
 
     protected string $title = 'DummyTitle';
-
+    {properties}
     /**
      * @return list<FieldContract>
      */

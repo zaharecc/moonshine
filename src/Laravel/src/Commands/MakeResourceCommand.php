@@ -13,7 +13,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 #[AsCommand(name: 'moonshine:resource')]
 class MakeResourceCommand extends MoonShineCommand
 {
-    protected $signature = 'moonshine:resource {name?} {--m|model=} {--t|title=} {--test} {--pest} {--p|policy}';
+    protected $signature = 'moonshine:resource {name?} {--type=} {--m|model=} {--t|title=} {--test} {--pest} {--p|policy}';
 
     protected $description = 'Create resource';
 
@@ -54,10 +54,17 @@ class MakeResourceCommand extends MoonShineCommand
             $stub = select('Resource type', $types, 'ModelResourceDefault');
         }
 
+        $properties = '';
+
+        if($this->option('policy')) {
+            $properties .= PHP_EOL . str_repeat(' ', 4) . 'protected bool $withPolicy = true;' . PHP_EOL;
+        }
+
         $replace = [
             '{namespace}' => moonshineConfig()->getNamespace('\Resources'),
             '{model-namespace}' => $model,
             '{model}' => class_basename($model),
+            '{properties}' => $properties,
             'DummyTitle' => $title,
             'Dummy' => $name,
         ];
