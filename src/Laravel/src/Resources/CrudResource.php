@@ -75,6 +75,8 @@ abstract class CrudResource extends Resource implements CrudResourceContract
 
     protected bool $isAsync = true;
 
+    protected bool $isLazy = false;
+
     protected bool $isPrecognitive = false;
 
     protected bool $deleteRelationships = false;
@@ -208,6 +210,11 @@ abstract class CrudResource extends Resource implements CrudResourceContract
     public function isAsync(): bool
     {
         return $this->isAsync;
+    }
+
+    public function isLazy(): bool
+    {
+        return $this->isLazy;
     }
 
     public function isPrecognitive(): bool
