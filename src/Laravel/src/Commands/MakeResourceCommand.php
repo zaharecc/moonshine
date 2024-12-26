@@ -13,7 +13,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 #[AsCommand(name: 'moonshine:resource')]
 class MakeResourceCommand extends MoonShineCommand
 {
-    protected $signature = 'moonshine:resource {name?} {--m|model=} {--t|title=} {--test} {--pest}';
+    protected $signature = 'moonshine:resource {name?} {--m|model=} {--t|title=} {--test} {--pest} {--p|policy}';
 
     protected $description = 'Create resource';
 
@@ -97,6 +97,12 @@ class MakeResourceCommand extends MoonShineCommand
             "{$name}Resource",
             $title
         );
+
+        if ($this->option('policy')) {
+            $this->call(MakePolicyCommand::class, [
+                'className' => class_basename($model),
+            ]);
+        }
 
         return self::SUCCESS;
     }
