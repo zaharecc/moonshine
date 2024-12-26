@@ -41,11 +41,18 @@ class MakeResourceCommand extends MoonShineCommand
 
         $this->makeDir($resourcesDir);
 
-        $stub = select('Resource type', [
+        $types = [
             'ModelResourceDefault' => 'Default model resource',
             'ModelResourceWithPages' => 'Model resource with pages',
             'Resource' => 'Empty resource',
-        ], 'ModelResourceDefault');
+        ];
+
+        if ($type = $this->option('type')) {
+            $keys = array_keys($types);
+            $stub = $keys[$type - 1] ?? $keys[0];
+        } else {
+            $stub = select('Resource type', $types, 'ModelResourceDefault');
+        }
 
         $replace = [
             '{namespace}' => moonshineConfig()->getNamespace('\Resources'),
