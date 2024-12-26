@@ -101,6 +101,12 @@ interface TableBuilderContract extends
 
     public function isSticky(): bool;
 
+    public function stickyButtons(): static;
+
+    public function isStickyButtons(): bool;
+
+    public function calculateStickyClass(): string;
+
     public function columnSelection(): static;
 
     public function isColumnSelection(): bool;

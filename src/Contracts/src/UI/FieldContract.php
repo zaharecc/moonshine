@@ -42,6 +42,10 @@ interface FieldContract extends
 
     public function isColumnSelection(): bool;
 
+    public function sticky(): static;
+
+    public function isStickyColumn(): bool;
+
     public function nullable(Closure|bool|null $condition = null): static;
 
     public function isNullable(): bool;
