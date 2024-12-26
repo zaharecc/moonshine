@@ -92,6 +92,8 @@ abstract class CrudResource extends Resource implements CrudResourceContract
 
     protected bool $columnSelection = false;
 
+    protected bool $stickyButtons = false;
+
     protected ?string $casterKeyName = null;
 
     protected bool $isRecentlyCreated = false;
@@ -240,6 +242,11 @@ abstract class CrudResource extends Resource implements CrudResourceContract
     public function isColumnSelection(): bool
     {
         return $this->columnSelection;
+    }
+
+    public function isStickyButtons(): bool
+    {
+        return $this->stickyButtons;
     }
 
     public function isSubmitShowWhen(): bool
