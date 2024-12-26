@@ -56,7 +56,7 @@ class MakeResourceCommand extends MoonShineCommand
 
         $properties = '';
 
-        if($this->option('policy')) {
+        if ($this->option('policy')) {
             $properties .= PHP_EOL . str_repeat(' ', 4) . 'protected bool $withPolicy = true;' . PHP_EOL;
         }
 
