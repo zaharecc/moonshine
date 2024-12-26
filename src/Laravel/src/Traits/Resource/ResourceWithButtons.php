@@ -170,7 +170,7 @@ trait ResourceWithButtons
 
     public function getDeleteButton(
         ?string $componentName = null,
-        string $redirectAfterDelete = '',
+        ?string $redirectAfterDelete = null,
         bool $isAsync = true,
         string $modalName = 'resource-delete-modal',
     ): ActionButtonContract {
@@ -178,7 +178,7 @@ trait ResourceWithButtons
             DeleteButton::for(
                 $this,
                 componentName: $componentName,
-                redirectAfterDelete: $isAsync ? '' : $redirectAfterDelete,
+                redirectAfterDelete: $isAsync ? null : $redirectAfterDelete,
                 isAsync: $isAsync,
                 modalName: $modalName
             )
@@ -192,7 +192,7 @@ trait ResourceWithButtons
 
     public function getMassDeleteButton(
         ?string $componentName = null,
-        string $redirectAfterDelete = '',
+        ?string $redirectAfterDelete = null,
         bool $isAsync = true,
         string $modalName = 'resource-mass-delete-modal',
     ): ActionButtonContract {
@@ -200,7 +200,7 @@ trait ResourceWithButtons
             MassDeleteButton::for(
                 $this,
                 componentName: $componentName,
-                redirectAfterDelete: $isAsync ? '' : $redirectAfterDelete,
+                redirectAfterDelete: $isAsync ? null : $redirectAfterDelete,
                 isAsync: $isAsync,
                 modalName: $modalName
             )

@@ -81,6 +81,7 @@ final class HasManyController extends MoonShineController
         };
 
         $formName = "{$resource->getUriKey()}-unique-" . ($item->getKey() ?? "create");
+        $redirectRoute = $field->getRedirectAfter($parent);
 
         return (string) FormBuilder::make($action($item))
             /** @phpstan-ignore-next-line  */
@@ -121,7 +122,11 @@ final class HasManyController extends MoonShineController
                     && $element->getColumn() === $relation->getForeignKeyName()
             ))
             ->buttons($field->getFormButtons())
-            ->redirect($isAsync ? null : $field->getRedirectAfter($parent));
+            ->redirect($redirectRoute)
+            ->when(
+                ! $update && \is_null($redirectRoute),
+                static fn (FormBuilderContract $form): FormBuilderContract => $form->withoutRedirect(),
+            );
     }
 
     /**

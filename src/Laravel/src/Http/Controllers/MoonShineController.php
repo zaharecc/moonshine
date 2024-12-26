@@ -54,7 +54,7 @@ abstract class MoonShineController extends BaseController
     /**
      * @throws Throwable
      */
-    protected function reportAndResponse(bool $isAjax, Throwable $e, string $redirectRoute): Response
+    protected function reportAndResponse(bool $isAjax, Throwable $e, ?string $redirectRoute): Response
     {
         report_if(moonshine()->isProduction(), $e);
 
@@ -74,6 +74,10 @@ abstract class MoonShineController extends BaseController
         throw_if(! moonshine()->isProduction(), $e);
 
         $this->toast(__($message), $type);
+
+        if (\is_null($redirectRoute)) {
+            return back()->withInput();
+        }
 
         return redirect($redirectRoute)->withInput();
     }

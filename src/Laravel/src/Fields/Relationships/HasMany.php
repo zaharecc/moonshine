@@ -105,15 +105,24 @@ class HasMany extends ModelRelationField implements HasFieldsContract
         return $this;
     }
 
-    public function getRedirectAfter(Model|int|null|string $parentId): string
+    public function getRedirectAfter(Model|int|null|string $parentId): ?string
     {
         if (! \is_null($this->redirectAfter)) {
             return (string) value($this->redirectAfter, $parentId, $this);
         }
 
+        if ($this->isAsync()) {
+            return null;
+        }
+
+        return $this->getDefaultRedirect($parentId);
+    }
+
+    public function getDefaultRedirect(Model|int|null|string $parentId): ?string
+    {
         return moonshineRequest()
             ->getResource()
-            ?->getFormPageUrl($parentId) ?? '';
+            ?->getFormPageUrl($parentId);
     }
 
     /**
@@ -450,10 +459,9 @@ class HasMany extends ModelRelationField implements HasFieldsContract
     {
         $resource = $this->getResource()->stopGettingItemFromUrl();
 
-        $redirectAfter = $this->isAsync()
-            ? '' : $this->getRedirectAfter(
-                $this->getRelatedModel()?->getKey()
-            );
+        $redirectAfter = $this->getRedirectAfter(
+            $this->getRelatedModel()?->getKey()
+        );
 
         $editButton = $this->editButton ?? HasManyButton::for($this, update: true);
 
