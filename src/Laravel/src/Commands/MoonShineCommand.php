@@ -8,7 +8,6 @@ use Closure;
 use Illuminate\Support\Stringable;
 use Leeto\PackageCommand\Command;
 use MoonShine\Laravel\Support\StubsPath;
-use MoonShine\MenuManager\MenuItem;
 use function Laravel\Prompts\{text, outro};
 
 abstract class MoonShineCommand extends Command
@@ -49,7 +48,6 @@ abstract class MoonShineCommand extends Command
             isPage: $page,
             between: static fn (Stringable $content): Stringable => $content->betweenFirst("protected function menu(): array", '}'),
             replace: static fn (Stringable $content, Closure $tab): Stringable => $content->replace("];", "{$tab()}MenuItem::make('$title', $class::class),\n{$tab(2)}];"),
-            use: MenuItem::class,
         );
     }
 
