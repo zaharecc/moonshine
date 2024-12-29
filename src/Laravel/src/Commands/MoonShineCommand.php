@@ -57,7 +57,7 @@ abstract class MoonShineCommand extends Command
      * @param  Closure(Stringable $content): Stringable  $between
      * @param  Closure(Stringable $content, Closure $tab): Stringable  $replace
      */
-    private static function addResourceOrPageTo(string $class, string $to, bool $isPage, Closure $between, Closure $replace, string $use = ''): void
+    private static function addResourceOrPageTo(string $class, string $to, Closure $between, Closure $replace, string $use = ''): void
     {
         if (! file_exists($to)) {
             return;

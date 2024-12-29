@@ -20,7 +20,7 @@ final class StubsPath
         private readonly string $path,
         private ?string $ext = null,
     ) {
-        $this->ext = $this->ext ?? File::extension($this->path);
+        $this->ext ??= File::extension($this->path);
 
         $pathWithExt = str($this->path)
             ->replace('\\', '/')
