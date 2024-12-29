@@ -16,7 +16,7 @@ use MoonShine\Laravel\Pages\Page;
 /**
  * @extends ModelResource<{model}, {indexPage}, {formPage}, {detailPage}>
  */
-class DummyResource extends ModelResource
+class DummyClass extends ModelResource
 {
     protected string $model = {model}::class;
 

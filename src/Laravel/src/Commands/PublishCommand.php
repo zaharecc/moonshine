@@ -123,7 +123,7 @@ class PublishCommand extends MoonShineCommand
         $provider = file_get_contents(app_path('Providers/MoonShineServiceProvider.php'));
 
         if (! str_contains($provider, "$targetNamespace\\$name")) {
-            self::addResourceOrPageToProviderFile($name);
+            self::addResourceOrPageToProviderFile($name, namespace: $targetNamespace);
         }
     }
 

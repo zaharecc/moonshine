@@ -6,7 +6,8 @@ namespace MoonShine\Laravel\Commands;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
-use function Laravel\Prompts\{outro, text};
+use MoonShine\Laravel\Support\StubsPath;
+use function Laravel\Prompts\{text};
 
 use Symfony\Component\Console\Attribute\AsCommand;
 
@@ -27,47 +28,25 @@ class MakeComponentCommand extends MoonShineCommand
             required: true
         );
 
-        $suggestView = str($className)
-            ->classBasename()
-            ->kebab()
-            ->prepend("admin.components.")
-            ->value();
+        $stubsPath = new StubsPath($className, 'php');
 
-        $view = text(
-            'Path to view',
-            $suggestView,
-            default: $suggestView,
-            required: true
+        $view = $this->makeViewFromStub('admin.components', $stubsPath->name, $stubsPath->dir);
+
+        $stubsPath->prependDir(
+            $this->getDirectory('Components')
+        )->prependNamespace(
+            moonshineConfig()->getNamespace('Components')
         );
 
-        $componentsDir = $this->getDirectory('/Components');
-        $componentPath = "$componentsDir/$className.php";
+        $this->makeDir($stubsPath->dir);
 
-        $this->makeDir($componentsDir);
-
-        $view = str_replace('.blade.php', '', $view);
-        $viewPath = resource_path('views/' . str_replace('.', DIRECTORY_SEPARATOR, $view));
-        $viewPath .= '.blade.php';
-
-        $this->makeDir(
-            \dirname($viewPath)
-        );
-
-        $this->copyStub('view', $viewPath);
-
-        $this->copyStub('Component', $componentPath, [
-            '{namespace}' => moonshineConfig()->getNamespace('\Components'),
+        $this->copyStub('Component', $stubsPath->getPath(), [
+            '{namespace}' => $stubsPath->namespace,
             '{view}' => $view,
-            'DummyClass' => $className,
+            'DummyClass' => $stubsPath->name,
         ]);
 
-        outro(
-            "$className was created: " . $this->getRelativePath($componentPath)
-        );
-
-        outro(
-            "View was created: " . $this->getRelativePath($viewPath)
-        );
+        $this->wasCreatedInfo($stubsPath);
 
         return self::SUCCESS;
     }

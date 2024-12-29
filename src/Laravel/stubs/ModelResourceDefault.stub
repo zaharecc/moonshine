@@ -16,7 +16,7 @@ use MoonShine\Contracts\UI\ComponentContract;
 /**
  * @extends ModelResource<{model}>
  */
-class DummyResource extends ModelResource
+class DummyClass extends ModelResource
 {
     protected string $model = {model}::class;
 

@@ -7,7 +7,8 @@ namespace MoonShine\Laravel\Commands;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\File;
 
-use function Laravel\Prompts\{outro, select, text};
+use MoonShine\Laravel\Support\StubsPath;
+use function Laravel\Prompts\{select, text};
 
 use MoonShine\UI\Fields\Field;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -28,68 +29,47 @@ class MakeFieldCommand extends MoonShineCommand
         $className = $this->argument('className') ?? text(
             'Class name',
             'CustomField',
-            required: true
+            required: true,
         );
 
-        $suggestView = str($className)
-            ->classBasename()
-            ->kebab()
-            ->prepend("admin.fields.")
-            ->value();
+        $stubsPath = new StubsPath($className, 'php');
 
-        $view = text(
-            'Path to view',
-            $suggestView,
-            default: $suggestView,
-            required: true
+        $view = $this->makeViewFromStub('admin.fields', $stubsPath->name, $stubsPath->dir);
+
+        $stubsPath->prependDir(
+            $this->getDirectory('Fields'),
+        )->prependNamespace(
+            moonshineConfig()->getNamespace('Fields'),
         );
 
-        $extends = select(
-            'Extends',
-            collect(File::files(__DIR__ . '/../../../UI/src/Fields/'))
-                ->mapWithKeys(
-                    static fn (SplFileInfo $file): array => [
-                        $file->getFilenameWithoutExtension() => $file->getFilenameWithoutExtension(),
-                    ]
-                )
-                ->except(['Field', 'Fields', 'FormElement'])
-                ->mapWithKeys(static fn ($file): array => [('MoonShine\UI\Fields\\' . $file) => $file])
-                ->prepend('Base', Field::class)
-                ->toArray(),
-            Field::class
-        );
+        $extends = select('Extends', $this->findExtends(), Field::class);
 
-        $fieldsDir = $this->getDirectory('/Fields');
-        $fieldPath = "$fieldsDir/$className.php";
+        $this->makeDir($stubsPath->dir);
 
-        $this->makeDir($fieldsDir);
-
-        $this->copyStub('Field', $fieldPath, [
-            '{namespace}' => moonshineConfig()->getNamespace('\Fields'),
+        $this->copyStub('Field', $stubsPath->getPath(), [
+            '{namespace}' => $stubsPath->namespace,
             '{view}' => $view,
             '{extend}' => $extends,
             '{extendShort}' => class_basename($extends),
-            'DummyField' => $className,
+            'DummyClass' => $stubsPath->name,
         ]);
 
-        $view = str_replace('.blade.php', '', $view);
-        $viewPath = resource_path('views/' . str_replace('.', DIRECTORY_SEPARATOR, $view));
-        $viewPath .= '.blade.php';
-
-        $this->makeDir(
-            \dirname($viewPath)
-        );
-
-        $this->copyStub('view', $viewPath);
-
-        outro(
-            "$className was created: " . $this->getRelativePath($fieldPath)
-        );
-
-        outro(
-            "View was created: " . $this->getRelativePath($viewPath)
-        );
+        $this->wasCreatedInfo($stubsPath);
 
         return self::SUCCESS;
+    }
+
+    private function findExtends(): array
+    {
+        return collect(File::files(__DIR__ . '/../../../UI/src/Fields/'))
+            ->mapWithKeys(
+                static fn (SplFileInfo $file): array => [
+                    $file->getFilenameWithoutExtension() => $file->getFilenameWithoutExtension(),
+                ],
+            )
+            ->except(['Field', 'Fields', 'FormElement'])
+            ->mapWithKeys(static fn ($file): array => [('MoonShine\UI\Fields\\' . $file) => $file])
+            ->prepend('Base', Field::class)
+            ->toArray();
     }
 }

@@ -6,6 +6,7 @@ namespace MoonShine\Laravel\Commands;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
+use MoonShine\Laravel\Support\StubsPath;
 use function Laravel\Prompts\{outro, suggest};
 
 use MoonShine\Laravel\MoonShineAuth;
@@ -43,22 +44,25 @@ class MakePolicyCommand extends MoonShineCommand
         $model = $this->qualifyModel($className);
         $className = class_basename($model) . 'Policy';
 
-        $policiesDir = app_path('/Policies');
-        $policyPath = "$policiesDir/$className.php";
+        $stubsPath = new StubsPath($className, 'php');
 
-        $this->makeDir($policiesDir);
+        $stubsPath->prependDir(
+            'app/Policies',
+        )->prependNamespace(
+            'App\\Policies',
+        );
 
-        $this->copyStub('Policy', $policyPath, [
-            'DummyClass' => $className,
+        $this->makeDir($stubsPath->dir);
+
+        $this->copyStub('Policy', $stubsPath->getPath(), [
+            'DummyClass' => $stubsPath->name,
             '{model-namespace}' => $model,
             '{model}' => class_basename($model),
             '{user-model-namespace}' => MoonShineAuth::getModel()::class,
             '{user-model}' => class_basename(MoonShineAuth::getModel()),
         ]);
 
-        outro(
-            "$className was created: " . $this->getRelativePath($policyPath)
-        );
+        $this->wasCreatedInfo($stubsPath);
 
         return self::SUCCESS;
     }
