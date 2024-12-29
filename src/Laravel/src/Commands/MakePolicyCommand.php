@@ -6,10 +6,10 @@ namespace MoonShine\Laravel\Commands;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
-use MoonShine\Laravel\Support\StubsPath;
-use function Laravel\Prompts\{outro, suggest};
+use function Laravel\Prompts\{suggest};
 
 use MoonShine\Laravel\MoonShineAuth;
+use MoonShine\Laravel\Support\StubsPath;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Finder\Finder;
 

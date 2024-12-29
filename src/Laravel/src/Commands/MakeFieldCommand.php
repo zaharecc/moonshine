@@ -7,9 +7,9 @@ namespace MoonShine\Laravel\Commands;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\File;
 
-use MoonShine\Laravel\Support\StubsPath;
 use function Laravel\Prompts\{select, text};
 
+use MoonShine\Laravel\Support\StubsPath;
 use MoonShine\UI\Fields\Field;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Finder\SplFileInfo;

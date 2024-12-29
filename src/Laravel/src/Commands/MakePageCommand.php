@@ -6,9 +6,9 @@ namespace MoonShine\Laravel\Commands;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
-use MoonShine\Laravel\Support\StubsPath;
-use function Laravel\Prompts\{outro, select, text};
+use function Laravel\Prompts\{select, text};
 
+use MoonShine\Laravel\Support\StubsPath;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'moonshine:page')]

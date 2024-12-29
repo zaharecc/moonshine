@@ -6,9 +6,9 @@ namespace MoonShine\Laravel\Commands;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
-use MoonShine\Laravel\Support\StubsPath;
-use function Laravel\Prompts\{confirm, outro, text};
+use function Laravel\Prompts\{confirm, text};
 
+use MoonShine\Laravel\Support\StubsPath;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'moonshine:layout')]

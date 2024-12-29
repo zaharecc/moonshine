@@ -6,9 +6,11 @@ namespace MoonShine\Laravel\Commands;
 
 use Closure;
 use Illuminate\Support\Stringable;
+
+use function Laravel\Prompts\{outro, text};
+
 use Leeto\PackageCommand\Command;
 use MoonShine\Laravel\Support\StubsPath;
-use function Laravel\Prompts\{text, outro};
 
 abstract class MoonShineCommand extends Command
 {
@@ -122,7 +124,7 @@ abstract class MoonShineCommand extends Command
                 $path . '.' . str($dir)
                     ->replace('/', '.')
                     ->lower()
-                    ->whenNotEmpty(fn(Stringable $str) => $str->append('.')),
+                    ->whenNotEmpty(fn (Stringable $str) => $str->append('.')),
             )
             ->value();
 
