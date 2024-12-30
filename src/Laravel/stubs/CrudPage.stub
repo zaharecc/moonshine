@@ -9,7 +9,7 @@ use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FieldContract;
 use Throwable;
 
-class DummyPage extends {extendShort}
+class DummyClass extends {extendShort}
 {
     /**
      * @return list<ComponentContract|FieldContract>

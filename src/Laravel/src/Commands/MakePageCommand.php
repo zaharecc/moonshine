@@ -6,8 +6,9 @@ namespace MoonShine\Laravel\Commands;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
-use function Laravel\Prompts\{outro, select, text};
+use function Laravel\Prompts\{select, text};
 
+use MoonShine\Laravel\Support\StubsPath;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'moonshine:page')]
@@ -29,12 +30,15 @@ class MakePageCommand extends MoonShineCommand
             required: true
         );
 
-        $dir = $this->option('dir') ?: \dirname($className);
-        $className = class_basename($className);
+        $stubsPath = new StubsPath($className, 'php');
 
-        if ($dir === '.') {
-            $dir = 'Pages';
-        }
+        $dir = $this->option('dir') ?: 'Pages';
+
+        $stubsPath->prependDir(
+            $this->getDirectory($dir),
+        )->prependNamespace(
+            moonshineConfig()->getNamespace($dir),
+        );
 
         if (! $this->option('force') && ! $this->option('extends') && ! $this->option('crud')) {
             $types = [
@@ -52,21 +56,30 @@ class MakePageCommand extends MoonShineCommand
 
             $extends = $type ?: null;
 
-            $this->makePage($className, $extends ? 'CrudPage' : 'Page', $dir, $extends);
+            $this->makePage($stubsPath, $extends ? 'CrudPage' : 'Page', $extends);
 
             return self::SUCCESS;
         }
 
         if ($this->option('crud')) {
-            $dir = "$dir/$className";
+            $name = $stubsPath->name;
+
             foreach (['IndexPage', 'FormPage', 'DetailPage'] as $type) {
-                $this->makePage($className . $type, 'CrudPage', $dir, $type);
+                $stubsPath = new StubsPath("$name$type", 'php');
+
+                $stubsPath->prependDir(
+                    $this->getDirectory("$dir/$name"),
+                )->prependNamespace(
+                    moonshineConfig()->getNamespace("$dir\\$name"),
+                );
+
+                $this->makePage($stubsPath, 'CrudPage', $type);
             }
 
             return self::SUCCESS;
         }
 
-        $this->makePage($className, 'Page', $dir, $extends);
+        $this->makePage($stubsPath, 'Page', $extends);
 
         return self::SUCCESS;
     }
@@ -75,39 +88,27 @@ class MakePageCommand extends MoonShineCommand
      * @throws FileNotFoundException
      */
     private function makePage(
-        string $className,
+        StubsPath $stubsPath,
         string $stub = 'Page',
-        ?string $dir = null,
-        ?string $extends = null
+        ?string $extends = null,
     ): void {
-        $dir = \is_null($dir) ? 'Pages' : $dir;
-        $extends = $extends === null || $extends === '' || $extends === '0' ? 'Page' : $extends;
+        $extends = $extends ?: 'Page';
 
-        $pagesDir = $this->getDirectory("/$dir");
-        $pagePath = "$pagesDir/$className.php";
+        $this->makeDir($stubsPath->dir);
 
-        $this->makeDir($pagesDir);
-
-        $this->copyStub($stub, $pagePath, [
-            '{namespace}' => moonshineConfig()->getNamespace('\\' . str_replace('/', '\\', $dir)),
-            'DummyPage' => $className,
-            'DummyTitle' => $className,
+        $this->copyStub($stub, $stubsPath->getPath(), [
+            '{namespace}' => $stubsPath->namespace,
+            'DummyClass' => $stubsPath->name,
+            'DummyTitle' => $stubsPath->name,
             '{extendShort}' => $extends,
         ]);
 
-        outro(
-            "$className was created: " . $this->getRelativePath($pagePath)
-        );
+        $this->wasCreatedInfo($stubsPath);
 
         if (! $this->option('without-register')) {
-            $prefix = str_contains($dir, 'Pages/')
-                ? str_replace('Pages/', '', $dir) . '\\'
-                : str_replace('Pages', '', $dir);
-
             self::addResourceOrPageToProviderFile(
-                $className,
-                page: true,
-                prefix: $prefix
+                $stubsPath->name,
+                namespace: $stubsPath->namespace
             );
         }
     }

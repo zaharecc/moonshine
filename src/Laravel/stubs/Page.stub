@@ -7,7 +7,7 @@ namespace {namespace};
 use MoonShine\Laravel\Pages\Page;
 use MoonShine\Contracts\UI\ComponentContract;
 
-class DummyPage extends Page
+class DummyClass extends Page
 {
     /**
      * @return array<string, string>

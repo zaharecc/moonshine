@@ -6,14 +6,15 @@ namespace MoonShine\Laravel\Commands;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
-use function Laravel\Prompts\{info, select, text};
+use function Laravel\Prompts\{outro, select, text};
 
+use MoonShine\Laravel\Support\StubsPath;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'moonshine:resource')]
 class MakeResourceCommand extends MoonShineCommand
 {
-    protected $signature = 'moonshine:resource {name?} {--type=} {--m|model=} {--t|title=} {--test} {--pest} {--p|policy}';
+    protected $signature = 'moonshine:resource {className?} {--type=} {--m|model=} {--t|title=} {--test} {--pest} {--p|policy}';
 
     protected $description = 'Create resource';
 
@@ -22,24 +23,32 @@ class MakeResourceCommand extends MoonShineCommand
      */
     public function handle(): int
     {
-        $name = $this->argument('name') ?? text(
+        $className = $this->argument('className') ?? text(
             'Resource name',
             'ArticleResource',
             required: true,
         );
 
-        $name = str($name)
+        $className = str($className)
             ->ucfirst()
             ->remove('resource', false)
             ->value();
 
-        $model = $this->qualifyModel($this->option('model') ?? $name);
-        $title = $this->option('title') ?? str($name)->singular()->plural()->value();
-        $resourcesDir = $this->getDirectory('/Resources');
+        $model = $this->qualifyModel($this->option('model') ?? $className);
+        $title = $this->option('title') ?? str($className)->singular()->plural()->value();
 
-        $resource = "$resourcesDir/{$name}Resource.php";
+        $stubsPath = new StubsPath("{$className}Resource", 'php');
+        $name = str($stubsPath->name)
+            ->remove('resource', false)
+            ->value();
 
-        $this->makeDir($resourcesDir);
+        $stubsPath->prependDir(
+            $this->getDirectory('Resources'),
+        )->prependNamespace(
+            moonshineConfig()->getNamespace('Resources'),
+        );
+
+        $this->makeDir($stubsPath->dir);
 
         $types = [
             'ModelResourceDefault' => 'Default model resource',
@@ -61,21 +70,22 @@ class MakeResourceCommand extends MoonShineCommand
         }
 
         $replace = [
-            '{namespace}' => moonshineConfig()->getNamespace('\Resources'),
+            '{namespace}' => $stubsPath->namespace,
             '{model-namespace}' => $model,
             '{model}' => class_basename($model),
             '{properties}' => $properties,
             'DummyTitle' => $title,
-            'Dummy' => $name,
+            'DummyClass' => $stubsPath->name,
+            'DummyResource' => $stubsPath->name,
         ];
 
         if ($this->option('test') || $this->option('pest')) {
             $testStub = $this->option('pest') ? 'pest' : 'test';
-            $testPath = base_path("tests/Feature/{$name}ResourceTest.php");
+            $testPath = base_path("tests/Feature/{$stubsPath->name}Test.php");
 
             $this->copyStub($testStub, $testPath, $replace);
 
-            info('Test file was created');
+            outro('Test was created: ' . $this->getRelativePath($testPath));
         }
 
         if ($stub === 'ModelResourceWithPages') {
@@ -97,19 +107,19 @@ class MakeResourceCommand extends MoonShineCommand
             ];
         }
 
-        $this->copyStub($stub, $resource, $replace);
+        $this->copyStub($stub, $stubsPath->getPath(), $replace);
 
-        info(
-            "{$name}Resource file was created: " . $this->getRelativePath($resource)
-        );
+        $this->wasCreatedInfo($stubsPath);
 
         self::addResourceOrPageToProviderFile(
-            "{$name}Resource"
+            $stubsPath->name,
+            namespace: $stubsPath->namespace
         );
 
         self::addResourceOrPageToMenu(
-            "{$name}Resource",
-            $title
+            $stubsPath->name,
+            $title,
+            namespace: $stubsPath->namespace
         );
 
         if ($this->option('policy')) {

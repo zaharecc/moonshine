@@ -9,7 +9,7 @@ use Closure;
 use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
 use Illuminate\Contracts\Support\Renderable;
 
-class DummyField extends {extendShort}
+class DummyClass extends {extendShort}
 {
     protected string $view = '{view}';
 

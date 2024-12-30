@@ -31,7 +31,7 @@ use MoonShine\UI\Components\{Breadcrumbs,
     Layout\Wrapper,
     When};
 
-final class DummyLayout extends {extendShort}
+final class DummyClass extends {extendShort}
 {
     protected function assets(): array
     {

@@ -11,7 +11,7 @@ use MoonShine\Contracts\UI\ActionButtonContract;
 use MoonShine\UI\Components\ActionButton;
 use Symfony\Component\HttpFoundation\Response;
 
-class DummyHandler extends Handler
+class DummyClass extends Handler
 {
     /**
      * @throws ActionButtonException

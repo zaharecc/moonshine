@@ -6,8 +6,9 @@ namespace MoonShine\Laravel\Commands;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
-use function Laravel\Prompts\{confirm, outro, text};
+use function Laravel\Prompts\{confirm, text};
 
+use MoonShine\Laravel\Support\StubsPath;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'moonshine:layout')]
@@ -27,38 +28,36 @@ class MakeLayoutCommand extends MoonShineCommand
             required: true
         );
 
-        $dir = $this->option('dir') ?: \dirname($className);
-        $className = class_basename($className);
+        $stubsPath = new StubsPath($className, 'php');
 
-        if ($dir === '.') {
-            $dir = 'Layouts';
-        }
+        $dir = $this->option('dir') ?: 'Layouts';
 
-        $layoutsDir = $this->getDirectory() . "/$dir";
-        $layoutPath = "$layoutsDir/$className.php";
+        $stubsPath->prependDir(
+            $this->getDirectory($dir),
+        )->prependNamespace(
+            moonshineConfig()->getNamespace($dir),
+        );
 
-        $this->makeDir($layoutsDir);
+        $this->makeDir($stubsPath->dir);
 
-        $compact = ! $this->option('full') && ($this->option('compact') || confirm('Want to use a minimalist theme?'));
+        $compact = ! $this->option('full') && ($this->option('compact') || confirm('Want to use a minimalist theme?', false));
 
         $extendClassName = $compact ? 'CompactLayout' : 'AppLayout';
         $extends = "MoonShine\Laravel\Layouts\\$extendClassName";
 
-        $this->copyStub('Layout', $layoutPath, [
-            '{namespace}' => moonshineConfig()->getNamespace('\\' . str_replace('/', '\\', $dir)),
+        $this->copyStub('Layout', $stubsPath->getPath(), [
+            '{namespace}' => $stubsPath->namespace,
             '{extend}' => $extends,
             '{extendShort}' => class_basename($extends),
-            'DummyLayout' => $className,
+            'DummyClass' => $stubsPath->name,
         ]);
 
-        outro(
-            "$className was created: " . $this->getRelativePath($layoutPath)
-        );
+        $this->wasCreatedInfo($stubsPath);
 
         if ($this->option('default') || confirm('Use the default template in the system?')) {
             $this->replaceInConfig(
                 'layout',
-                moonshineConfig()->getNamespace('\Layouts\\' . $className) . "::class"
+                $stubsPath->getClassString()
             );
         }
 
