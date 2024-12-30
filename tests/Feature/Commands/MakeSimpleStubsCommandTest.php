@@ -62,7 +62,7 @@ final class MakeSimpleStubsCommandTest extends TestCase
     #[DataProvider('commands')]
     public function successfulCreatedInSubFolder(string $command, string $dir, ?string $nameOfFile = null, bool $withSub = false): void
     {
-        if(!$withSub) {
+        if (! $withSub) {
             $this->markTestSkipped('Not defined');
         }
 

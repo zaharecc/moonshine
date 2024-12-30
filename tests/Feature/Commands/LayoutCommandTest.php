@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace MoonShine\Tests\Feature\Commands;
 
 use Illuminate\Support\Facades\File;
-use MoonShine\Laravel\Commands\MakeFieldCommand;
 use MoonShine\Laravel\Commands\MakeLayoutCommand;
 use MoonShine\Tests\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;

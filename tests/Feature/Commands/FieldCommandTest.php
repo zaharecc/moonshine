@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MoonShine\Tests\Feature\Commands;
 
-use MoonShine\Laravel\Commands\MakeComponentCommand;
 use MoonShine\Laravel\Commands\MakeFieldCommand;
 use MoonShine\Tests\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;

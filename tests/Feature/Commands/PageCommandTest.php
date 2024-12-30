@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MoonShine\Tests\Feature\Commands;
 
-use MoonShine\Laravel\Commands\MakeFieldCommand;
 use MoonShine\Laravel\Commands\MakePageCommand;
 use MoonShine\Tests\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -84,7 +83,7 @@ final class PageCommandTest extends TestCase
 
         $this->artisan(MakePageCommand::class, [
             'className' => $name,
-            '--crud' => true
+            '--crud' => true,
         ])
             ->expectsOutputToContain(
                 "{$name}IndexPage was created"

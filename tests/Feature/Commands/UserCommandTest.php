@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace MoonShine\Tests\Feature\Commands;
 
-use MoonShine\Laravel\Commands\MakeFieldCommand;
 use MoonShine\Laravel\Commands\MakeUserCommand;
-use MoonShine\Laravel\Models\MoonshineUser;
 use MoonShine\Tests\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
@@ -22,7 +20,7 @@ final class UserCommandTest extends TestCase
     public function successfulCreated(): void
     {
         $this->assertDatabaseMissing('moonshine_users', [
-            'email' => 'danil@moonshine.com'
+            'email' => 'danil@moonshine.com',
         ]);
 
         $this->artisan(MakeUserCommand::class, [
@@ -33,7 +31,7 @@ final class UserCommandTest extends TestCase
             ->assertSuccessful();
 
         $this->assertDatabaseHas('moonshine_users', [
-            'email' => 'danil@moonshine.com'
+            'email' => 'danil@moonshine.com',
         ]);
     }
 }
