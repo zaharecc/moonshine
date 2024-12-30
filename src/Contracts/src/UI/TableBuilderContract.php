@@ -105,7 +105,7 @@ interface TableBuilderContract extends
 
     public function isStickyButtons(): bool;
 
-    public function calculateStickyClass(): string;
+    public function getStickyClass(): string;
 
     public function columnSelection(): static;
 
