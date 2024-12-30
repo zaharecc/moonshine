@@ -47,13 +47,6 @@ final class ComponentCommandTest extends TestCase
     #[TestDox('it successful file created in sub folder')]
     public function successfulCreatedInSubFolder(): void
     {
-        dump(
-            File::directories(__DIR__),
-            File::directories(__DIR__ . '/../'),
-            File::directories(__DIR__ . '/../../'),
-            File::directories(__DIR__ . '/../../../'),
-        );
-
         $dir = 'Test';
         $name = 'DeleteMe';
         $file = "$name.php";
@@ -73,6 +66,12 @@ final class ComponentCommandTest extends TestCase
                 "$name was created"
             )
             ->assertSuccessful();
+
+        dump(
+            File::directories(__DIR__ . '/../../../app'),
+            File::directories(__DIR__ . '/../../../app/MoonShine'),
+            File::directories(__DIR__ . '/../../../app/MoonShine/Components'),
+        );
 
         $this->assertFileExists($path);
         $this->assertFileExists($viewPath);
