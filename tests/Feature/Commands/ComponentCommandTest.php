@@ -67,12 +67,6 @@ final class ComponentCommandTest extends TestCase
             )
             ->assertSuccessful();
 
-        dump(
-            File::directories(__DIR__ . '/../../../app'),
-            File::directories(__DIR__ . '/../../../app/MoonShine'),
-            File::directories(__DIR__ . '/../../../app/MoonShine/Components'),
-        );
-
         $this->assertFileExists($path);
         $this->assertFileExists($viewPath);
     }

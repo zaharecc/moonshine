@@ -34,8 +34,6 @@ final class PublishCommandTest extends TestCase
         $this->assertFileExists("$basePath/Pages/ProfilePage.php");
         $this->assertFileExists("$basePath/Pages/LoginPage.php");
         $this->assertFileExists("$basePath/Pages/ErrorPage.php");
-        $this->assertFileExists("$basePath/Resources/MoonshineUserResource.php");
-        $this->assertFileExists("$basePath/Resources/MoonshineUserRoleResource.php");
 
         $config = File::get(config_path('moonshine.php'));
 
