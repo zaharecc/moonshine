@@ -3,12 +3,17 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\UploadedFile;
 use MoonShine\Contracts\Core\DependencyInjection\AppliesRegisterContract;
 use MoonShine\Contracts\UI\ApplyContract;
 use MoonShine\Contracts\UI\FieldContract;
+use MoonShine\Laravel\Applies\Fields\FileModelApply;
+use MoonShine\Laravel\Applies\Filters\JsonModelApply;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Tests\Fixtures\Models\Item;
 use MoonShine\UI\Fields\Field;
+use MoonShine\UI\Fields\File;
+use MoonShine\UI\Fields\Json;
 use MoonShine\UI\Fields\Text;
 
 uses()->group('core');
@@ -16,6 +21,28 @@ uses()->group('applies');
 
 beforeEach(function () {
     $this->appliesRegister = $this->moonshineCore->getContainer(AppliesRegisterContract::class);
+});
+
+it('apply finder', function (): void {
+    $file = File::make('File');
+    $json = Json::make('Json');
+
+    /** @var FileModelApply $fileApply */
+    $fileApply = $file->getApplyClass();
+    $jsonApply = $json->getApplyClass();
+    $jsonFilterApply = $json->getApplyClass('filters', ModelResource::class);
+
+    expect($fileApply)
+        ->toBeInstanceOf(FileModelApply::class)
+        ->and($jsonApply)
+        ->toBeNull()
+        ->and($jsonFilterApply)
+        ->toBeInstanceOf(JsonModelApply::class);
+
+    $upload = UploadedFile::fake()->create('avatar.png');
+
+    expect($fileApply->store($file, $upload))
+        ->toBe($upload->hashName());
 });
 
 it('add new field apply', function (): void {
