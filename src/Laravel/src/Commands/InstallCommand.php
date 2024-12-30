@@ -61,7 +61,7 @@ class InstallCommand extends MoonShineCommand
         }
 
         $userCreate = $this->confirmAction(
-            'Create super user ?',
+            'Create super user?',
             canRunningInTests: false,
             skipOption: 'without-user',
             condition: fn (): bool => $this->useMigrations && $this->authEnabled,
