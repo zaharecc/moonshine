@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MoonShine\Tests\Feature\Commands;
 
+use Illuminate\Support\Facades\File;
 use MoonShine\Laravel\Commands\MakeComponentCommand;
 use MoonShine\Tests\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -46,6 +47,13 @@ final class ComponentCommandTest extends TestCase
     #[TestDox('it successful file created in sub folder')]
     public function successfulCreatedInSubFolder(): void
     {
+        dump(
+            File::directories(__DIR__),
+            File::directories(__DIR__ . '/../'),
+            File::directories(__DIR__ . '/../../'),
+            File::directories(__DIR__ . '/../../../'),
+        );
+
         $dir = 'Test';
         $name = 'DeleteMe';
         $file = "$name.php";
