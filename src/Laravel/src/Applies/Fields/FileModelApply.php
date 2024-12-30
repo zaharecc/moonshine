@@ -56,7 +56,7 @@ final class FileModelApply implements ApplyContract
         };
     }
 
-    private function store(File $field, UploadedFile $file): string
+    public function store(File $field, UploadedFile $file): string
     {
         $extension = $file->extension();
 

@@ -93,6 +93,11 @@ interface FormElementContract extends
 
     public function apply(Closure $default, mixed $data): mixed;
 
+    /**
+     * @param  ?class-string  $for
+     */
+    public function getApplyClass(string $type = 'fields', ?string $for = null): ?ApplyContract;
+
     public function beforeApply(mixed $data): mixed;
 
     public function afterApply(mixed $data): mixed;
