@@ -9,13 +9,9 @@ export default function request(
   headers = {},
   componentRequestData = {},
 ) {
-  if (!url) {
-    return
-  }
-
-  if (!navigator.onLine) {
+  if (!url || !navigator.onLine) {
     t.loading = false
-    MoonShine.ui.toast('No internet connection', 'error')
+    MoonShine.ui.toast(!url ? 'Request URL not set' : 'No internet connection', 'error')
     return
   }
 
@@ -36,7 +32,7 @@ export default function request(
     .then(function (response) {
       t.loading = false
 
-      const data = response.data
+      const data = response.data ?? {}
       const contentDisposition = response.headers['content-disposition']
 
       if (componentRequestData.hasBeforeHandleResponse()) {
