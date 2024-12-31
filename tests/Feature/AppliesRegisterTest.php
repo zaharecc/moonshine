@@ -13,6 +13,7 @@ use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Tests\Fixtures\Models\Item;
 use MoonShine\UI\Fields\Field;
 use MoonShine\UI\Fields\File;
+use MoonShine\UI\Fields\Image;
 use MoonShine\UI\Fields\Json;
 use MoonShine\UI\Fields\Text;
 
@@ -25,14 +26,19 @@ beforeEach(function () {
 
 it('apply finder', function (): void {
     $file = File::make('File');
+    $image = Image::make('Image');
     $json = Json::make('Json');
 
     /** @var FileModelApply $fileApply */
     $fileApply = $file->getApplyClass();
+    /** @var FileModelApply $imageApply */
+    $imageApply = $image->getApplyClass();
     $jsonApply = $json->getApplyClass();
     $jsonFilterApply = $json->getApplyClass('filters', ModelResource::class);
 
     expect($fileApply)
+        ->toBeInstanceOf(FileModelApply::class)
+        ->and($imageApply)
         ->toBeInstanceOf(FileModelApply::class)
         ->and($jsonApply)
         ->toBeNull()
