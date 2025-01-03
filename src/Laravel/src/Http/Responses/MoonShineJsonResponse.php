@@ -52,7 +52,7 @@ final class MoonShineJsonResponse extends JsonResponse
         return $this->mergeJsonData(['events' => AlpineJs::prepareEvents($events)]);
     }
 
-    public function html(string $value): self
+    public function html(string|array $value): self
     {
         return $this->mergeJsonData(['html' => $value]);
     }
