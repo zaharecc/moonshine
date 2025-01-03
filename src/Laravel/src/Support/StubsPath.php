@@ -24,7 +24,6 @@ final class StubsPath
 
         $pathWithExt = str($this->path)
             ->replace('\\', '/')
-            ->deduplicate('/')
             ->replaceLast('.' . $this->ext, '')
             ->append('.' . $this->ext)
             ->value();
