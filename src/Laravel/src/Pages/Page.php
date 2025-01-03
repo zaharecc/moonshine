@@ -57,11 +57,11 @@ abstract class Page extends CorePage implements WithResponseModifierContract
     {
         $fragments = moonshineRequest()->getFragmentLoad();
 
-        if($fragments === null) {
+        if ($fragments === null) {
             return null;
         }
 
-        if(str_contains($fragments, ',')) {
+        if (str_contains($fragments, ',')) {
             $fragments = explode(',', $fragments);
             $data = [];
             foreach ($fragments as $fragment) {

@@ -69,7 +69,7 @@ final readonly class AlpineJs
     ): array {
         return array_filter([
             'data-async-events' => self::prepareEvents($events),
-            'data-async-selector' => is_array($selector) ? implode(',', $selector) : $selector,
+            'data-async-selector' => \is_array($selector) ? implode(',', $selector) : $selector,
             'data-async-response-handler' => $callback?->getResponseHandler(),
             'data-async-before-request' => $callback?->getBeforeRequest(),
             'data-async-method' => $method->value,
