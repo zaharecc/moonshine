@@ -108,7 +108,7 @@ final readonly class MoonShineEndpoints implements EndpointsContract
 
         if(\is_array($fragment)) {
             $fragment = implode(',', array_map(
-                static fn($key, $value) => "$key:$value",
+                static fn($key, $value): string => "$key:$value",
                 array_keys($fragment),
                 $fragment
             ));
