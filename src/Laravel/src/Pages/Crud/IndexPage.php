@@ -15,7 +15,6 @@ use MoonShine\Laravel\Contracts\Resource\HasQueryTagsContract;
 use MoonShine\Laravel\Enums\Ability;
 use MoonShine\Support\Enums\JsEvent;
 use MoonShine\Support\Enums\PageType;
-use MoonShine\UI\Components\ActionButton;
 use MoonShine\UI\Components\ActionGroup;
 use MoonShine\UI\Components\Layout\Div;
 use MoonShine\UI\Components\Layout\Flex;
@@ -180,7 +179,7 @@ class IndexPage extends CrudPage
                         $group->add(
                             QueryTagButton::for($resource, $tag)->when(
                                 $resource->isQueryTagsInDropdown(),
-                                fn(ActionButtonContract $btn) => $btn->showInDropdown()
+                                fn(ActionButtonContract $btn): ActionButtonContract => $btn->showInDropdown()
                             )
                         );
                     }
