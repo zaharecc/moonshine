@@ -179,19 +179,19 @@ abstract class MoonShineCommand extends Command
         $baseDir = $this->hasOption('base-dir') ? $this->option('base-dir') : null;
         $baseNamespace = $this->hasOption('base-namespace') ? $this->option('base-namespace') : null;
 
-        $toNamespace = static fn(string $str): string => str($str)
+        $toNamespace = static fn (string $str): string => str($str)
             ->trim('\\')
             ->trim('/')
             ->replace('/', '\\')
             ->explode('\\')
-            ->map(static fn(string $segment): string => ucfirst($segment))
+            ->map(static fn (string $segment): string => ucfirst($segment))
             ->implode('\\');
 
-        if($baseDir !== null && $baseNamespace === null) {
+        if ($baseDir !== null && $baseNamespace === null) {
             $baseNamespace = $toNamespace($baseDir);
         }
 
-        if($namespace === null) {
+        if ($namespace === null) {
             $namespace = $toNamespace($dir);
         }
 
