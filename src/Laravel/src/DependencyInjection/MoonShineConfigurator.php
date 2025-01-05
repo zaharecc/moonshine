@@ -364,6 +364,16 @@ final class MoonShineConfigurator implements ConfiguratorContract
         return $this->set('home_route', $route);
     }
 
+    public function getHomeUrl(): ?string
+    {
+        return $this->get('home_url');
+    }
+
+    public function homeUrl(string|Closure $route): self
+    {
+        return $this->set('home_url', $route);
+    }
+
     public function getAuthorizationRules(): Collection
     {
         return $this->authorizationRules;
