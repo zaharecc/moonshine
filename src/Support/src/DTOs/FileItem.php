@@ -15,6 +15,7 @@ final readonly class FileItem implements Arrayable
         private string $rawValue,
         private string $name,
         private ComponentAttributesBagContract $attributes = new MoonShineComponentAttributeBag(),
+        private ?FileItemExtra $extra = null,
     ) {
     }
 
@@ -33,6 +34,11 @@ final readonly class FileItem implements Arrayable
         return $this->name;
     }
 
+    public function getExtra(): ?FileItemExtra
+    {
+        return $this->extra;
+    }
+
     public function getAttributes(): ComponentAttributesBagContract
     {
         return $this->attributes;
@@ -45,6 +51,7 @@ final readonly class FileItem implements Arrayable
             'raw_value' => $this->getRawValue(),
             'name' => $this->getName(),
             'attributes' => $this->getAttributes(),
+            'extra' => $this->getExtra()?->toArray(),
         ];
     }
 }
