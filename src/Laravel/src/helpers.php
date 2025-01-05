@@ -101,7 +101,7 @@ if (! \function_exists('toPage')) {
         string|ResourceContract|null $resource = null,
         array $params = [],
         bool $redirect = false,
-        ?string $fragment = null
+        null|string|array $fragment = null
     ): RedirectResponse|string {
         return moonshineRouter()->getEndpoints()->toPage(
             page: $page,
