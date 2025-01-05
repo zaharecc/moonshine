@@ -34,7 +34,7 @@
             method="make"
             argument="1"
         >
-            <methods xpath="$containingClass.$model.$fillable" />
+            <arrayValues xpath="$containingClass.$model.$fillable" />
         </classMethod>
     </definitions>
 </meta-storm>
