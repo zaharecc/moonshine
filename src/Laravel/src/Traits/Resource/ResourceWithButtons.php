@@ -117,7 +117,7 @@ trait ResourceWithButtons
             $this->indexButtons()->toArray(),
         )->when(
             $this->isIndexButtonsInDropdown(),
-            fn(ActionButtonsContract $buttons) => $buttons->map(fn(ActionButtonContract $button): ActionButtonContract => $button->showInDropdown())
+            fn (ActionButtonsContract $buttons) => $buttons->map(fn (ActionButtonContract $button): ActionButtonContract => $button->showInDropdown())
         );
     }
 

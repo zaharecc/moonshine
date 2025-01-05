@@ -179,7 +179,7 @@ class IndexPage extends CrudPage
                         $group->add(
                             QueryTagButton::for($resource, $tag)->when(
                                 $resource->isQueryTagsInDropdown(),
-                                fn(ActionButtonContract $btn): ActionButtonContract => $btn->showInDropdown()
+                                fn (ActionButtonContract $btn): ActionButtonContract => $btn->showInDropdown()
                             )
                         );
                     }
