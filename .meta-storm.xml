@@ -22,6 +22,14 @@
         </classMethod>
 
         <classMethod
+            class="\MoonShine\Contracts\UI\FormBuilderContract"
+            method="asyncMethod"
+            argument="0"
+        >
+            <methods relatedTo="containingClass" private="false" protected="false" />
+        </classMethod>
+
+        <classMethod
             class="\MoonShine\Laravel\Fields\Relationships\ModelRelationField"
             method="make"
             argument="1"
