@@ -17,6 +17,20 @@ use MoonShine\UI\Collections\ActionButtons;
 
 trait ResourceWithButtons
 {
+    protected bool $queryTagsInDropdown = false;
+
+    protected bool $indexButtonsInDropdown = false;
+
+    public function isQueryTagsInDropdown(): bool
+    {
+        return $this->queryTagsInDropdown;
+    }
+
+    public function isIndexButtonsInDropdown(): bool
+    {
+        return $this->indexButtonsInDropdown;
+    }
+
     /**
      * @return ListOf<ActionButtonContract>
      */
@@ -101,6 +115,9 @@ trait ResourceWithButtons
     {
         return ActionButtons::make(
             $this->indexButtons()->toArray(),
+        )->when(
+            $this->isIndexButtonsInDropdown(),
+            fn(ActionButtonsContract $buttons) => $buttons->map(fn(ActionButtonContract $button) => $button->showInDropdown())
         );
     }
 
