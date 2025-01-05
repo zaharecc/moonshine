@@ -9,7 +9,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 #[AsCommand(name: 'moonshine:handler')]
 class MakeHandlerCommand extends MoonShineCommand
 {
-    protected $signature = 'moonshine:handler {className?}';
+    protected $signature = 'moonshine:handler {className?} {--base-dir=} {--base-namespace=}';
 
     protected $description = 'Create handler class';
 

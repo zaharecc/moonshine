@@ -9,7 +9,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 #[AsCommand(name: 'moonshine:type-cast')]
 class MakeTypeCastCommand extends MoonShineCommand
 {
-    protected $signature = 'moonshine:type-cast {className?}';
+    protected $signature = 'moonshine:type-cast {className?} {--base-dir=} {--base-namespace=}';
 
     protected $description = 'Create type cast class';
 

@@ -14,7 +14,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 #[AsCommand(name: 'moonshine:layout')]
 class MakeLayoutCommand extends MoonShineCommand
 {
-    protected $signature = 'moonshine:layout {className?} {--compact} {--full} {--default} {--dir=}';
+    protected $signature = 'moonshine:layout {className?} {--compact} {--full} {--default} {--dir=} {--base-dir=} {--base-namespace=}';
 
     protected $description = 'Create layout';
 
@@ -32,11 +32,7 @@ class MakeLayoutCommand extends MoonShineCommand
 
         $dir = $this->option('dir') ?: 'Layouts';
 
-        $stubsPath->prependDir(
-            $this->getDirectory($dir),
-        )->prependNamespace(
-            moonshineConfig()->getNamespace($dir),
-        );
+        $stubsPath = $this->qualifyStubsDir($stubsPath, $dir);
 
         $this->makeDir($stubsPath->dir);
 
