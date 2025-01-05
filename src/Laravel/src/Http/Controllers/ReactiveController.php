@@ -64,7 +64,7 @@ final class ReactiveController extends MoonShineController
         );
 
         foreach ($fields as $field) {
-            $fields = $field->getReactiveCallback(
+            $fields = $field->formName($form->getName())->getReactiveCallback(
                 $fields,
                 data_get($values, $field->getColumn()),
                 $values->toArray(),
