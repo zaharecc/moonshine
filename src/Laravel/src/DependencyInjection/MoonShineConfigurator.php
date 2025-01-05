@@ -42,14 +42,14 @@ final class MoonShineConfigurator implements ConfiguratorContract
 
     public function getDir(string $path = '', ?string $base = null): string
     {
-        $base = $base ?? $this->get('dir');
+        $base ??= $this->get('dir');
 
         return $base . '/' . trim($path, '/');
     }
 
     public function getNamespace(string $path = '', ?string $base = null): string
     {
-        $base = $base ?? $this->get('namespace');
+        $base ??= $this->get('namespace');
 
         return $base . '\\' . trim($path, '\\');
     }

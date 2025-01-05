@@ -184,7 +184,7 @@ abstract class MoonShineCommand extends Command
             ->trim('/')
             ->replace('/', '\\')
             ->explode('\\')
-            ->map(static fn(string $segment) => ucfirst($segment))
+            ->map(static fn(string $segment): string => ucfirst($segment))
             ->implode('\\');
 
         if($baseDir !== null && $baseNamespace === null) {
