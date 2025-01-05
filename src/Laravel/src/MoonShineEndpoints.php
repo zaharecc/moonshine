@@ -106,9 +106,9 @@ final readonly class MoonShineEndpoints implements EndpointsContract
         $redirect = $extra['redirect'] ?? false;
         $fragment = $extra['fragment'] ?? null;
 
-        if(\is_array($fragment)) {
+        if (\is_array($fragment)) {
             $fragment = implode(',', array_map(
-                static fn($key, $value): string => "$key:$value",
+                static fn ($key, $value): string => "$key:$value",
                 array_keys($fragment),
                 $fragment
             ));
