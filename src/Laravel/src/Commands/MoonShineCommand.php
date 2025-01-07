@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace MoonShine\Laravel\Commands;
 
-use ReflectionClass;
 use Closure;
 use Illuminate\Support\Stringable;
 
-use MoonShine\MenuManager\MenuItem;
 use function Laravel\Prompts\{outro, text};
 
 use Leeto\PackageCommand\Command;
 use MoonShine\Laravel\Support\StubsPath;
+use MoonShine\MenuManager\MenuItem;
+use ReflectionClass;
 
 abstract class MoonShineCommand extends Command
 {
