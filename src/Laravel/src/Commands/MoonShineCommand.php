@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MoonShine\Laravel\Commands;
 
+use ReflectionClass;
 use Closure;
 use Illuminate\Support\Stringable;
 
@@ -44,7 +45,7 @@ abstract class MoonShineCommand extends Command
     {
         $namespace = rtrim($namespace, '\\');
 
-        $reflector = new \ReflectionClass(moonshineConfig()->getLayout());
+        $reflector = new ReflectionClass(moonshineConfig()->getLayout());
 
         self::addResourceOrPageTo(
             class: "$namespace\\$class",
