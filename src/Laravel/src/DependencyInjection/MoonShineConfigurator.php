@@ -29,8 +29,8 @@ final class MoonShineConfigurator implements ConfiguratorContract
         $this->items = $repository->get('moonshine', []);
         $this->authorizationRules = Collection::make();
         $this
-            ->set('dir', 'app/MoonShine')
-            ->set('namespace', 'App\MoonShine');
+            ->set('dir', $this->items['dir'] ?? 'app/MoonShine')
+            ->set('namespace', $this->items['namespace'] ?? 'App\MoonShine');
     }
 
     public function dir(string $dir, string $namespace): self
