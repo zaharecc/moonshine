@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MoonShine\Tests\Feature\Commands;
 
 use MoonShine\Laravel\Commands\MakeResourceCommand;
+use MoonShine\MenuManager\MenuItem;
 use MoonShine\Tests\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
@@ -19,9 +20,12 @@ final class ResourceCommandTest extends TestCase
     #[TestDox('it successful file created')]
     public function successfulCreated(): void
     {
+        $reflector = new \ReflectionClass(moonshineConfig()->getLayout());
+
         $name = 'DeleteMeResource';
         $file = "$name.php";
         $path = __DIR__ . "/../../../app/MoonShine/Resources/$file";
+        $layoutPath = $reflector->getFileName();
 
         @unlink($path);
 
@@ -37,6 +41,11 @@ final class ResourceCommandTest extends TestCase
             ->assertSuccessful();
 
         $this->assertFileExists($path);
+
+        $layoutContent = file_get_contents($layoutPath);
+
+        $this->assertStringContainsString(MenuItem::class, $layoutContent);
+        $this->assertStringContainsString('DeleteMeResource', $layoutContent);
     }
 
     #[Test]
