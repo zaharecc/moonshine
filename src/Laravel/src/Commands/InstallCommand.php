@@ -277,7 +277,7 @@ class InstallCommand extends MoonShineCommand
 
         $this->replaceInConfig(
             'dashboard',
-            moonshineConfig()->getNamespace('\Pages\Dashboard') . "::class"
+            $this->getNamespace('\Pages\Dashboard') . "::class"
         );
 
         $this->components->task('Dashboard created');

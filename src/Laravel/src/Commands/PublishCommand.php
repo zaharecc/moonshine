@@ -157,7 +157,7 @@ class PublishCommand extends MoonShineCommand
 
         $this->replaceInConfig(
             $configKey,
-            moonshineConfig()->getNamespace('\Forms\\' . $className) . "::class",
+            $this->getNamespace('\Forms\\' . $className) . "::class",
             $className
         );
     }
@@ -203,7 +203,7 @@ class PublishCommand extends MoonShineCommand
 
         $this->replaceInConfig(
             $configKey,
-            moonshineConfig()->getNamespace('\Pages\\' . $className) . "::class",
+            $this->getNamespace('\Pages\\' . $className) . "::class",
             $className
         );
     }
@@ -214,8 +214,8 @@ class PublishCommand extends MoonShineCommand
     private function copySystemClass(string $name, string $dir): array
     {
         $classPath = "src/$dir/$name.php";
-        $fullClassPath = moonshineConfig()->getDir("/$dir/$name.php");
-        $targetNamespace = moonshineConfig()->getNamespace("\\$dir");
+        $fullClassPath = $this->getDirectory("/$dir/$name.php");
+        $targetNamespace = $this->getNamespace("\\$dir");
 
         (new Filesystem())->put(
             $fullClassPath,
