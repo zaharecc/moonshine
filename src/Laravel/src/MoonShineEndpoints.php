@@ -155,6 +155,10 @@ final readonly class MoonShineEndpoints implements EndpointsContract
 
     public function home(): string
     {
+        if ($url = moonshineConfig()->getHomeUrl()) {
+            return $url;
+        }
+
         return route(
             moonshineConfig()->getHomeRoute()
         );
