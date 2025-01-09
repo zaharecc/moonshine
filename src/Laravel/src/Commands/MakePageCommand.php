@@ -108,6 +108,7 @@ class MakePageCommand extends MoonShineCommand
         if (! $this->option('without-register')) {
             self::addResourceOrPageToProviderFile(
                 $stubsPath->name,
+                page: true,
                 namespace: $stubsPath->namespace
             );
         }
