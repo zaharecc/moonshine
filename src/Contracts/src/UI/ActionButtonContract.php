@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MoonShine\Contracts\UI;
 
 use Closure;
+use Illuminate\Support\Traits\Conditionable;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Contracts\Core\ResourceContract;
 use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
@@ -17,6 +18,8 @@ use MoonShine\Support\Enums\HttpMethod;
  *
  * @extends HasModalContract<TModal>
  * @extends HasOffCanvasContract<TOffCanvas>
+ *
+ * @mixin Conditionable
  */
 interface ActionButtonContract extends
     ComponentContract,
