@@ -29,8 +29,8 @@ final class MoonShineConfigurator implements ConfiguratorContract
         $this->items = $repository->get('moonshine', []);
         $this->authorizationRules = Collection::make();
         $this
-            ->set('dir', 'app/MoonShine')
-            ->set('namespace', 'App\MoonShine');
+            ->set('dir', $this->items['dir'] ?? 'app/MoonShine')
+            ->set('namespace', $this->items['namespace'] ?? 'App\MoonShine');
     }
 
     public function dir(string $dir, string $namespace): self
@@ -40,14 +40,18 @@ final class MoonShineConfigurator implements ConfiguratorContract
             ->set('namespace', $namespace);
     }
 
-    public function getDir(string $path = ''): string
+    public function getDir(string $path = '', ?string $base = null): string
     {
-        return $this->get('dir') . '/' . trim($path, '/');
+        $base ??= $this->get('dir');
+
+        return $base . '/' . trim($path, '/');
     }
 
-    public function getNamespace(string $path = ''): string
+    public function getNamespace(string $path = '', ?string $base = null): string
     {
-        return $this->get('namespace') . '\\' . trim($path, '\\');
+        $base ??= $this->get('namespace');
+
+        return $base . '\\' . trim($path, '\\');
     }
 
     /**
@@ -244,7 +248,7 @@ final class MoonShineConfigurator implements ConfiguratorContract
         return $this->get('auth.guard', 'moonshine');
     }
 
-    public function getUserField(string $field, string $default = null): string|false
+    public function getUserField(string $field, ?string $default = null): string|false
     {
         return $this->get("user_fields.$field", $default ?? $field);
     }
@@ -362,6 +366,16 @@ final class MoonShineConfigurator implements ConfiguratorContract
     public function homeRoute(string|Closure $route): self
     {
         return $this->set('home_route', $route);
+    }
+
+    public function getHomeUrl(): ?string
+    {
+        return $this->get('home_url');
+    }
+
+    public function homeUrl(string|Closure $route): self
+    {
+        return $this->set('home_url', $route);
     }
 
     public function getAuthorizationRules(): Collection

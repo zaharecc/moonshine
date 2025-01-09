@@ -14,7 +14,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 #[AsCommand(name: 'moonshine:page')]
 class MakePageCommand extends MoonShineCommand
 {
-    protected $signature = 'moonshine:page {className?} {--force} {--without-register} {--crud} {--dir=} {--extends=}';
+    protected $signature = 'moonshine:page {className?} {--force} {--without-register} {--crud} {--dir=} {--extends=} {--base-dir=} {--base-namespace=}';
 
     protected $description = 'Create page';
 
@@ -34,11 +34,7 @@ class MakePageCommand extends MoonShineCommand
 
         $dir = $this->option('dir') ?: 'Pages';
 
-        $stubsPath->prependDir(
-            $this->getDirectory($dir),
-        )->prependNamespace(
-            moonshineConfig()->getNamespace($dir),
-        );
+        $stubsPath = $this->qualifyStubsDir($stubsPath, $dir);
 
         if (! $this->option('force') && ! $this->option('extends') && ! $this->option('crud')) {
             $types = [
@@ -70,7 +66,7 @@ class MakePageCommand extends MoonShineCommand
                 $stubsPath->prependDir(
                     $this->getDirectory("$dir/$name"),
                 )->prependNamespace(
-                    moonshineConfig()->getNamespace("$dir\\$name"),
+                    $this->getNamespace("$dir\\$name"),
                 );
 
                 $this->makePage($stubsPath, 'CrudPage', $type);

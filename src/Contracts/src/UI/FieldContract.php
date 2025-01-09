@@ -68,7 +68,7 @@ interface FieldContract extends
         string $method,
         array|Closure $params = [],
         ?string $message = null,
-        ?string $selector = null,
+        null|string|array $selector = null,
         array $events = [],
         ?AsyncCallback $callback = null,
         ?PageContract $page = null,
@@ -79,7 +79,7 @@ interface FieldContract extends
         Closure $url,
         HttpMethod $method = HttpMethod::GET,
         array $events = [],
-        ?string $selector = null,
+        null|string|array $selector = null,
         ?AsyncCallback $callback = null,
     ): static;
 

@@ -98,7 +98,7 @@ final class Fields extends BaseFields
      */
     public function findByRelation(
         string $relation,
-        ModelRelationField $default = null
+        ?ModelRelationField $default = null
     ): ?ModelRelationField {
         return $this->onlyRelationFields()->first(
             static fn (ModelRelationField $field): bool => $field->getRelationName() === $relation,

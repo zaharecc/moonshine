@@ -14,7 +14,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 #[AsCommand(name: 'moonshine:resource')]
 class MakeResourceCommand extends MoonShineCommand
 {
-    protected $signature = 'moonshine:resource {className?} {--type=} {--m|model=} {--t|title=} {--test} {--pest} {--p|policy}';
+    protected $signature = 'moonshine:resource {className?} {--type=} {--m|model=} {--t|title=} {--test} {--pest} {--p|policy} {--base-dir=} {--base-namespace=}';
 
     protected $description = 'Create resource';
 
@@ -42,11 +42,7 @@ class MakeResourceCommand extends MoonShineCommand
             ->remove('resource', false)
             ->value();
 
-        $stubsPath->prependDir(
-            $this->getDirectory('Resources'),
-        )->prependNamespace(
-            moonshineConfig()->getNamespace('Resources'),
-        );
+        $stubsPath = $this->qualifyStubsDir($stubsPath, 'Resources');
 
         $this->makeDir($stubsPath->dir);
 
@@ -95,7 +91,7 @@ class MakeResourceCommand extends MoonShineCommand
                 '--without-register' => true,
             ]);
 
-            $pageNamespace = moonshineConfig()->getNamespace("\Pages\\$name\\$name");
+            $pageNamespace = $this->getNamespace("\Pages\\$name\\$name");
 
             $replace += [
                 '{indexPage}' => "{$name}IndexPage",

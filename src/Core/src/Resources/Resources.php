@@ -12,7 +12,7 @@ final class Resources extends Collection implements ResourcesContract
 {
     public function findByUri(
         string $uri,
-        ResourceContract $default = null
+        ?ResourceContract $default = null
     ): ?ResourceContract {
         return $this->first(
             static fn (ResourceContract $resource): bool => $resource->getUriKey() === $uri,
@@ -22,7 +22,7 @@ final class Resources extends Collection implements ResourcesContract
 
     public function findByClass(
         string $class,
-        ResourceContract $default = null
+        ?ResourceContract $default = null
     ): ?ResourceContract {
         return $this->first(
             static fn (ResourceContract $resource): bool => $resource::class === $class,

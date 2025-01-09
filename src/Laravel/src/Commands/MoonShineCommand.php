@@ -11,14 +11,21 @@ use function Laravel\Prompts\{outro, text};
 
 use Leeto\PackageCommand\Command;
 use MoonShine\Laravel\Support\StubsPath;
+use MoonShine\MenuManager\MenuItem;
+use ReflectionClass;
 
 abstract class MoonShineCommand extends Command
 {
     protected string $stubsDir = __DIR__ . '/../../stubs';
 
-    protected function getDirectory(string $path = ''): string
+    protected function getDirectory(string $path = '', ?string $base = null): string
     {
-        return moonshineConfig()->getDir($path);
+        return moonshineConfig()->getDir($path, $base);
+    }
+
+    protected function getNamespace(string $path = '', ?string $base = null): string
+    {
+        return moonshineConfig()->getNamespace($path, $base);
     }
 
     protected function getRelativePath(string $path): string
@@ -43,11 +50,14 @@ abstract class MoonShineCommand extends Command
     {
         $namespace = rtrim($namespace, '\\');
 
+        $reflector = new ReflectionClass(moonshineConfig()->getLayout());
+
         self::addResourceOrPageTo(
             class: "$namespace\\$class",
-            to: app_path('MoonShine/Layouts/MoonShineLayout.php'),
+            to: $reflector->getFileName(),
             between: static fn (Stringable $content): Stringable => $content->betweenFirst("protected function menu(): array", '}'),
             replace: static fn (Stringable $content, Closure $tab): Stringable => $content->replace("];", "{$tab()}MenuItem::make('$title', $class::class),\n{$tab(2)}];"),
+            use: MenuItem::class
         );
     }
 
@@ -154,16 +164,10 @@ abstract class MoonShineCommand extends Command
     {
         $className = $this->argument('className') ?? text(
             'Class name',
-            required: true
+            required: true,
         );
 
-        $stubsPath = new StubsPath($className, 'php');
-
-        $stubsPath->prependDir(
-            $this->getDirectory($dir)
-        )->prependNamespace(
-            moonshineConfig()->getNamespace($dir)
-        );
+        $stubsPath = $this->qualifyStubsDir(new StubsPath($className, 'php'), $dir);
 
         $this->makeDir($stubsPath->dir);
 
@@ -175,10 +179,43 @@ abstract class MoonShineCommand extends Command
         $this->wasCreatedInfo($stubsPath);
     }
 
+    protected function qualifyStubsDir(StubsPath $stubsPath, string $dir, ?string $namespace = null): StubsPath
+    {
+        $baseDir = $this->hasOption('base-dir') ? $this->option('base-dir') : null;
+        $baseNamespace = $this->hasOption('base-namespace') ? $this->option('base-namespace') : null;
+
+        $toNamespace = static fn (string $str): string => str($str)
+            ->trim('\\')
+            ->trim('/')
+            ->replace('/', '\\')
+            ->explode('\\')
+            ->map(static fn (string $segment): string => ucfirst($segment))
+            ->implode('\\');
+
+        if ($baseDir !== null && $baseNamespace === null) {
+            $baseNamespace = $toNamespace($baseDir);
+        }
+
+        if ($namespace === null) {
+            $namespace = $toNamespace($dir);
+        }
+
+        $baseDir = $baseDir ? trim($baseDir, '/') : $baseDir;
+        $baseNamespace = $baseNamespace ? $toNamespace($baseNamespace) : $baseNamespace;
+
+        return $stubsPath->prependDir(
+            $this->getDirectory($dir, $baseDir),
+        )->prependNamespace(
+            $this->getNamespace($namespace, $baseNamespace),
+        );
+    }
+
     protected function wasCreatedInfo(StubsPath $stubsPath): void
     {
+        $path = $this->getRelativePath($stubsPath->getPath());
+
         outro(
-            "$stubsPath->name was created: " . $this->getRelativePath($stubsPath->getPath()),
+            "$stubsPath->name was created: $path",
         );
     }
 }

@@ -16,7 +16,7 @@ final class Handlers extends Collection
 {
     public function findByUri(
         string $uri,
-        Handler $default = null
+        ?Handler $default = null
     ): ?Handler {
         return $this->first(
             static fn (Handler $handler): bool => $handler->getUriKey() === $uri,

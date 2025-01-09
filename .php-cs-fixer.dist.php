@@ -14,6 +14,7 @@ return (new PhpCsFixer\Config())
     ->setRules([
         '@PSR12' => true,
         'native_function_invocation' => true,
+        'nullable_type_declaration_for_default_null_value' => true,
         'array_syntax' => ['syntax' => 'short'],
         'ordered_imports' => ['sort_algorithm' => 'alpha'],
         'no_unused_imports' => true,

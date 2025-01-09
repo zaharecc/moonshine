@@ -19,7 +19,7 @@ interface HasAsyncSearchContract
     public function getAsyncSearchValueCallback(): ?Closure;
 
     public function asyncSearch(
-        string $column = null,
+        ?string $column = null,
         ?Closure $searchQuery = null,
         ?Closure $formatted = null,
         ?string $associatedWith = null,

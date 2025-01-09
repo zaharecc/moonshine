@@ -14,6 +14,6 @@ expect()->extend('applies', function (Field $field): Expectation {
         ->toBe(['onAfterDestroy']);
 });
 
-expect()->extend('hasFields', fn (array $fields = null) => expect($this->value)
+expect()->extend('hasFields', fn (?array $fields = null) => expect($this->value)
     ->toBeCollection()
     ->toHaveCount($fields ? \count($fields) : 0));

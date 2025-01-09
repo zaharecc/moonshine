@@ -11,6 +11,7 @@ use MoonShine\Contracts\Core\CrudResourceContract;
 use MoonShine\Core\Pages\Page as CorePage;
 use MoonShine\Laravel\Contracts\WithResponseModifierContract;
 use MoonShine\Laravel\DependencyInjection\MoonShine;
+use MoonShine\Laravel\Http\Responses\MoonShineJsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -35,9 +36,7 @@ abstract class Page extends CorePage implements WithResponseModifierContract
 
     protected function prepareRender(Renderable|Closure|string $view): Renderable|Closure|string
     {
-        /**
-         * @var View $view
-         */
+        /** @var View $view */
         return $view->fragmentIf(
             moonshineRequest()->isFragmentLoad(),
             moonshineRequest()->getFragmentLoad(),
@@ -56,6 +55,25 @@ abstract class Page extends CorePage implements WithResponseModifierContract
 
     protected function modifyResponse(): ?Response
     {
+        $fragments = moonshineRequest()->getFragmentLoad();
+
+        if ($fragments === null) {
+            return null;
+        }
+
+        if (str_contains($fragments, ',')) {
+            $fragments = explode(',', $fragments);
+            $data = [];
+            foreach ($fragments as $fragment) {
+                [$selector, $name] = explode(':', $fragment);
+                /** @var View $view */
+                $view = $this->renderView();
+                $data[$selector] = $view->fragment($name);
+            }
+
+            return MoonShineJsonResponse::make()->html($data);
+        }
+
         return null;
     }
 }

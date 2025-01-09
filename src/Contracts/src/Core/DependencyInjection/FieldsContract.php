@@ -58,7 +58,7 @@ interface FieldsContract extends Enumerable, HasStructureContract
      */
     public function findByColumn(
         string $column,
-        FieldContract $default = null
+        ?FieldContract $default = null
     ): ?FieldContract;
 
     /**
@@ -69,7 +69,7 @@ interface FieldsContract extends Enumerable, HasStructureContract
      */
     public function findByClass(
         string $class,
-        FieldContract $default = null
+        ?FieldContract $default = null
     ): ?FieldContract;
 
     public function wrapNames(string $name): static;

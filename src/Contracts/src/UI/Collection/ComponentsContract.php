@@ -40,16 +40,16 @@ interface ComponentsContract extends Enumerable, HasStructureContract
 
     public function findForm(
         string $name,
-        FormBuilderContract $default = null
+        ?FormBuilderContract $default = null
     ): ?FormBuilderContract;
 
     public function findTable(
         string $name,
-        TableBuilderContract $default = null
+        ?TableBuilderContract $default = null
     ): ?TableBuilderContract;
 
     public function findByName(
         string $name,
-        ComponentContract $default = null
+        ?ComponentContract $default = null
     ): ?ComponentContract;
 }

@@ -33,7 +33,7 @@ abstract class MoonShineController extends BaseController
     protected function json(
         string $message = '',
         array $data = [],
-        string $redirect = null,
+        ?string $redirect = null,
         ToastType $messageType = ToastType::SUCCESS,
         int $status = Response::HTTP_OK
     ): JsonResponse {

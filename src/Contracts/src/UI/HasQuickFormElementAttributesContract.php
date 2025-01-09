@@ -10,7 +10,7 @@ interface HasQuickFormElementAttributesContract
 {
     public function setNameAttribute(string $name): static;
 
-    public function getNameAttribute(string $index = null): string;
+    public function getNameAttribute(?string $index = null): string;
 
     public function wrapName(string $wrapName): static;
 

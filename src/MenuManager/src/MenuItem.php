@@ -33,7 +33,7 @@ class MenuItem extends MenuElement
     final public function __construct(
         Closure|string $label,
         protected Closure|MenuFillerContract|string $filler,
-        string $icon = null,
+        ?string $icon = null,
         Closure|bool $blank = false
     ) {
         parent::__construct();

@@ -22,7 +22,7 @@ use Traversable;
 interface CrudResourceContract extends ResourceContract
 {
     public function getRoute(
-        string $name = null,
+        ?string $name = null,
         DataWrapperContract|int|string|null $key = null,
         array $query = []
     ): string;
@@ -120,7 +120,7 @@ interface CrudResourceContract extends ResourceContract
     public function save(mixed $item, ?FieldsContract $fields = null): mixed;
 
 
-    public function getIndexPageUrl(array $params = [], ?string $fragment = null): string;
+    public function getIndexPageUrl(array $params = [], null|string|array $fragment = null): string;
 
     /**
      * @param DataWrapperContract<TData>|int|string|null $key
@@ -128,7 +128,7 @@ interface CrudResourceContract extends ResourceContract
     public function getFormPageUrl(
         DataWrapperContract|int|string|null $key = null,
         array $params = [],
-        ?string $fragment = null
+        null|string|array $fragment = null
     ): string;
 
     /**
@@ -137,7 +137,7 @@ interface CrudResourceContract extends ResourceContract
     public function getDetailPageUrl(
         DataWrapperContract|int|string $key,
         array $params = [],
-        ?string $fragment = null
+        null|string|array $fragment = null
     ): string;
 
     public function setQueryParams(iterable $params): static;

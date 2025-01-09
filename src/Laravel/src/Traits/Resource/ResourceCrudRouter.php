@@ -21,7 +21,7 @@ trait ResourceCrudRouter
      * @param DataWrapperContract<T>|int|string|null $key
      */
     public function getRoute(
-        string $name = null,
+        ?string $name = null,
         DataWrapperContract|int|string|null $key = null,
         array $query = []
     ): string {
@@ -37,14 +37,14 @@ trait ResourceCrudRouter
      * @param class-string<PageContract>|PageContract $page
      * @param array<string, mixed> $params
      */
-    public function getPageUrl(string|PageContract $page, array $params = [], ?string $fragment = null): string
+    public function getPageUrl(string|PageContract $page, array $params = [], null|string|array $fragment = null): string
     {
         return $this->getRouter()->getEndpoints()->toPage($page, $this, params: $params, extra: [
             'fragment' => $fragment,
         ]);
     }
 
-    public function getIndexPageUrl(array $params = [], ?string $fragment = null): string
+    public function getIndexPageUrl(array $params = [], null|string|array $fragment = null): string
     {
         return $this->getPageUrl($this->getIndexPage(), params: $params, fragment: $fragment);
     }
@@ -52,7 +52,7 @@ trait ResourceCrudRouter
     public function getFormPageUrl(
         DataWrapperContract|int|string|null $key = null,
         array $params = [],
-        ?string $fragment = null
+        null|string|array $fragment = null
     ): string {
         return $this->getPageUrl(
             $this->getFormPage(),
@@ -67,7 +67,7 @@ trait ResourceCrudRouter
     public function getDetailPageUrl(
         DataWrapperContract|int|string $key,
         array $params = [],
-        ?string $fragment = null
+        null|string|array $fragment = null
     ): string {
         return $this->getPageUrl(
             $this->getDetailPage(),
@@ -83,7 +83,7 @@ trait ResourceCrudRouter
      * @param DataWrapperContract<T>|int|string|null $key
      */
     public function getFragmentLoadUrl(
-        string $fragment,
+        string|array $fragment,
         PageContract $page,
         DataWrapperContract|int|string|null $key,
         array $params = []

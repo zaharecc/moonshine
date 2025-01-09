@@ -25,7 +25,7 @@ interface PagesContract extends Enumerable
      */
     public function findByType(
         PageType $type,
-        PageContract $default = null
+        ?PageContract $default = null
     ): ?PageContract;
 
     /**
@@ -37,7 +37,7 @@ interface PagesContract extends Enumerable
      */
     public function findByClass(
         string $class,
-        PageContract $default = null
+        ?PageContract $default = null
     ): ?PageContract;
 
     /**
@@ -46,7 +46,7 @@ interface PagesContract extends Enumerable
      */
     public function findByUri(
         string $uri,
-        PageContract $default = null
+        ?PageContract $default = null
     ): ?PageContract;
 
     public function activePage(): ?PageContract;
