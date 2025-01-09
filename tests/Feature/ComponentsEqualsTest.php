@@ -76,7 +76,7 @@ function compare(
     array $parameters = [],
     array $attributes = [],
     string $slot = '',
-    string $alias = null
+    ?string $alias = null
 ): void {
     if ($attributes === []) {
         $attributes = [

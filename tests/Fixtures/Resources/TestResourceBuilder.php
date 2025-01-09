@@ -15,7 +15,7 @@ use MoonShine\UI\Fields\Text;
 
 class TestResourceBuilder
 {
-    public static function new(string $model = null): TestResource
+    public static function new(?string $model = null): TestResource
     {
         $resource = app(TestResource::class);
 

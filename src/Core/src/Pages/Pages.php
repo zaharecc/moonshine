@@ -24,14 +24,14 @@ final class Pages extends Collection implements PagesContract
 
     public function findByType(
         PageType $type,
-        PageContract $default = null
+        ?PageContract $default = null
     ): ?PageContract {
         return $this->first(static fn (PageContract $page): bool => $page->getPageType() === $type, $default);
     }
 
     public function findByClass(
         string $class,
-        PageContract $default = null
+        ?PageContract $default = null
     ): ?PageContract {
         return $this->first(
             static fn (PageContract $page): bool => $page::class === $class,
@@ -61,7 +61,7 @@ final class Pages extends Collection implements PagesContract
 
     public function findByUri(
         string $uri,
-        PageContract $default = null
+        ?PageContract $default = null
     ): ?PageContract {
         return $this->first(
             static function (PageContract $page) use ($uri): bool {

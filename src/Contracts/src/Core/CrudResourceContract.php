@@ -22,7 +22,7 @@ use Traversable;
 interface CrudResourceContract extends ResourceContract
 {
     public function getRoute(
-        string $name = null,
+        ?string $name = null,
         DataWrapperContract|int|string|null $key = null,
         array $query = []
     ): string;

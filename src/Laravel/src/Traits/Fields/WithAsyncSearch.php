@@ -164,7 +164,7 @@ trait WithAsyncSearch
      * @param  ?Closure(mixed $data, FieldContract $field): static  $formatted
      */
     public function asyncSearch(
-        string $column = null,
+        ?string $column = null,
         ?Closure $searchQuery = null,
         ?Closure $formatted = null,
         ?string $associatedWith = null,

@@ -100,7 +100,7 @@ final class Components extends BaseCollection implements ComponentsContract
      */
     public function findForm(
         string $name,
-        FormBuilderContract $default = null
+        ?FormBuilderContract $default = null
     ): ?FormBuilderContract {
         return $this->onlyForms()->first(
             static fn (FormBuilderContract $component): bool => $component->getName() === $name,
@@ -113,7 +113,7 @@ final class Components extends BaseCollection implements ComponentsContract
      */
     public function findTable(
         string $name,
-        TableBuilderContract $default = null
+        ?TableBuilderContract $default = null
     ): ?TableBuilderContract {
         return $this->onlyTables()->first(
             static fn (TableBuilderContract $component): bool => $component->getName() === $name,
@@ -126,7 +126,7 @@ final class Components extends BaseCollection implements ComponentsContract
      */
     public function findByName(
         string $name,
-        ComponentContract $default = null
+        ?ComponentContract $default = null
     ): ?ComponentContract {
         return $this->onlyComponents()->first(
             static fn (ComponentContract $component): bool => $component->getName() === $name,

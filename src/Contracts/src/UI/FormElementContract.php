@@ -23,7 +23,7 @@ interface FormElementContract extends
 
     public function formName(?string $formName = null): static;
 
-    public function getIdentity(string $index = null): string;
+    public function getIdentity(?string $index = null): string;
 
     public function getFormName(): ?string;
 
@@ -69,7 +69,7 @@ interface FormElementContract extends
 
     public function getRowIndex(): int;
 
-    public function getNameAttribute(string $index = null): string;
+    public function getNameAttribute(?string $index = null): string;
 
     public function customWrapperAttributes(array $attributes): static;
 

@@ -25,7 +25,7 @@ interface ResourcesContract extends Enumerable
      */
     public function findByUri(
         string $uri,
-        ResourceContract $default = null
+        ?ResourceContract $default = null
     ): ?ResourceContract;
 
     /**
@@ -35,6 +35,6 @@ interface ResourcesContract extends Enumerable
      */
     public function findByClass(
         string $class,
-        ResourceContract $default = null
+        ?ResourceContract $default = null
     ): ?ResourceContract;
 }

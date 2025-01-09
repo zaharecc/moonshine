@@ -54,7 +54,7 @@ final readonly class LaravelStorage implements StorageContract
         return $this->filesystem->files($directory, $recursive);
     }
 
-    public function getDirectories(string $directory = null, bool $recursive = false): array
+    public function getDirectories(?string $directory = null, bool $recursive = false): array
     {
         return $this->filesystem->directories($directory, $recursive);
     }

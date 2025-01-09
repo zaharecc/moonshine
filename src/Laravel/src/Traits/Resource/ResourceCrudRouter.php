@@ -21,7 +21,7 @@ trait ResourceCrudRouter
      * @param DataWrapperContract<T>|int|string|null $key
      */
     public function getRoute(
-        string $name = null,
+        ?string $name = null,
         DataWrapperContract|int|string|null $key = null,
         array $query = []
     ): string {
