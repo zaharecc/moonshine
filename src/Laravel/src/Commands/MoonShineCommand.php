@@ -11,6 +11,8 @@ use function Laravel\Prompts\{outro, text};
 
 use Leeto\PackageCommand\Command;
 use MoonShine\Laravel\Support\StubsPath;
+use MoonShine\MenuManager\MenuItem;
+use ReflectionClass;
 
 abstract class MoonShineCommand extends Command
 {
@@ -43,11 +45,14 @@ abstract class MoonShineCommand extends Command
     {
         $namespace = rtrim($namespace, '\\');
 
+        $reflector = new ReflectionClass(moonshineConfig()->getLayout());
+
         self::addResourceOrPageTo(
             class: "$namespace\\$class",
-            to: app_path('MoonShine/Layouts/MoonShineLayout.php'),
+            to: $reflector->getFileName(),
             between: static fn (Stringable $content): Stringable => $content->betweenFirst("protected function menu(): array", '}'),
             replace: static fn (Stringable $content, Closure $tab): Stringable => $content->replace("];", "{$tab()}MenuItem::make('$title', $class::class),\n{$tab(2)}];"),
+            use: MenuItem::class
         );
     }
 
