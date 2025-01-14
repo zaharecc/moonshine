@@ -16,7 +16,6 @@ use MoonShine\Laravel\Traits\Controller\InteractsWithAuth;
 use MoonShine\Laravel\Traits\Controller\InteractsWithUI;
 use MoonShine\Laravel\TypeCasts\ModelCaster;
 use MoonShine\Support\Enums\ToastType;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -36,7 +35,7 @@ abstract class MoonShineController extends BaseController
         ?string $redirect = null,
         ToastType $messageType = ToastType::SUCCESS,
         int $status = Response::HTTP_OK
-    ): JsonResponse {
+    ): MoonShineJsonResponse {
         return MoonShineJsonResponse::make(data: $data)
             ->setStatusCode($status)
             ->toast($message, $messageType)

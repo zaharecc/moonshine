@@ -15,6 +15,7 @@ use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
 use MoonShine\Core\Resources\Resource;
 use MoonShine\Core\TypeCasts\MixedDataCaster;
 use MoonShine\Laravel\Components\Fragment;
+use MoonShine\Laravel\Http\Responses\MoonShineJsonResponse;
 use MoonShine\Laravel\Pages\Crud\DetailPage;
 use MoonShine\Laravel\Pages\Crud\FormPage;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
@@ -345,5 +346,20 @@ abstract class CrudResource extends Resource implements CrudResourceContract
     public function modifyCollectionResponse(mixed $items): mixed
     {
         return $items;
+    }
+
+    public function modifyDestroyResponse(MoonShineJsonResponse $response): MoonShineJsonResponse
+    {
+        return $response;
+    }
+
+    public function modifyMassDeleteResponse(MoonShineJsonResponse $response): MoonShineJsonResponse
+    {
+        return $response;
+    }
+
+    public function modifySaveResponse(MoonShineJsonResponse $response): MoonShineJsonResponse
+    {
+        return $response;
     }
 }

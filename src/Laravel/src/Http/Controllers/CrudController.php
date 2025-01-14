@@ -98,9 +98,11 @@ final class CrudController extends MoonShineController
         }
 
         if ($request->ajax() || $request->wantsJson()) {
-            return $this->json(
-                message: __('moonshine::ui.deleted'),
-                redirect: $request->input('_redirect')
+            return $resource->modifyDestroyResponse(
+                $this->json(
+                    message: __('moonshine::ui.deleted'),
+                    redirect: $request->input('_redirect')
+                )
             );
         }
 
@@ -126,9 +128,11 @@ final class CrudController extends MoonShineController
         }
 
         if ($request->ajax() || $request->wantsJson()) {
-            return $this->json(
-                message: __('moonshine::ui.deleted'),
-                redirect: $request->input('_redirect')
+            return $resource->modifyMassDeleteResponse(
+                $this->json(
+                    message: __('moonshine::ui.deleted'),
+                    redirect: $request->input('_redirect')
+                )
             );
         }
 
@@ -173,10 +177,12 @@ final class CrudController extends MoonShineController
         $resource->setItem($item);
 
         if ($request->ajax() || $request->wantsJson()) {
-            return $this->json(
-                message: __('moonshine::ui.saved'),
-                redirect: $redirectRoute($resource),
-                status: $resource->isRecentlyCreated() ? Response::HTTP_CREATED : Response::HTTP_OK
+            return $resource->modifySaveResponse(
+                $this->json(
+                    message: __('moonshine::ui.saved'),
+                    redirect: $redirectRoute($resource),
+                    status: $resource->isRecentlyCreated() ? Response::HTTP_CREATED : Response::HTTP_OK
+                )
             );
         }
 
