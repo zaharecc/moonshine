@@ -146,12 +146,32 @@ abstract class CrudResource extends Resource implements CrudResourceContract
         return $this->getPages()->indexPage();
     }
 
+    public function isIndexPage(): bool
+    {
+        return $this->getActivePage() instanceof IndexPage;
+    }
+
     /**
      * @return null|PageContract<TFormPage>|FormPage
      */
     public function getFormPage(): ?PageContract
     {
         return $this->getPages()->formPage();
+    }
+
+    public function isFormPage(): bool
+    {
+        return $this->getActivePage() instanceof FormPage;
+    }
+
+    public function isCreateFormPage(): bool
+    {
+        return $this->isFormPage() && \is_null($this->getItemID());
+    }
+
+    public function isUpdateFormPage(): bool
+    {
+        return $this->isFormPage() && !\is_null($this->getItemID());
     }
 
     public function getActivePage(): ?PageContract
@@ -165,6 +185,11 @@ abstract class CrudResource extends Resource implements CrudResourceContract
     public function getDetailPage(): ?PageContract
     {
         return $this->getPages()->detailPage();
+    }
+
+    public function isDetailPage(): bool
+    {
+        return $this->getActivePage() instanceof DetailPage;
     }
 
     public function getCaster(): DataCasterContract
