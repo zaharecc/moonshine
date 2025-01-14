@@ -171,7 +171,7 @@ abstract class CrudResource extends Resource implements CrudResourceContract
 
     public function isUpdateFormPage(): bool
     {
-        return $this->isFormPage() && !\is_null($this->getItemID());
+        return $this->isFormPage() && ! \is_null($this->getItemID());
     }
 
     public function getActivePage(): ?PageContract
