@@ -27,6 +27,11 @@ final class EditButton
 
         $action = static fn (mixed $item, ?DataWrapperContract $data): string => $resource->getFormPageUrl($data?->getKey());
 
+        // required to create field entities and load assets
+        if(!$resource->isCreateInModal() && $resource->isEditInModal()) {
+            $resource->getFormFields();
+        }
+
         if ($resource->isEditInModal()) {
             $action = static fn (mixed $item, ?DataWrapperContract $data): string => $resource->getFormPageUrl(
                 $data?->getKey(),

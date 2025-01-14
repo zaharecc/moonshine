@@ -25,6 +25,9 @@ final class CreateButton
         $action = $resource->getFormPageUrl();
 
         if ($resource->isCreateInModal()) {
+            // required to create field entities and load assets
+            $resource->getFormFields();
+
             $action = $resource->getFormPageUrl(
                 params: [
                     '_component_name' => $componentName ?? $resource->getListComponentName(),
