@@ -75,7 +75,7 @@ final class FileModelApply implements ApplyContract
         if (! \is_null($field->getCustomName())) {
             return $file->storeAs(
                 $field->getDir(),
-                \call_user_func($field->getCustomName(), $file, $this),
+                \call_user_func($field->getCustomName(), $file, $field),
                 $field->getOptions()
             );
         }
