@@ -315,6 +315,11 @@ abstract class CrudResource extends Resource implements CrudResourceContract
         );
     }
 
+    public function getListEventType(): JsEvent
+    {
+        return JsEvent::TABLE_UPDATED;
+    }
+
     public function isListComponentRequest(): bool
     {
         return request()->ajax() && request()->getScalar('_component_name') === $this->getListComponentName();
@@ -326,7 +331,7 @@ abstract class CrudResource extends Resource implements CrudResourceContract
 
         return rescue(
             fn (): string => AlpineJs::event($this->getIndexPage()?->getListEventName() ?? '', $name, $params),
-            AlpineJs::event(JsEvent::TABLE_UPDATED, $name, $params),
+            AlpineJs::event($this->getListEventType(), $name, $params),
             false,
         );
     }
