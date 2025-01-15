@@ -88,7 +88,7 @@ trait ResourceCrudRouter
         DataWrapperContract|int|string|null $key = null,
         array $params = []
     ): string {
-        if(is_null($page)) {
+        if (\is_null($page)) {
             $page = $this->getIndexPage();
         }
 
