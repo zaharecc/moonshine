@@ -140,6 +140,16 @@ interface CrudResourceContract extends ResourceContract
         null|string|array $fragment = null
     ): string;
 
+    public function isIndexPage(): bool;
+
+    public function isFormPage(): bool;
+
+    public function isDetailPage(): bool;
+
+    public function isCreateFormPage(): bool;
+
+    public function isUpdateFormPage(): bool;
+
     public function setQueryParams(iterable $params): static;
 
     public function getQueryParams(): Collection;
