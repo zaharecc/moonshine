@@ -72,6 +72,7 @@ final readonly class AlpineJs
             'data-async-selector' => \is_array($selector) ? implode(',', $selector) : $selector,
             'data-async-response-handler' => $callback?->getResponseHandler(),
             'data-async-before-request' => $callback?->getBeforeRequest(),
+            'data-async-after-response' => $callback?->getAfterResponse(),
             'data-async-method' => $method->value,
         ]);
     }

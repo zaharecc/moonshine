@@ -84,10 +84,14 @@ trait ResourceCrudRouter
      */
     public function getFragmentLoadUrl(
         string|array $fragment,
-        PageContract $page,
-        DataWrapperContract|int|string|null $key,
+        ?PageContract $page = null,
+        DataWrapperContract|int|string|null $key = null,
         array $params = []
     ): string {
+        if(is_null($page)) {
+            $page = $this->getIndexPage();
+        }
+
         return $this->getPageUrl(
             $page,
             params: array_filter([

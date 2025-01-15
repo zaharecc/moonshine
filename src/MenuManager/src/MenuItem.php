@@ -67,7 +67,7 @@ class MenuItem extends MenuElement
 
     public function changeButton(Closure $callback): static
     {
-        $this->actionButton = $callback($this->actionButton);
+        $this->actionButton = $callback($this->actionButton->customAttributes(['@mouseenter' => false]));
 
         return $this;
     }
