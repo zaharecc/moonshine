@@ -9,7 +9,7 @@ if (! \function_exists('memoize')) {
     /**
      * @template T
      *
-     * @param callable(?array): T $callback
+     * @param (callable(): T) $callback
      * @return T
      */
     function memoize(callable $callback): mixed
@@ -22,7 +22,7 @@ if (! \function_exists('memoize')) {
         $backtrace = new Backtrace($trace);
 
         if ($backtrace->getFunctionName() === 'eval') {
-            return $callback([]);
+            return \call_user_func($callback);
         }
 
         $object = $backtrace->getObject();
@@ -36,11 +36,11 @@ if (! \function_exists('memoize')) {
         }
 
         if (! $cache->isEnabled()) {
-            return $callback($backtrace->getArguments());
+            return \call_user_func($callback, $backtrace->getArguments());
         }
 
         if (! $cache->has($object, $hash)) {
-            $result = $callback($backtrace->getArguments());
+            $result = \call_user_func($callback, $backtrace->getArguments());
 
             $cache->set($object, $hash, $result);
         }
