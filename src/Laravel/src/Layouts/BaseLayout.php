@@ -31,6 +31,10 @@ use MoonShine\UI\Components\When;
  */
 abstract class BaseLayout extends AbstractLayout
 {
+    public const CONTENT_FRAGMENT_NAME = '_content';
+
+    public const CONTENT_ID = '_moonshine-content';
+
     protected function getFaviconComponent(): Favicon
     {
         return Favicon::make();

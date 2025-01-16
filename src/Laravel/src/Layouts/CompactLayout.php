@@ -17,6 +17,7 @@ use MoonShine\UI\Components\{
     Layout\Layout,
     Layout\Wrapper
 };
+use MoonShine\Laravel\Components\Fragment;
 
 class CompactLayout extends AppLayout
 {
@@ -89,8 +90,9 @@ class CompactLayout extends AppLayout
                     Wrapper::make([
                         // $this->getTopBarComponent(),
                         $this->getSidebarComponent(),
-                        Div::make([
+                        Fragment::make([
                             Flash::make(),
+
                             $this->getHeaderComponent(),
 
                             Content::make([
@@ -100,7 +102,7 @@ class CompactLayout extends AppLayout
                             ]),
 
                             $this->getFooterComponent(),
-                        ])->class('layout-page'),
+                        ])->name(self::CONTENT_FRAGMENT_NAME)->customAttributes(['id' => self::CONTENT_ID])->class('layout-page'),
                     ]),
                 ])->class('theme-minimalistic'),
             ])
