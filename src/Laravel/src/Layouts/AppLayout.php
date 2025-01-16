@@ -13,7 +13,6 @@ use MoonShine\UI\Components\{
     Components,
     Layout\Body,
     Layout\Content,
-    Layout\Div,
     Layout\Flash,
     Layout\Html,
     Layout\Layout,
