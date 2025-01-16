@@ -7,11 +7,11 @@ namespace MoonShine\Laravel\Layouts;
 use MoonShine\AssetManager\Css;
 use MoonShine\ColorManager\ColorManager;
 use MoonShine\Contracts\ColorManager\ColorManagerContract;
+use MoonShine\Laravel\Components\Fragment;
 use MoonShine\UI\Components\{
     Components,
     Layout\Body,
     Layout\Content,
-    Layout\Div,
     Layout\Flash,
     Layout\Html,
     Layout\Layout,
@@ -90,17 +90,20 @@ class CompactLayout extends AppLayout
                         // $this->getTopBarComponent(),
                         $this->getSidebarComponent(),
                         Div::make([
-                            Flash::make(),
-                            $this->getHeaderComponent(),
+                            Fragment::make([
+                                Flash::make(),
 
-                            Content::make([
-                                Components::make(
-                                    $this->getPage()->getComponents()
-                                ),
-                            ]),
+                                $this->getHeaderComponent(),
 
-                            $this->getFooterComponent(),
-                        ])->class('layout-page'),
+                                Content::make([
+                                    Components::make(
+                                        $this->getPage()->getComponents()
+                                    ),
+                                ]),
+
+                                $this->getFooterComponent(),
+                            ])->class('layout-page')->name(self::CONTENT_FRAGMENT_NAME),
+                        ])->class('flex grow')->customAttributes(['id' => self::CONTENT_ID]),
                     ]),
                 ])->class('theme-minimalistic'),
             ])

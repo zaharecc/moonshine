@@ -7,6 +7,7 @@
             argument="0"
         >
             <files extension="blade.php" xpath="$project/vendor/moonshine/moonshine/src/UI/resources/views/icons"/>
+            <stopCompletion />
         </classMethod>
 
         <classMethod
@@ -15,6 +16,7 @@
             argument="0"
         >
             <methods xpath="$containingClass" private="false" protected="false" static="false" />
+            <stopCompletion />
         </classMethod>
 
         <classMethod
@@ -23,6 +25,7 @@
             argument="0"
         >
             <methods xpath="$containingClass" private="false" protected="false" static="false" />
+            <stopCompletion />
         </classMethod>
 
         <classMethod
@@ -31,6 +34,7 @@
             argument="1"
         >
             <methods xpath="$containingClass.$model" />
+            <stopCompletion />
         </classMethod>
 
         <classMethod
@@ -39,6 +43,7 @@
             argument="1"
         >
             <arrayValues xpath="$containingClass.$model.$fillable" />
+            <stopCompletion />
         </classMethod>
     </definitions>
 </meta-storm>

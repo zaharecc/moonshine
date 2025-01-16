@@ -191,6 +191,10 @@ export default (asyncUrl = '') => ({
       },
       callbackOnInit: () => {
         this.searchTerms = this.$el.closest('.choices').querySelector('[name="search_terms"]')
+
+        if (asyncUrl && this.$el.dataset.asyncOnInit && !this.$el.dataset.asyncOnInitDropdown) {
+          this.asyncSearch()
+        }
       },
       ...this.customOptions,
     })

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MoonShine\Laravel\Layouts;
 
+use MoonShine\Laravel\Components\Fragment;
 use MoonShine\Laravel\Resources\MoonShineUserResource;
 use MoonShine\Laravel\Resources\MoonShineUserRoleResource;
 use MoonShine\MenuManager\MenuGroup;
@@ -12,7 +13,6 @@ use MoonShine\UI\Components\{
     Components,
     Layout\Body,
     Layout\Content,
-    Layout\Div,
     Layout\Flash,
     Layout\Html,
     Layout\Layout,
@@ -49,19 +49,21 @@ class AppLayout extends BaseLayout
                         $this->getSidebarComponent(),
 
                         Div::make([
-                            Flash::make(),
+                            Fragment::make([
+                                Flash::make(),
 
-                            $this->getHeaderComponent(),
+                                $this->getHeaderComponent(),
 
-                            Content::make([
-                                Title::make($this->getPage()->getTitle())->class('mb-6'),
-                                Components::make(
-                                    $this->getPage()->getComponents()
-                                ),
-                            ]),
+                                Content::make([
+                                    Title::make($this->getPage()->getTitle())->class('mb-6'),
+                                    Components::make(
+                                        $this->getPage()->getComponents()
+                                    ),
+                                ]),
 
-                            $this->getFooterComponent(),
-                        ])->class('layout-page'),
+                                $this->getFooterComponent(),
+                            ])->class('layout-page')->name(self::CONTENT_FRAGMENT_NAME),
+                        ])->class('flex grow')->customAttributes(['id' => self::CONTENT_ID]),
                     ]),
                 ]),
             ])
