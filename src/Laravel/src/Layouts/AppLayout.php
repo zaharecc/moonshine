@@ -49,20 +49,22 @@ class AppLayout extends BaseLayout
                         // $this->getTopBarComponent(),
                         $this->getSidebarComponent(),
 
-                        Fragment::make([
-                            Flash::make(),
+                        Div::make([
+                            Fragment::make([
+                                Flash::make(),
 
-                            $this->getHeaderComponent(),
+                                $this->getHeaderComponent(),
 
-                            Content::make([
-                                Title::make($this->getPage()->getTitle())->class('mb-6'),
-                                Components::make(
-                                    $this->getPage()->getComponents()
-                                ),
-                            ]),
+                                Content::make([
+                                    Title::make($this->getPage()->getTitle())->class('mb-6'),
+                                    Components::make(
+                                        $this->getPage()->getComponents()
+                                    ),
+                                ]),
 
-                            $this->getFooterComponent(),
-                        ])->name(self::CONTENT_FRAGMENT_NAME)->customAttributes(['id' => self::CONTENT_ID])->class('layout-page'),
+                                $this->getFooterComponent(),
+                            ])->class('layout-page')->name(self::CONTENT_FRAGMENT_NAME)
+                        ])->class('flex grow')->customAttributes(['id' => self::CONTENT_ID]),
                     ]),
                 ]),
             ])
