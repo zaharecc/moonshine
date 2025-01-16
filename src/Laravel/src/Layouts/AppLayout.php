@@ -9,16 +9,15 @@ use MoonShine\Laravel\Resources\MoonShineUserResource;
 use MoonShine\Laravel\Resources\MoonShineUserRoleResource;
 use MoonShine\MenuManager\MenuGroup;
 use MoonShine\MenuManager\MenuItem;
-use MoonShine\UI\Components\{
-    Components,
+use MoonShine\UI\Components\{Components,
     Layout\Body,
     Layout\Content,
+    Layout\Div,
     Layout\Flash,
     Layout\Html,
     Layout\Layout,
     Layout\Wrapper,
-    Title
-};
+    Title};
 
 class AppLayout extends BaseLayout
 {

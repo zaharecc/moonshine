@@ -8,15 +8,14 @@ use MoonShine\AssetManager\Css;
 use MoonShine\ColorManager\ColorManager;
 use MoonShine\Contracts\ColorManager\ColorManagerContract;
 use MoonShine\Laravel\Components\Fragment;
-use MoonShine\UI\Components\{
-    Components,
+use MoonShine\UI\Components\{Components,
     Layout\Body,
     Layout\Content,
+    Layout\Div,
     Layout\Flash,
     Layout\Html,
     Layout\Layout,
-    Layout\Wrapper
-};
+    Layout\Wrapper};
 
 class CompactLayout extends AppLayout
 {
