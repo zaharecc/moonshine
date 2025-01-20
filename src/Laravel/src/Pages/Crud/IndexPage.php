@@ -257,7 +257,7 @@ class IndexPage extends CrudPage
      */
     protected function getItemsComponents(): array
     {
-        if(request()->has('_no_items_query')) {
+        if (request()->has('_no_items_query')) {
             return [];
         }
 
