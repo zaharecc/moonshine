@@ -251,7 +251,7 @@ class BelongsToMany extends ModelRelationField implements
             $this->memoizeValues = $this->getRelation()
                 ?->getRelated()
                 ?->newQuery()
-                ?->findMany($this->toValue()) ?? EloquentCollection::make();
+                ?->findMany(array_keys($this->toValue()->toArray())) ?? EloquentCollection::make();
         }
 
         if ($this->isSelectMode()) {

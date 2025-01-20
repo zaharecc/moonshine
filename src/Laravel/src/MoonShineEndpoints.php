@@ -178,6 +178,7 @@ final readonly class MoonShineEndpoints implements EndpointsContract
             'resourceItem' => $resourceItem,
             '_parent_field' => $parentField,
             '_relation' => $relation,
+            '_no_items_query' => true,
         ]);
     }
 }

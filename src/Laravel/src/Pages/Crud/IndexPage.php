@@ -257,6 +257,10 @@ class IndexPage extends CrudPage
      */
     protected function getItemsComponents(): array
     {
+        if(request()->has('_no_items_query')) {
+            return [];
+        }
+
         $this->getResource()->setQueryParams(
             request()->only($this->getResource()->getQueryParamsKeys())
         );

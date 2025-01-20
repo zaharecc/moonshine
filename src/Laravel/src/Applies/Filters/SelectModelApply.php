@@ -20,10 +20,12 @@ class SelectModelApply implements ApplyContract
     {
         return static function (Builder $query) use ($field): void {
             if (filled($field->getRequestValue())) {
+                $values = $field->getRequestValue();
+
                 $query->when(
                     $field->isMultiple(),
-                    static fn (Builder $q) => $q->whereIn($field->getColumn(), $field->getRequestValue()),
-                    static fn (Builder $q) => $q->where($field->getColumn(), $field->getRequestValue()),
+                    static fn (Builder $q) => $q->whereIn($field->getColumn(), \is_string($values) ? explode(',', $values) : $values),
+                    static fn (Builder $q) => $q->where($field->getColumn(), $values),
                 );
             }
         };
