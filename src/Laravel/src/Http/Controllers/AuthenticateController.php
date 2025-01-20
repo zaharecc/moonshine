@@ -9,10 +9,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Pipeline;
 use Illuminate\Validation\ValidationException;
-use MoonShine\Laravel\Contracts\WithResponseModifierContract;
 use MoonShine\Laravel\Http\Requests\LoginFormRequest;
 use MoonShine\Laravel\Http\Responses\MoonShineJsonResponse;
-use MoonShine\Laravel\Pages\Dashboard;
 use MoonShine\Laravel\Pages\LoginPage;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,7 +27,7 @@ class AuthenticateController extends MoonShineController
 
         $page = moonshineConfig()->getPage('login', LoginPage::class);
 
-        if ($page instanceof WithResponseModifierContract && $page->isResponseModified()) {
+        if ($page->isResponseModified()) {
             return $page->getModifiedResponse();
         }
 
