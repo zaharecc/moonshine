@@ -45,5 +45,40 @@
             <arrayValues xpath="$containingClass.$model.$fillable" />
             <stopCompletion />
         </classMethod>
+
+        <classMethod
+            class="\MoonShine\UI\Components\Layout\Flex"
+            method="itemsAlign"
+            argument="0"
+        >
+            <collection name="items-align" argument="0" />
+            <stopCompletion />
+        </classMethod>
+
+        <classMethod
+            class="\MoonShine\UI\Components\Layout\Flex"
+            method="justifyAlign"
+            argument="0"
+        >
+            <collection name="justify-align" argument="0" />
+            <stopCompletion />
+        </classMethod>
     </definitions>
+    <collections>
+        <strings name="items-align">
+            <value>start</value>
+            <value>end</value>
+            <value>center</value>
+            <value>stretch</value>
+            <value>baseline</value>
+        </strings>
+        <strings name="justify-align">
+            <value>start</value>
+            <value>end</value>
+            <value>center</value>
+            <value>between</value>
+            <value>around</value>
+            <value>evenly</value>
+        </strings>
+    </collections>
 </meta-storm>
