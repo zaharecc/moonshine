@@ -20,7 +20,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 #[AsCommand(name: 'moonshine:install')]
 class InstallCommand extends MoonShineCommand
 {
-    protected $signature = 'moonshine:install {--u|without-user} {--m|without-migrations} {--l|default-layout} {--a|without-auth} {--d|without-notifications} {--t|tests-mode}';
+    protected $signature = 'moonshine:install {--u|without-user} {--m|without-migrations} {--l|default-layout} {--a|without-auth} {--d|without-notifications} {--t|tests-mode} {--Q|quick-mode}';
 
     protected $description = 'Install the MoonShine Laravel package';
 
@@ -30,12 +30,18 @@ class InstallCommand extends MoonShineCommand
 
     private bool $testsMode = false;
 
+    private bool $quickMode = false;
+
     public function handle(): int
     {
         intro('MoonShine installation ...');
 
         if ($this->option('tests-mode')) {
             $this->testsMode = true;
+        }
+
+        if ($this->option('quick-mode')) {
+            $this->quickMode = true;
         }
 
         spin(function (): void {
@@ -60,7 +66,7 @@ class InstallCommand extends MoonShineCommand
             $this->call('migrate');
         }
 
-        $userCreate = $this->confirmAction(
+        $userCreate = $this->quickMode || $this->confirmAction(
             'Create super user?',
             canRunningInTests: false,
             skipOption: 'without-user',
@@ -71,7 +77,7 @@ class InstallCommand extends MoonShineCommand
             $this->call(MakeUserCommand::class);
         }
 
-        if (! $this->testsMode) {
+        if (! $this->testsMode && ! $this->quickMode) {
             confirm('Can you quickly star our GitHub repository? 🙏🏻');
 
             $this->components->bulletList([
@@ -108,7 +114,7 @@ class InstallCommand extends MoonShineCommand
 
     protected function initAuth(): void
     {
-        $this->authEnabled = $this->confirmAction(
+        $this->authEnabled = $this->quickMode || $this->confirmAction(
             'Enable authentication?',
             skipOption: 'without-auth',
             autoEnable: $this->testsMode,
@@ -135,7 +141,7 @@ class InstallCommand extends MoonShineCommand
 
     protected function initMigrations(): void
     {
-        $this->useMigrations = $this->confirmAction(
+        $this->useMigrations = $this->quickMode || $this->confirmAction(
             'Install with system migrations?',
             skipOption: 'without-migrations',
             autoEnable: $this->testsMode,
@@ -172,13 +178,13 @@ class InstallCommand extends MoonShineCommand
 
     protected function initNotifications(): void
     {
-        $confirm = $this->confirmAction(
+        $confirm = $this->quickMode || $this->confirmAction(
             'Enable notifications?',
             skipOption: 'without-notifications',
             autoEnable: $this->testsMode,
         );
 
-        $confirmDatabase = $this->confirmAction(
+        $confirmDatabase = $this->quickMode || $this->confirmAction(
             'Use database notifications?',
             canRunningInTests: false,
             condition: fn (): bool => $confirm && $this->useMigrations,
@@ -285,7 +291,7 @@ class InstallCommand extends MoonShineCommand
 
     protected function initLayout(): void
     {
-        $compact = $this->confirmAction(
+        $compact = $this->quickMode || $this->confirmAction(
             'Want to use a minimalist theme?',
             skipOption: 'default-layout',
             autoEnable: $this->testsMode,
