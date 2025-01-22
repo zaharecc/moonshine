@@ -102,7 +102,7 @@ class CompactLayout extends AppLayout
 
                                 $this->getFooterComponent(),
                             ])->class('layout-page')->name(self::CONTENT_FRAGMENT_NAME),
-                        ])->class('flex grow')->customAttributes(['id' => self::CONTENT_ID]),
+                        ])->class('flex grow overflow-auto')->customAttributes(['id' => self::CONTENT_ID]),
                     ]),
                 ])->class('theme-minimalistic'),
             ])
