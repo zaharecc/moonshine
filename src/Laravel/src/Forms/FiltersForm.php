@@ -8,6 +8,7 @@ use Illuminate\Support\Arr;
 use MoonShine\Contracts\UI\FormBuilderContract;
 use MoonShine\Contracts\UI\FormContract;
 use MoonShine\Laravel\Collections\Fields;
+use MoonShine\Laravel\Fields\Relationships\ModelRelationField;
 use MoonShine\Laravel\Resources\CrudResource;
 use MoonShine\Support\AlpineJs;
 use MoonShine\Support\Enums\FormMethod;
@@ -15,7 +16,6 @@ use MoonShine\Support\Enums\JsEvent;
 use MoonShine\Support\Traits\Makeable;
 use MoonShine\UI\Components\ActionButton;
 use MoonShine\UI\Components\FormBuilder;
-use MoonShine\UI\Contracts\RangeFieldContract;
 use MoonShine\UI\Fields\Hidden;
 use Stringable;
 use Throwable;
@@ -48,7 +48,8 @@ final readonly class FiltersForm implements FormContract
         $action = $resource->isAsync() ? '#' : $this->getFormAction();
 
         foreach ($filters->onlyFields() as $filter) {
-            if ($filter instanceof RangeFieldContract) {
+            if(!$filter instanceof ModelRelationField) {
+                $filter->fillData($values);
                 data_forget($values, $filter->getColumn());
             }
         }
