@@ -582,6 +582,11 @@ class HasMany extends ModelRelationField implements HasFieldsContract
         return $data;
     }
 
+    public function isReactivitySupported(): bool
+    {
+        return false;
+    }
+
     /**
      * @return array<string, mixed>
      * @throws Throwable

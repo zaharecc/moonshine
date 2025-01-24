@@ -406,6 +406,11 @@ class RelationRepeater extends ModelRelationField implements
         return $data;
     }
 
+    public function isReactivitySupported(): bool
+    {
+        return false;
+    }
+
     /**
      * @return array<string, mixed>
      * @throws Throwable

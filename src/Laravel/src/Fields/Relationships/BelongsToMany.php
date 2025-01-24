@@ -227,7 +227,7 @@ class BelongsToMany extends ModelRelationField implements
 
     public function getCheckboxKey(): string
     {
-        return '_checked';
+        return 'selected';
     }
 
     protected function prepareFill(array $raw = [], ?DataWrapperContract $casted = null): mixed
@@ -304,6 +304,7 @@ class BelongsToMany extends ModelRelationField implements
         $checkedColumn = $this->getNameAttribute('${index0}');
 
         $identityField = Checkbox::make('#', $this->getCheckboxKey())
+            ->customAttributes($this->getReactiveAttributes())
             ->withoutWrapper()
             ->class('js-pivot-checker')
             ->setNameAttribute($checkedColumn . "[{$this->getCheckboxKey()}]")
@@ -535,6 +536,34 @@ class BelongsToMany extends ModelRelationField implements
         return $data;
     }
 
+    public function prepareReactivityValue(mixed $value, mixed &$casted, array &$except): mixed
+    {
+        $casted = $this->getRelatedModel();
+        $related = $this->getRelation()?->getRelated();
+
+        $checkedKey = $this->getCheckboxKey();
+        $valueKey = $this->isSelectMode() ? 'value' : $related->getKeyName();
+        $value = collect($value)->filter(fn($v) => $v[$checkedKey] ?? true)->map(fn($v) => clone $related->forceFill([
+            $related->getKeyName() => $v[$valueKey] ?? $v,
+        ]))->values();
+
+        $casted?->setRelation($this->getRelationName(), $value);
+        $except[$this->getColumn()] = $this->getColumn();
+
+        return $value;
+    }
+
+    public function getReactiveValue(): mixed
+    {
+        if(!$this->isTree() || $this->isSelectMode()) {
+            return $this
+                ->toValue()
+                ->pluck($this->getRelation()?->getRelated()->getKeyName());
+        }
+
+        return parent::getReactiveValue();
+    }
+
     /**
      * @return array<string, mixed>
      * @throws Throwable
@@ -553,6 +582,10 @@ class BelongsToMany extends ModelRelationField implements
         ];
 
         if ($this->isSelectMode()) {
+            $this->customAttributes(
+                $this->getReactiveAttributes()
+            );
+
             return [
                 ...$viewData,
                 'isSearchable' => $this->isSearchable(),

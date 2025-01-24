@@ -14,6 +14,12 @@ interface HasReactivityContract
 {
     public function isReactive(): bool;
 
+    public function isReactivitySupported(): bool;
+
+    public function prepareReactivityValue(mixed $value, mixed &$casted, array &$except): mixed;
+
+    public function getReactiveValue(): mixed;
+
     /**
      * @param  TFields  $fields
      *

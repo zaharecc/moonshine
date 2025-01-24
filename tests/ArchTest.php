@@ -7,7 +7,7 @@ arch('moonshine')
     ->toUseStrictTypes();
 
 arch('globals')
-    ->expect(['dd', 'dump'])
+    ->expect(['dd', 'dump', 'debugbar', 'trap'])
     ->not->toBeUsed();
 
 arch('contracts')
