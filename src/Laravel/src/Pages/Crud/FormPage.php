@@ -165,6 +165,8 @@ class FormPage extends CrudPage
             }
         }
 
+        $components = array_merge($components, $this->getEmptyModals());
+
         return array_merge($components, $this->getResource()->getFormPageComponents());
     }
 
