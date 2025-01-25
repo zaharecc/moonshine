@@ -233,7 +233,7 @@ class BelongsToMany extends ModelRelationField implements
                 ->setColumn("{$this->getPivotAs()}.{$field->getColumn()}")
                 ->class('js-pivot-field')
                 ->withoutWrapper(),
-            performName: fn(string $name): string => str_replace($this->getRelationName(), "{$this->getRelationName()}_pivot", $name),
+            performName: fn (string $name): string => str_replace($this->getRelationName(), "{$this->getRelationName()}_pivot", $name),
         );
     }
 
@@ -549,7 +549,7 @@ class BelongsToMany extends ModelRelationField implements
         $casted = $this->getRelatedModel();
         $related = $this->getRelation()?->getRelated();
 
-        $value = collect($value)->map(fn($v) => clone $related->forceFill([
+        $value = collect($value)->map(fn ($v) => clone $related->forceFill([
             $related->getKeyName() => $v,
         ]))->values();
 
@@ -561,11 +561,11 @@ class BelongsToMany extends ModelRelationField implements
 
     public function getReactiveValue(): mixed
     {
-        if($this->isAsyncSearch()) {
+        if ($this->isAsyncSearch()) {
             throw FieldException::reactivityNotSupported(static::class, 'with asyncSearch');
         }
 
-        if(!$this->isTree() || $this->isSelectMode()) {
+        if (! $this->isTree() || $this->isSelectMode()) {
             return $this->getCollectionValue()->pluck($this->getRelatedKeyName());
         }
 

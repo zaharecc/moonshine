@@ -46,7 +46,7 @@ function testBelongsToManyValue(TestResource $resource, Item $item, array $data,
         $resource->getRoute('crud.update', $item->getKey()),
         [
             'categories' => $data,
-            'categories_pivot' => $pivotData
+            'categories_pivot' => $pivotData,
         ]
     )->assertRedirect();
 

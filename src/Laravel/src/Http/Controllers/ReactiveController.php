@@ -38,7 +38,7 @@ final class ReactiveController extends MoonShineController
         $values = $request->collect('values')->map(function (mixed $value, string $column) use ($fields, &$casted, &$except) {
             $field = $fields->findByColumn($column);
 
-            if(!$field instanceof HasReactivityContract) {
+            if (! $field instanceof HasReactivityContract) {
                 return $value;
             }
 
