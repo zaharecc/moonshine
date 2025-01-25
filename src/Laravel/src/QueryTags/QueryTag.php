@@ -13,6 +13,7 @@ use MoonShine\Contracts\UI\ActionButtonContract;
 use MoonShine\Contracts\UI\HasIconContract;
 use MoonShine\Contracts\UI\HasLabelContract;
 use MoonShine\Core\Traits\WithCore;
+use MoonShine\Laravel\Resources\CrudResource;
 use MoonShine\Support\AlpineJs;
 use MoonShine\Support\Traits\Makeable;
 use MoonShine\UI\Components\ActionButton;
@@ -107,7 +108,7 @@ final class QueryTag implements HasCanSeeContract, HasIconContract, HasLabelCont
         return $this;
     }
 
-    public function getButton(CrudResourceContract $resource): ActionButtonContract
+    public function getButton(CrudResource $resource): ActionButtonContract
     {
         return ActionButton::make(
             $this->getLabel(),
