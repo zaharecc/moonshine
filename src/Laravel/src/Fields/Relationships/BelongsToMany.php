@@ -233,7 +233,7 @@ class BelongsToMany extends ModelRelationField implements
                 ->setColumn("{$this->getPivotAs()}.{$field->getColumn()}")
                 ->class('js-pivot-field')
                 ->withoutWrapper(),
-            performName: fn(string $name) => str_replace($this->getRelationName(), "{$this->getRelationName()}_pivot", $name),
+            performName: fn(string $name): array|string => str_replace($this->getRelationName(), "{$this->getRelationName()}_pivot", $name),
         );
     }
 

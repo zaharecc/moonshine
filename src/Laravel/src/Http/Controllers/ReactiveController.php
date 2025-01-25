@@ -7,12 +7,9 @@ namespace MoonShine\Laravel\Http\Controllers;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
 use MoonShine\Contracts\UI\HasReactivityContract;
-use MoonShine\Laravel\Fields\Relationships\BelongsTo;
-use MoonShine\Laravel\Fields\Relationships\BelongsToMany;
 use MoonShine\Laravel\MoonShineRequest;
 use MoonShine\Laravel\TypeCasts\ModelDataWrapper;
 use MoonShine\UI\Components\FieldsGroup;
-use MoonShine\UI\Fields\Select;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 final class ReactiveController extends MoonShineController
