@@ -6,6 +6,7 @@ namespace MoonShine\Laravel\Http\Controllers;
 
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
+use MoonShine\Contracts\UI\HasReactivityContract;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use MoonShine\Laravel\Fields\Relationships\BelongsToMany;
 use MoonShine\Laravel\MoonShineRequest;
@@ -38,7 +39,13 @@ final class ReactiveController extends MoonShineController
         $except = [];
 
         $values = $request->collect('values')->map(function (mixed $value, string $column) use ($fields, &$casted, &$except) {
-            return $fields->findByColumn($column)?->prepareReactivityValue($value, $casted, $except);
+            $field = $fields->findByColumn($column);
+
+            if(!$field instanceof HasReactivityContract) {
+                return $value;
+            }
+
+            return $field->prepareReactivityValue($value, $casted, $except);
         });
 
         $fields->fill(
