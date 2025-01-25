@@ -142,12 +142,12 @@ final class QueryTag implements HasCanSeeContract, HasIconContract, HasLabelCont
                 $resource->isQueryTagsInDropdown(),
                 fn (ActionButtonContract $btn): ActionButtonContract => $btn->showInDropdown()
             )->when(
-                !\is_null($this->modifyButton),
+                ! \is_null($this->modifyButton),
                 fn (ActionButtonContract $btn): ActionButtonContract => \call_user_func($this->modifyButton, $btn, $this)
             )->when(
                 $this->events !== [],
                 fn (ActionButtonContract $btn): ActionButtonContract => $btn->customAttributes([
-                    'data-async-events' => AlpineJs::prepareEvents(events: $this->events)
+                    'data-async-events' => AlpineJs::prepareEvents(events: $this->events),
                 ])
             );
     }
