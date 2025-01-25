@@ -19,7 +19,6 @@ use MoonShine\UI\Components\ActionGroup;
 use MoonShine\UI\Components\Layout\Div;
 use MoonShine\UI\Components\Layout\Flex;
 use MoonShine\UI\Components\Layout\LineBreak;
-use MoonShine\UI\Components\Modal;
 use MoonShine\UI\Components\Table\TableBuilder;
 use Throwable;
 
