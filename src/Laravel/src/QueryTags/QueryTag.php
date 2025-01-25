@@ -6,7 +6,6 @@ namespace MoonShine\Laravel\QueryTags;
 
 use Closure;
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use MoonShine\Contracts\Core\CrudResourceContract;
 use MoonShine\Contracts\Core\HasCanSeeContract;
 use MoonShine\Contracts\Core\HasCoreContract;
 use MoonShine\Contracts\UI\ActionButtonContract;
