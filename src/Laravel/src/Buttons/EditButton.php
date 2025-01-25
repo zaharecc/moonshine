@@ -32,7 +32,7 @@ final class EditButton
             $resource->getFormFields();
         }
 
-        if ($resource->isEditInModal()) {
+        if ($resource->isEditInModal() && ! $resource->isDetailPage()) {
             $action = static fn (mixed $item, ?DataWrapperContract $data): string => $resource->getFormPageUrl(
                 $data?->getKey(),
                 array_filter([
@@ -51,7 +51,7 @@ final class EditButton
         )
             ->name('resource-edit-button')
             ->when(
-                $resource->isEditInModal(),
+                $resource->isEditInModal() && ! $resource->isDetailPage(),
                 static fn (ActionButtonContract $button): ActionButtonContract => $button->async(
                     selector: "#$modalName",
                     events: [AlpineJs::event(JsEvent::MODAL_TOGGLED, $modalName)]
