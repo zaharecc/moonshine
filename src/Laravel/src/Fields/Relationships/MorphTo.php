@@ -165,6 +165,11 @@ class MorphTo extends BelongsTo
         return (string) $this->getRelatedModel()->{$this->getMorphKey()};
     }
 
+    public function isReactivitySupported(): bool
+    {
+        return false;
+    }
+
     protected function viewData(): array
     {
         return [
