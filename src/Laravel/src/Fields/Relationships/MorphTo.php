@@ -154,9 +154,8 @@ class MorphTo extends BelongsTo
     {
         $default = Arr::first(array_keys($this->types));
 
-        return old($this->getMorphType()) ?? addslashes(
-            (string) ($this->getRelatedModel()->{$this->getMorphType()}
-            ?? $default)
+        return old(
+            $this->getMorphType()) ?? (string) ($this->getRelatedModel()->{$this->getMorphType()} ?? $default
         );
     }
 
