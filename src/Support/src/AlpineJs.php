@@ -26,7 +26,7 @@ final readonly class AlpineJs
 
         $event = self::prepareEvents($event);
 
-        if($params instanceof EventParams) {
+        if ($params instanceof EventParams) {
             $params = $params->toArray();
         }
 
