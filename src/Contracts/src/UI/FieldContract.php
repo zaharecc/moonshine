@@ -39,9 +39,11 @@ interface FieldContract extends
 
     public function isPreviewChanged(): bool;
 
-    public function columnSelection(bool $active = true): static;
+    public function columnSelection(bool $active = true, bool $hideOnInit = false): static;
 
     public function isColumnSelection(): bool;
+
+    public function isColumnHideOnInit(): bool;
 
     public function sticky(): static;
 
