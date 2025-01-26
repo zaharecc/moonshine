@@ -11,6 +11,15 @@
         </classMethod>
 
         <classMethod
+            class="\MoonShine\UI\Components\Icon"
+            method="make"
+            argument="0"
+        >
+            <files extension="blade.php" xpath="$project/vendor/moonshine/moonshine/src/UI/resources/views/icons"/>
+            <stopCompletion />
+        </classMethod>
+
+        <classMethod
             class="\MoonShine\UI\Components\ActionButton"
             method="method"
             argument="0"
@@ -63,6 +72,22 @@
             <collection name="justify-align" argument="0" />
             <stopCompletion />
         </classMethod>
+        <classMethod
+            class="\MoonShine\UI\Components\ProgressBar"
+            method="make"
+            argument="1"
+        >
+            <collection name="size" argument="1" />
+            <stopCompletion />
+        </classMethod>
+        <classMethod
+            class="\MoonShine\UI\Components\Spinner"
+            method="make"
+            argument="0"
+        >
+            <collection name="size" argument="0" />
+            <stopCompletion />
+        </classMethod>
     </definitions>
     <collections>
         <strings name="items-align">
@@ -79,6 +104,13 @@
             <value>between</value>
             <value>around</value>
             <value>evenly</value>
+        </strings>
+        <strings name="size">
+            <value>xs</value>
+            <value>sm</value>
+            <value>md</value>
+            <value>lg</value>
+            <value>xl</value>
         </strings>
     </collections>
 </meta-storm>
