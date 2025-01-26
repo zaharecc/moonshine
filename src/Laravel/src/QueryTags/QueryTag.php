@@ -8,10 +8,14 @@ use Closure;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use MoonShine\Contracts\Core\HasCanSeeContract;
 use MoonShine\Contracts\Core\HasCoreContract;
+use MoonShine\Contracts\UI\ActionButtonContract;
 use MoonShine\Contracts\UI\HasIconContract;
 use MoonShine\Contracts\UI\HasLabelContract;
 use MoonShine\Core\Traits\WithCore;
+use MoonShine\Laravel\Resources\CrudResource;
+use MoonShine\Support\AlpineJs;
 use MoonShine\Support\Traits\Makeable;
+use MoonShine\UI\Components\ActionButton;
 use MoonShine\UI\Traits\HasCanSee;
 use MoonShine\UI\Traits\WithIcon;
 use MoonShine\UI\Traits\WithLabel;
@@ -30,6 +34,10 @@ final class QueryTag implements HasCanSeeContract, HasIconContract, HasLabelCont
     protected bool $isDefault = false;
 
     protected ?string $alias = null;
+
+    protected array $events = [];
+
+    protected ?Closure $modifyButton = null;
 
     public function __construct(
         Closure|string $label,
@@ -79,5 +87,68 @@ final class QueryTag implements HasCanSeeContract, HasIconContract, HasLabelCont
     public function apply(Builder $builder): Builder
     {
         return \call_user_func($this->builder, $builder);
+    }
+
+    public function events(array $events): self
+    {
+        $this->events = $events;
+
+        return $this;
+    }
+
+    /**
+     * @param  Closure(ActionButtonContract $btn, self $ctx): ActionButtonContract  $callback
+     *
+     */
+    public function modifyButton(Closure $callback): self
+    {
+        $this->modifyButton = $callback;
+
+        return $this;
+    }
+
+    public function getButton(CrudResource $resource): ActionButtonContract
+    {
+        return ActionButton::make(
+            $this->getLabel(),
+            $resource->getIndexPageUrl(['query-tag' => $this->getUri()])
+        )
+            ->name("query-tag-{$this->getUri()}-button")
+            ->showInLine()
+            ->icon($this->getIconValue(), $this->isCustomIcon(), $this->getIconPath())
+            ->canSee(fn (mixed $data): bool => $this->isSee())
+            ->class('js-query-tag-button')
+            ->xDataMethod('queryTag', 'btn-primary', $resource->getListEventName())
+            ->when(
+                $this->isActive(),
+                static fn (ActionButtonContract $btn): ActionButtonContract => $btn
+                    ->primary()
+                    ->customAttributes([
+                        'href' => $resource->getIndexPageUrl(),
+                    ])
+            )
+            ->when(
+                $resource->isAsync(),
+                fn (ActionButtonContract $btn): ActionButtonContract => $btn
+                    ->onClick(
+                        fn ($action): string => "request(`{$this->getUri()}`)",
+                        'prevent'
+                    )
+            )
+            ->when(
+                $this->isDefault(),
+                static fn (ActionButtonContract $btn): ActionButtonContract => $btn->class('js-query-tag-default')
+            )->when(
+                $resource->isQueryTagsInDropdown(),
+                fn (ActionButtonContract $btn): ActionButtonContract => $btn->showInDropdown()
+            )->when(
+                ! \is_null($this->modifyButton),
+                fn (ActionButtonContract $btn): ActionButtonContract => \call_user_func($this->modifyButton, $btn, $this)
+            )->when(
+                $this->events !== [],
+                fn (ActionButtonContract $btn): ActionButtonContract => $btn->customAttributes([
+                    'data-async-events' => AlpineJs::prepareEvents(events: $this->events),
+                ])
+            );
     }
 }

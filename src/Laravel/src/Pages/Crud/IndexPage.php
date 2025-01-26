@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace MoonShine\Laravel\Pages\Crud;
 
-use MoonShine\Contracts\UI\ActionButtonContract;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\TableBuilderContract;
 use MoonShine\Core\Exceptions\ResourceException;
-use MoonShine\Laravel\Buttons\QueryTagButton;
 use MoonShine\Laravel\Collections\Fields;
 use MoonShine\Laravel\Components\Fragment;
 use MoonShine\Laravel\Contracts\Resource\HasQueryTagsContract;
@@ -156,10 +154,7 @@ class IndexPage extends CrudPage
                 static function (ActionGroup $group) use ($resource): ActionGroup {
                     foreach ($resource->getQueryTags() as $tag) {
                         $group->add(
-                            QueryTagButton::for($resource, $tag)->when(
-                                $resource->isQueryTagsInDropdown(),
-                                fn (ActionButtonContract $btn): ActionButtonContract => $btn->showInDropdown()
-                            )
+                            $tag->getButton($resource)
                         );
                     }
 
