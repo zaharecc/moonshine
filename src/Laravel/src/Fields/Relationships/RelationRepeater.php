@@ -276,6 +276,10 @@ class RelationRepeater extends ModelRelationField implements
             $requestValues[$index] = $values;
 
             foreach ($this->resetPreparedFields()->getPreparedFields() as $field) {
+                if (! $field->isCanApply()) {
+                    continue;
+                }
+
                 $field->setNameIndex($index);
 
                 $field->when($fill, fn (FieldContract $f): FieldContract => $f->fillCast(
@@ -404,6 +408,11 @@ class RelationRepeater extends ModelRelationField implements
         }
 
         return $data;
+    }
+
+    public function isReactivitySupported(): bool
+    {
+        return false;
     }
 
     /**

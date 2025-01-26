@@ -30,6 +30,7 @@ use MoonShine\UI\Components\ActionButton;
 use MoonShine\UI\Components\Badge;
 use MoonShine\UI\Components\Link;
 use MoonShine\UI\Components\Table\TableBuilder;
+use MoonShine\UI\Exceptions\FieldException;
 use MoonShine\UI\Fields\Checkbox;
 use MoonShine\UI\Fields\Field;
 use MoonShine\UI\Fields\ID;
@@ -179,11 +180,21 @@ class BelongsToMany extends ModelRelationField implements
         return 'belongs_to_many_' . $this->getRelationName();
     }
 
+    public function getRelatedKeyName(): string
+    {
+        return $this->getRelation()?->getRelated()?->getKeyName() ?? 'id';
+    }
+
+    public function getCollectionValue(): EloquentCollection
+    {
+        return new EloquentCollection($this->toValue() ?? []);
+    }
+
     public function getSelectedValue(): string|array
     {
         $selected = $this->isValueWithModels()
-            ? collect($this->toValue())->pluck($this->getRelation()?->getRelated()?->getKeyName() ?? 'id')
-            : collect($this->toValue());
+            ? $this->getCollectionValue()->pluck($this->getRelatedKeyName())
+            : $this->getCollectionValue();
 
         return $selected->toArray();
     }
@@ -222,12 +233,8 @@ class BelongsToMany extends ModelRelationField implements
                 ->setColumn("{$this->getPivotAs()}.{$field->getColumn()}")
                 ->class('js-pivot-field')
                 ->withoutWrapper(),
+            performName: fn (string $name): string => str_replace($this->getRelationName(), "{$this->getRelationName()}_pivot", $name),
         );
-    }
-
-    public function getCheckboxKey(): string
-    {
-        return '_checked';
     }
 
     protected function prepareFill(array $raw = [], ?DataWrapperContract $casted = null): mixed
@@ -248,10 +255,12 @@ class BelongsToMany extends ModelRelationField implements
     {
         // fix for filters
         if ($this->isAsyncSearch() && ! $this->isValueWithModels($this->memoizeValues) && filled($this->toValue())) {
+            $keys = $this->isSelectMode() ? $this->getCollectionValue()->toArray() : $this->getCollectionValue()->keys();
+
             $this->memoizeValues = $this->getRelation()
                 ?->getRelated()
                 ?->newQuery()
-                ?->findMany(array_keys($this->toValue()->toArray())) ?? EloquentCollection::make();
+                ?->findMany($keys) ?? EloquentCollection::make();
         }
 
         if ($this->isSelectMode()) {
@@ -266,21 +275,17 @@ class BelongsToMany extends ModelRelationField implements
 
         return $values->map(function ($value) {
             if (! $this->isValueWithModels()) {
-                $data = $this->toValue();
-
                 return $value
                     ->setRelations([
-                        $this->getPivotAs() => $data[$value->getKey()] ?? [],
-                    ])
-                    ->setAttribute($this->getCheckboxKey(), $data[$value->getKey()][$this->getCheckboxKey()] ?? false);
+                        $this->getPivotAs() => [],
+                    ]);
             }
 
             $checked = $this->toValue()
                 ->first(static fn ($item): bool => $item->getKey() === $value->getKey());
 
             return $value
-                ->setRelations($checked?->getRelations() ?? $value->getRelations())
-                ->setAttribute($this->getCheckboxKey(), ! \is_null($checked));
+                ->setRelations($checked?->getRelations() ?? $value->getRelations());
         });
     }
 
@@ -303,10 +308,12 @@ class BelongsToMany extends ModelRelationField implements
 
         $checkedColumn = $this->getNameAttribute('${index0}');
 
-        $identityField = Checkbox::make('#', $this->getCheckboxKey())
+        $identityField = Checkbox::make('#', $this->getRelatedKeyName())
+            ->simpleMode()
+            ->customAttributes($this->getReactiveAttributes())
             ->withoutWrapper()
             ->class('js-pivot-checker')
-            ->setNameAttribute($checkedColumn . "[{$this->getCheckboxKey()}]")
+            ->setNameAttribute($checkedColumn)
             ->formName($this->getFormName())
             ->iterableAttributes();
 
@@ -315,7 +322,7 @@ class BelongsToMany extends ModelRelationField implements
                 Preview::make($this->getResourceColumnLabel(), $titleColumn, $this->getFormattedValueCallback())
                     ->withoutWrapper()
                     ->formName($this->getFormName())
-                    ->class('js-pivot-title')
+                    ->class('js-pivot-title'),
             )
             ->prepend($identityField);
 
@@ -325,7 +332,7 @@ class BelongsToMany extends ModelRelationField implements
             ->fields($fields)
             ->when(
                 $removeAfterClone,
-                static fn (TableBuilderContract $table): TableBuilderContract => $table->removeAfterClone()
+                static fn (TableBuilderContract $table): TableBuilderContract => $table->removeAfterClone(),
             )
             ->cast($this->getResource()->getCaster())
             ->simple()
@@ -333,7 +340,7 @@ class BelongsToMany extends ModelRelationField implements
             ->reindex(prepared: true)
             ->when(
                 ! \is_null($this->modifyTable),
-                fn (TableBuilderContract $tableBuilder) => value($this->modifyTable, $tableBuilder, false)
+                fn (TableBuilderContract $tableBuilder) => value($this->modifyTable, $tableBuilder, false),
             )
             ->withNotFound();
     }
@@ -345,7 +352,7 @@ class BelongsToMany extends ModelRelationField implements
                 $this->getFormattedValueCallback(),
                 $item,
                 0,
-                $this
+                $this,
             );
         }
 
@@ -354,7 +361,7 @@ class BelongsToMany extends ModelRelationField implements
 
     protected function resolveRawValue(): mixed
     {
-        return collect($this->toValue())
+        return $this->getCollectionValue()
             ->map(static fn (Model $item) => $item->getKey())
             ->toJson();
     }
@@ -364,7 +371,7 @@ class BelongsToMany extends ModelRelationField implements
      */
     protected function resolvePreview(): Renderable|string
     {
-        $values = $this->toValue() ?? collect();
+        $values = $this->getCollectionValue();
         $column = $this->getResourceColumn();
 
         if ($this->isRelatedLink()) {
@@ -377,7 +384,7 @@ class BelongsToMany extends ModelRelationField implements
 
         if ($this->inLine) {
             return $values->implode(function (Model $item) use ($column) {
-                $value = $this->getColumnOrFormattedValue($item, data_get($item, $column) ?? false);
+                $value = $this->getColumnOrFormattedValue($item, data_get($item, $column, ''));
 
                 if (! \is_null($this->inLineLink)) {
                     /** @var Link|string $linkValue */
@@ -404,7 +411,7 @@ class BelongsToMany extends ModelRelationField implements
                 }
 
                 return $value;
-            }, $this->inLineSeparator) ?? '';
+            }, $this->inLineSeparator);
         }
 
         $fields = $this->getPreparedFields()
@@ -417,7 +424,7 @@ class BelongsToMany extends ModelRelationField implements
             ->cast($this->getResource()->getCaster())
             ->when(
                 ! \is_null($this->modifyTable),
-                fn (TableBuilderContract $tableBuilder) => value($this->modifyTable, $tableBuilder, false)
+                fn (TableBuilderContract $tableBuilder) => value($this->modifyTable, $tableBuilder, false),
             )
             ->render();
     }
@@ -430,9 +437,7 @@ class BelongsToMany extends ModelRelationField implements
             return $requestValues;
         }
 
-        return $requestValues
-            ->filter(fn (array $value) => $value[$this->getCheckboxKey()] ?? false)
-            ->keys();
+        return $requestValues->keys();
 
     }
 
@@ -443,10 +448,10 @@ class BelongsToMany extends ModelRelationField implements
         }
 
         if ($this->isValueWithModels()) {
-            return $this->toValue()->modelKeys();
+            return $this->getCollectionValue()->modelKeys();
         }
 
-        return $this->toValue()->keys()->toArray();
+        return $this->getCollectionValue()->keys()->toArray();
     }
 
     protected function resolveOnApply(): ?Closure
@@ -474,20 +479,24 @@ class BelongsToMany extends ModelRelationField implements
 
         foreach ($checkedKeys as $key) {
             foreach ($this->resetPreparedFields()->getPreparedFields() as $field) {
+                if (! $field->isCanApply()) {
+                    continue;
+                }
+
                 $field->setNameIndex($key);
 
-                $values = $this->getRequestValue($key);
+                $values = $field->getRequestValue() !== false ? $field->getRequestValue() : null;
 
                 $apply = $field->apply(
-                    static fn ($data): mixed => data_set($data, $field->getColumn(), data_get($values, $field->getColumn())),
-                    $values
+                    static fn ($data): mixed => data_set($data, $field->getColumn(), $values),
+                    $values,
                 );
 
                 data_set(
                     /** @phpstan-ignore-next-line  */
                     $applyValues[$key],
                     str_replace($this->getPivotAs() . '.', '', $field->getColumn()),
-                    data_get($apply, $field->getColumn())
+                    data_get($apply, $field->getColumn()),
                 );
             }
         }
@@ -527,12 +536,40 @@ class BelongsToMany extends ModelRelationField implements
                     ->each(
                         static fn (Field $field): mixed => $field
                             ->fillData($value)
-                            ->afterDestroy($value)
+                            ->afterDestroy($value),
                     );
             }
         }
 
         return $data;
+    }
+
+    public function prepareReactivityValue(mixed $value, mixed &$casted, array &$except): mixed
+    {
+        $casted = $this->getRelatedModel();
+        $related = $this->getRelation()?->getRelated();
+
+        $value = collect($value)->map(fn ($v) => clone $related->forceFill([
+            $related->getKeyName() => $v,
+        ]))->values();
+
+        $casted?->setRelation($this->getRelationName(), $value);
+        $except[$this->getColumn()] = $this->getColumn();
+
+        return $value;
+    }
+
+    public function getReactiveValue(): mixed
+    {
+        if ($this->isAsyncSearch()) {
+            throw FieldException::reactivityNotSupported(static::class, 'with asyncSearch');
+        }
+
+        if (! $this->isTree() || $this->isSelectMode()) {
+            return $this->getCollectionValue()->pluck($this->getRelatedKeyName());
+        }
+
+        return parent::getReactiveValue();
     }
 
     /**
@@ -550,9 +587,14 @@ class BelongsToMany extends ModelRelationField implements
             'createButton' => $this->getCreateButton(),
             'fragmentUrl' => $this->getFragmentUrl(),
             'relationName' => $this->getRelationName(),
+            'keys' => $this->getKeys(),
         ];
 
         if ($this->isSelectMode()) {
+            $this->customAttributes(
+                $this->getReactiveAttributes(),
+            );
+
             return [
                 ...$viewData,
                 'isSearchable' => $this->isSearchable(),

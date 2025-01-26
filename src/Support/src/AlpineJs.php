@@ -16,7 +16,7 @@ final readonly class AlpineJs
 
     public const EVENT_PARAM_SEPARATOR = ';';
 
-    public static function event(string|JsEvent $event, ?string $name = null, array $params = []): string
+    public static function event(string|JsEvent $event, ?string $name = null, array|EventParams $params = []): string
     {
         $event = \is_string($event) ? $event : $event->value;
 
@@ -25,6 +25,10 @@ final readonly class AlpineJs
         }
 
         $event = self::prepareEvents($event);
+
+        if ($params instanceof EventParams) {
+            $params = $params->toArray();
+        }
 
         if ($params !== []) {
             $event .= self::EVENT_PARAMS_SEPARATOR
@@ -40,7 +44,7 @@ final readonly class AlpineJs
         string|JsEvent $event,
         ?string $name = null,
         ?string $call = null,
-        array $params = []
+        array|EventParams $params = []
     ): string {
         $event = \is_string($event) ? $event : $event->value;
         $name ??= 'default';

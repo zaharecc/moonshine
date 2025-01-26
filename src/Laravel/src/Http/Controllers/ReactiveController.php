@@ -6,11 +6,10 @@ namespace MoonShine\Laravel\Http\Controllers;
 
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
-use MoonShine\Laravel\Fields\Relationships\BelongsTo;
+use MoonShine\Contracts\UI\HasReactivityContract;
 use MoonShine\Laravel\MoonShineRequest;
 use MoonShine\Laravel\TypeCasts\ModelDataWrapper;
 use MoonShine\UI\Components\FieldsGroup;
-use MoonShine\UI\Fields\Select;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 final class ReactiveController extends MoonShineController
@@ -34,33 +33,21 @@ final class ReactiveController extends MoonShineController
             ->reactiveFields();
 
         $casted = null;
+        $except = [];
 
-        $values = $request->collect('values')->map(static function ($value, $column) use ($fields, &$casted) {
+        $values = $request->collect('values')->map(function (mixed $value, string $column) use ($fields, &$casted, &$except) {
             $field = $fields->findByColumn($column);
 
-            if ($field instanceof Select) {
-                $value = data_get($value, 'value', $value);
+            if (! $field instanceof HasReactivityContract) {
+                return $value;
             }
 
-            if ($field instanceof BelongsTo) {
-                $value = data_get($value, 'value', $value);
-
-                $casted = $field->getRelatedModel();
-                $related = $field->getRelation()?->getRelated();
-
-                $target = $related?->forceFill([
-                    $related->getKeyName() => $value,
-                ]);
-
-                $casted?->setRelation($field->getRelationName(), $target);
-            }
-
-            return $value;
+            return $field->prepareReactivityValue($value, $casted, $except);
         });
 
         $fields->fill(
             $values->toArray(),
-            $casted ? new ModelDataWrapper($casted->forceFill($values->toArray())) : null
+            $casted ? new ModelDataWrapper($casted->forceFill($values->except($except)->toArray())) : null
         );
 
         foreach ($fields as $field) {
@@ -72,7 +59,7 @@ final class ReactiveController extends MoonShineController
         }
 
         $values = $fields
-            ->mapWithKeys(static fn (FieldContract $field): array => [$field->getColumn() => $field->getValue()]);
+            ->mapWithKeys(static fn (FieldContract $field): array => [$field->getColumn() => $field->getReactiveValue()]);
 
         $fields = $fields->mapWithKeys(
             static fn (FieldContract $field): array => [$field->getColumn() => (string) FieldsGroup::make([$field])->render()]

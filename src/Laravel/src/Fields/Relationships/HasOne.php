@@ -312,6 +312,11 @@ class HasOne extends ModelRelationField implements HasFieldsContract
         return $data;
     }
 
+    public function isReactivitySupported(): bool
+    {
+        return false;
+    }
+
     /**
      * @throws FieldException
      * @return array<string, mixed>
