@@ -15,6 +15,7 @@ use MoonShine\Tests\Fixtures\Models\Item;
 use MoonShine\Tests\Fixtures\Resources\TestImageResource;
 
 uses()->group('model-relation-fields');
+uses()->group('morph-field');
 
 beforeEach(function (): void {
     $this->resource = app(TestImageResource::class);
