@@ -59,6 +59,7 @@ trait HasTreeMode
                     ->formName($this->getFormName())
                     ->simpleMode()
                     ->customAttributes($this->getAttributes()->jsonSerialize())
+                    ->customAttributes($this->getReactiveAttributes())
                     ->setValue($item->getKey());
 
                 $this->treeHtml .= str((string) $element)->wrap(

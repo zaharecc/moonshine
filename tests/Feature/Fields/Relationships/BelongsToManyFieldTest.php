@@ -42,21 +42,11 @@ function testBelongsToManyValue(TestResource $resource, Item $item, array $data,
 {
     $keys = $data;
 
-    $mapper = static function (array $d, array $p = []) {
-        return collect($d)->mapWithKeys(fn ($v, $k) => [$k => [
-            '_checked' => 1,
-            ...$p[$k] ?? [],
-        ]])->sort()->toArray();
-    };
-
-    if (! \is_null($pivotData)) {
-        $data = $mapper($data, $pivotData);
-    }
-
     asAdmin()->put(
         $resource->getRoute('crud.update', $item->getKey()),
         [
             'categories' => $data,
+            'categories_pivot' => $pivotData,
         ]
     )->assertRedirect();
 

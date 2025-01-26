@@ -6,6 +6,8 @@ use MoonShine\Laravel\Contracts\Fields\HasAsyncSearchContract;
 use MoonShine\Laravel\Contracts\Fields\HasRelatedValuesContact;
 use MoonShine\Laravel\Fields\Relationships\ModelRelationField;
 use MoonShine\Laravel\Fields\Relationships\MorphTo;
+use MoonShine\Support\DTOs\Select\Option;
+use MoonShine\Support\DTOs\Select\OptionProperty;
 use MoonShine\Support\DTOs\Select\Options;
 use MoonShine\Tests\Fixtures\Models\Category;
 use MoonShine\Tests\Fixtures\Models\ImageModel;
@@ -15,6 +17,7 @@ use MoonShine\UI\Contracts\DefaultValueTypes\CanBeObject;
 use MoonShine\UI\Contracts\HasDefaultValueContract;
 
 uses()->group('model-relation-fields');
+uses()->group('morph-field');
 
 beforeEach(function (): void {
     $this->item = Item::factory()->createOne();
@@ -66,7 +69,7 @@ describe('unique field methods', function () {
             ->toBe('name')
             ->and($this->field->getTypes()->toArray())
             ->toBe((new Options([
-                Item::class => 'Item',
+                Item::class => new Option('Item', Item::class, selected: true, properties: new OptionProperty(null)),
                 Category::class => 'Category',
             ]))->toArray())
             ->and($this->field)

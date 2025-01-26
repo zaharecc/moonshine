@@ -20,7 +20,8 @@ interface FieldContract extends
     SortableFieldContract,
     HasLinkContract,
     HasBadgeContract,
-    HasHintContract
+    HasHintContract,
+    HasReactivityContract
 {
     public function defaultMode(): static;
 
