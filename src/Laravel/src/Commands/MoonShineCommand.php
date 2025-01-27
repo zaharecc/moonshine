@@ -42,7 +42,16 @@ abstract class MoonShineCommand extends Command
             class: "$namespace\\$class",
             to: app_path('Providers/MoonShineServiceProvider.php'),
             between: static fn (Stringable $content): Stringable => $content->betweenFirst("->$method([", ']'),
-            replace: static fn (Stringable $content, Closure $tab): Stringable => $content->append("{$tab()}$class::class,\n{$tab(3)}"),
+            replace: static function (Stringable $content, Closure $tab) use ($class): Stringable {
+                $prefixTab = 1;
+
+                if (! $content->rtrim()->endsWith(',')) {
+                    $content = $content->rtrim()->append(",\n");
+                    $prefixTab = 4;
+                }
+
+                return $content->append("{$tab($prefixTab)}$class::class,\n{$tab(3)}");
+            },
         );
     }
 
@@ -56,7 +65,22 @@ abstract class MoonShineCommand extends Command
             class: "$namespace\\$class",
             to: $reflector->getFileName(),
             between: static fn (Stringable $content): Stringable => $content->betweenFirst("protected function menu(): array", '}'),
-            replace: static fn (Stringable $content, Closure $tab): Stringable => $content->replace("];", "{$tab()}MenuItem::make('$title', $class::class),\n{$tab(2)}];"),
+            replace: static function (Stringable $content, Closure $tab) use ($title, $class): Stringable {
+                if (! $content->rtrim()->squish()->remove(' ')->endsWith('),];')) {
+                    $lines = explode("\n", $content->value());
+
+                    foreach ($lines as $index => $line) {
+                        $line = rtrim($line);
+                        if ((preg_match('/\)]$/', $line) || preg_match('/\)$/', $line)) && ! str_ends_with($line, ',')) {
+                            $lines[$index] = $line . ',';
+                        }
+                    }
+
+                    $content = str(implode("\n", $lines));
+                }
+
+                return $content->replace("];", "{$tab()}MenuItem::make('$title', $class::class),\n{$tab(2)}];");
+            },
             use: MenuItem::class
         );
     }
