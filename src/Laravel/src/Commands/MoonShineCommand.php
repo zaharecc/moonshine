@@ -42,10 +42,10 @@ abstract class MoonShineCommand extends Command
             class: "$namespace\\$class",
             to: app_path('Providers/MoonShineServiceProvider.php'),
             between: static fn (Stringable $content): Stringable => $content->betweenFirst("->$method([", ']'),
-            replace: static function (Stringable $content, Closure $tab) use($class): Stringable {
+            replace: static function (Stringable $content, Closure $tab) use ($class): Stringable {
                 $prefixTab = 1;
 
-                if (!$content->rtrim()->endsWith(',')) {
+                if (! $content->rtrim()->endsWith(',')) {
                     $content = $content->rtrim()->append(",\n");
                     $prefixTab = 4;
                 }
@@ -65,13 +65,13 @@ abstract class MoonShineCommand extends Command
             class: "$namespace\\$class",
             to: $reflector->getFileName(),
             between: static fn (Stringable $content): Stringable => $content->betweenFirst("protected function menu(): array", '}'),
-            replace: static function (Stringable $content, Closure $tab) use($title, $class): Stringable {
-                if (!$content->rtrim()->squish()->remove(' ')->endsWith('),];')) {
+            replace: static function (Stringable $content, Closure $tab) use ($title, $class): Stringable {
+                if (! $content->rtrim()->squish()->remove(' ')->endsWith('),];')) {
                     $lines = explode("\n", $content->value());
 
                     foreach ($lines as $index => $line) {
                         $line = rtrim($line);
-                        if ((preg_match('/\)]$/', $line) || preg_match('/\)$/', $line)) && !str_ends_with($line, ',')) {
+                        if ((preg_match('/\)]$/', $line) || preg_match('/\)$/', $line)) && ! str_ends_with($line, ',')) {
                             $lines[$index] = $line . ',';
                         }
                     }
