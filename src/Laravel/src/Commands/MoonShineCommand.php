@@ -71,10 +71,8 @@ abstract class MoonShineCommand extends Command
 
                     foreach ($lines as $index => $line) {
                         $line = rtrim($line);
-                        if (preg_match('/\)]$/', $line) || preg_match('/\)$/', $line)) {
-                            if (!str_ends_with($line, ',')) {
-                                $lines[$index] = $line . ',';
-                            }
+                        if ((preg_match('/\)]$/', $line) || preg_match('/\)$/', $line)) && !str_ends_with($line, ',')) {
+                            $lines[$index] = $line . ',';
                         }
                     }
 
