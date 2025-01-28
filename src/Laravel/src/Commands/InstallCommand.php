@@ -292,11 +292,11 @@ class InstallCommand extends MoonShineCommand
     protected function initLayout(): void
     {
         $compact = ! $this->quickMode && $this->confirmAction(
-                'Want to use a minimalist theme?',
-                skipOption: 'default-layout',
-                autoEnable: $this->testsMode,
-                default: false,
-            );
+            'Want to use a minimalist theme?',
+            skipOption: 'default-layout',
+            autoEnable: $this->testsMode,
+            default: false,
+        );
 
         $this->call(MakeLayoutCommand::class, [
             'className' => 'MoonShineLayout',
