@@ -582,7 +582,7 @@ class BelongsToMany extends ModelRelationField implements
             'isTreeMode' => $this->isTree(),
             'isSelectMode' => $this->isSelectMode(),
             'isAsyncSearch' => $this->isAsyncSearch(),
-            'asyncSearchUrl' => $this->getAsyncSearchUrl(),
+            'asyncSearchUrl' => $this->isAsyncSearch() ? $this->getAsyncSearchUrl() : '',
             'isCreatable' => $this->isCreatable(),
             'createButton' => $this->getCreateButton(),
             'fragmentUrl' => $this->getFragmentUrl(),

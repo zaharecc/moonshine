@@ -143,7 +143,7 @@ class BelongsTo extends ModelRelationField implements
             'values' => $this->getRelation() ? $this->getValues()->toArray() : [],
             'isNullable' => $this->isNullable(),
             'isAsyncSearch' => $this->isAsyncSearch(),
-            'asyncSearchUrl' => $this->getAsyncSearchUrl(),
+            'asyncSearchUrl' => $this->isAsyncSearch() ? $this->getAsyncSearchUrl() : '',
             'isCreatable' => $this->isCreatable(),
             'createButton' => $this->getCreateButton(),
             'fragmentUrl' => $this->getFragmentUrl(),
