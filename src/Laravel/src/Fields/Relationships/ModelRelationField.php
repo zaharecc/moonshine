@@ -91,7 +91,7 @@ abstract class ModelRelationField extends Field implements HasResourceContract
         }
 
         // required to create field entities and load assets
-        if ($this instanceof HasFieldsContract && !$this->isExcludeInstancing() && ! $this->isMorph()) {
+        if ($this instanceof HasFieldsContract && ! $this->isExcludeInstancing() && ! $this->isMorph()) {
             $this->excludeInstancing();
             $this->getResource()?->getFormFields();
         }
