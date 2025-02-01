@@ -7,6 +7,7 @@ namespace MoonShine\Laravel\Traits\Fields;
 use Closure;
 use MoonShine\Contracts\UI\ActionButtonContract;
 use MoonShine\Laravel\Buttons\BelongsToOrManyButton;
+use MoonShine\Laravel\Fields\Relationships\BelongsToMany;
 use Throwable;
 
 trait BelongsToOrManyCreatable
@@ -40,6 +41,10 @@ trait BelongsToOrManyCreatable
     public function getCreateButton(): ?ActionButtonContract
     {
         if (! $this->isCreatable()) {
+            return null;
+        }
+
+        if ($this->getParent() instanceof BelongsToMany) {
             return null;
         }
 

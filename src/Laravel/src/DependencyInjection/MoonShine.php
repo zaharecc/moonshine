@@ -7,6 +7,7 @@ namespace MoonShine\Laravel\DependencyInjection;
 use MoonShine\Contracts\Core\DependencyInjection\StorageContract;
 use MoonShine\Core\Core;
 use MoonShine\Core\Storage\FileStorage;
+use MoonShine\Laravel\Fields\Relationships\ModelRelationField;
 
 /**
  * @extends Core<MoonShineConfigurator>
@@ -57,5 +58,12 @@ final class MoonShine extends Core
     public function getStorage(...$parameters): StorageContract
     {
         return app()->make(StorageContract::class, $parameters) ?? new FileStorage();
+    }
+
+    public function flushState(): void
+    {
+        parent::flushState();
+
+        ModelRelationField::$excludeInstancing = [];
     }
 }
