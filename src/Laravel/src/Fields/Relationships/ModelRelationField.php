@@ -43,6 +43,8 @@ abstract class ModelRelationField extends Field implements HasResourceContract
 
     protected bool $isMorph = false;
 
+    public static array $excludeInstancing = [];
+
     /**
      * @throws Throwable
      */
@@ -76,7 +78,7 @@ abstract class ModelRelationField extends Field implements HasResourceContract
                     ->singular()
                     ->snake()
                     ->append('_id')
-                    ->value()
+                    ->value(),
             );
         }
 
@@ -89,9 +91,25 @@ abstract class ModelRelationField extends Field implements HasResourceContract
         }
 
         // required to create field entities and load assets
-        if ($this instanceof HasFieldsContract && ! $this->isMorph()) {
+        if ($this instanceof HasFieldsContract && ! $this->isExcludeInstancing() && ! $this->isMorph()) {
+            $this->excludeInstancing();
             $this->getResource()?->getFormFields();
         }
+    }
+
+    public function excludeInstancing(): void
+    {
+        self::$excludeInstancing[$this->getExcludeInstanceName()] = true;
+    }
+
+    private function getExcludeInstanceName(): string
+    {
+        return class_basename($this) . $this->getRelationName();
+    }
+
+    private function isExcludeInstancing(): bool
+    {
+        return isset(self::$excludeInstancing[$this->getExcludeInstanceName()]);
     }
 
     /**
@@ -112,13 +130,13 @@ abstract class ModelRelationField extends Field implements HasResourceContract
                     ->singular()
                     ->append('Resource')
                     ->kebab()
-                    ->value()
+                    ->value(),
             );
 
         if (\is_null($resource) && $this->isMorph()) {
             /** @var ModelResource $resource */
             $resource = moonshine()->getResources()->findByUri(
-                moonshineRequest()->getResourceUri()
+                moonshineRequest()->getResourceUri(),
             );
         }
 
@@ -127,9 +145,9 @@ abstract class ModelRelationField extends Field implements HasResourceContract
             function (?ModelResource $resource): void {
                 throw_if(
                     \is_null($resource),
-                    FieldException::resourceRequired(static::class, $this->getRelationName())
+                    FieldException::resourceRequired(static::class, $this->getRelationName()),
                 );
-            }
+            },
         );
     }
 
@@ -156,15 +174,15 @@ abstract class ModelRelationField extends Field implements HasResourceContract
 
         if ($this->isToOne()) {
             $this->setColumn(
-                $this->getRelation()?->getForeignKeyName() ?? ''
+                $this->getRelation()?->getForeignKeyName() ?? '',
             );
 
             $this->setRawValue(
-                $raw[$this->getColumn()] ?? null
+                $raw[$this->getColumn()] ?? null,
             );
 
             $this->setFormattedValue(
-                data_get($data, $this->getResourceColumn())
+                data_get($data, $this->getResourceColumn()),
             );
         }
 
@@ -185,8 +203,8 @@ abstract class ModelRelationField extends Field implements HasResourceContract
                     $this->getFormattedValueCallback(),
                     $value ?? $this->getRelation()?->getModel(),
                     $this->getRowIndex(),
-                    $this
-                )
+                    $this,
+                ),
             );
         }
 
