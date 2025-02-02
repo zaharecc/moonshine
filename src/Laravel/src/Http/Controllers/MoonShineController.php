@@ -6,6 +6,7 @@ namespace MoonShine\Laravel\Http\Controllers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Validation\ValidationException;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Contracts\UI\TableBuilderContract;
 use MoonShine\Contracts\UI\TableRowContract;
@@ -57,8 +58,10 @@ abstract class MoonShineController extends BaseController
     {
         report_if(moonshine()->isProduction(), $e);
 
+        $data = [];
         $message = moonshine()->isProduction() ? __('moonshine::ui.saved_error') : $e->getMessage();
         $type = ToastType::ERROR;
+        $status = Response::HTTP_INTERNAL_SERVER_ERROR;
 
         if ($flash = session()->get('toast')) {
             session()->forget(['toast', '_flash.old', '_flash.new']);
@@ -66,11 +69,18 @@ abstract class MoonShineController extends BaseController
             $message = $flash['message'] ?? $message;
         }
 
-        if ($isAjax) {
-            return $this->json(message: __($message), messageType: $type);
+        if($e instanceof ValidationException) {
+            $status = $e->status;
+            $data = [
+                'errors' => $e->errors(),
+            ];
         }
 
-        throw_if(! moonshine()->isProduction(), $e);
+        if ($isAjax) {
+            return $this->json(message: __($message), data: $data, messageType: $type, status: $status);
+        }
+
+        throw_if(! moonshine()->isProduction() && !$e instanceof ValidationException, $e);
 
         $this->toast(__($message), $type);
 
