@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MoonShine\Laravel\Fields\Relationships;
 
-use BaconQrCode\Common\Mode;
 use Closure;
 use Illuminate\Database\Eloquent\Model;
 use MoonShine\Core\Exceptions\PageException;
