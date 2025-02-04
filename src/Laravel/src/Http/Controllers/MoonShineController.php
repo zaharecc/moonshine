@@ -69,7 +69,7 @@ abstract class MoonShineController extends BaseController
             $message = $flash['message'] ?? $message;
         }
 
-        if($e instanceof ValidationException) {
+        if ($e instanceof ValidationException) {
             $status = $e->status;
             $data = [
                 'errors' => $e->errors(),
@@ -80,7 +80,7 @@ abstract class MoonShineController extends BaseController
             return $this->json(message: __($message), data: $data, messageType: $type, status: $status);
         }
 
-        throw_if(! moonshine()->isProduction() && !$e instanceof ValidationException, $e);
+        throw_if(! moonshine()->isProduction() && ! $e instanceof ValidationException, $e);
 
         $this->toast(__($message), $type);
 

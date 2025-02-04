@@ -73,7 +73,7 @@ class BelongsTo extends ModelRelationField implements
 
     protected function resolveValue(): mixed
     {
-        if (is_scalar($this->toValue())) {
+        if (\is_scalar($this->toValue())) {
             return $this->toValue();
         }
 
