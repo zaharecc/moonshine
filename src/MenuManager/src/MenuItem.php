@@ -154,7 +154,7 @@ class MenuItem extends MenuElement
         $isActive = function ($path, $host): bool {
             $url = strtok($this->getUrl(), '?');
 
-            if($url === false) {
+            if ($url === false) {
                 return false;
             }
 
@@ -166,7 +166,7 @@ class MenuItem extends MenuElement
                 return $this->getCore()->getRequest()->urlIs($this->getUrl());
             }
 
-            if($url === '/' || trim($url) === '') {
+            if ($url === '/' || trim($url) === '') {
                 return $this->getCore()->getRequest()->urlIs($host ? $url : "*$url");
             }
 
