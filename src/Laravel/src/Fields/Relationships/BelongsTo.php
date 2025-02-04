@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MoonShine\Laravel\Fields\Relationships;
 
+use BaconQrCode\Common\Mode;
 use Closure;
 use Illuminate\Database\Eloquent\Model;
 use MoonShine\Core\Exceptions\PageException;
@@ -73,6 +74,10 @@ class BelongsTo extends ModelRelationField implements
 
     protected function resolveValue(): mixed
     {
+        if (is_scalar($this->toValue())) {
+            return $this->toValue();
+        }
+
         return $this->toValue()?->getKey();
     }
 
