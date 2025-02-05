@@ -25,7 +25,6 @@ use MoonShine\Laravel\Traits\Fields\HasTreeMode;
 use MoonShine\Laravel\Traits\Fields\WithAsyncSearch;
 use MoonShine\Laravel\Traits\Fields\WithRelatedLink;
 use MoonShine\Laravel\Traits\Fields\WithRelatedValues;
-use MoonShine\Support\DTOs\Select\Options;
 use MoonShine\Support\Enums\Color;
 use MoonShine\UI\Collections\ActionButtons;
 use MoonShine\UI\Components\ActionButton;
@@ -264,7 +263,7 @@ class BelongsToMany extends ModelRelationField implements
 
     public function getAvailableValues(): mixed
     {
-        if(!\is_null($this->memoizeValues)) {
+        if (! \is_null($this->memoizeValues)) {
             return $this->memoizeValues;
         }
 
@@ -306,7 +305,7 @@ class BelongsToMany extends ModelRelationField implements
 
     public function getComponent(): ComponentContract
     {
-        if(!\is_null($this->resolvedComponent)) {
+        if (! \is_null($this->resolvedComponent)) {
             return $this->resolvedComponent;
         }
 
@@ -381,14 +380,14 @@ class BelongsToMany extends ModelRelationField implements
     protected function resolveOldValue(mixed $old): mixed
     {
         // otherwise you will have to make a db query to receive records by keys
-        if($this->isAsyncSearch()) {
+        if ($this->isAsyncSearch()) {
             return $this->toValue();
         }
 
         $oldPivot = $this->getCore()->getRequest()->getOld($this->getPivotName());
 
         return collect($old)
-            ->map(fn ($key) => clone $this->makeRelatedModel($key, relations: $oldPivot[$key] ?? []))
+            ->map(fn ($key): ?Model => clone $this->makeRelatedModel($key, relations: $oldPivot[$key] ?? []))
             ->values();
     }
 
@@ -581,7 +580,7 @@ class BelongsToMany extends ModelRelationField implements
     {
         $casted = $this->getRelatedModel();
         $value = collect($value)
-            ->map(fn ($key) => clone $this->makeRelatedModel($key))
+            ->map(fn ($key): ?Model => clone $this->makeRelatedModel($key))
             ->values();
 
         $casted?->setRelation($this->getRelationName(), $value);
