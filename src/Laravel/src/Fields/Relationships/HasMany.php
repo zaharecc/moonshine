@@ -18,6 +18,7 @@ use MoonShine\Contracts\UI\ActionButtonContract;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Contracts\UI\FieldWithComponentContract;
+use MoonShine\Contracts\UI\FormBuilderContract;
 use MoonShine\Contracts\UI\HasFieldsContract;
 use MoonShine\Contracts\UI\TableBuilderContract;
 use MoonShine\Laravel\Buttons\HasManyButton;
@@ -37,7 +38,7 @@ use Throwable;
  * @template-covariant R of (HasOneOrMany|HasOneOrManyThrough|MorphOneOrMany)
  * @extends ModelRelationField<R>
  * @implements HasFieldsContract<Fields|FieldsContract>
- * @implements FieldWithComponentContract<TableBuilder|FormBuilder|ActionButton>
+ * @implements FieldWithComponentContract<TableBuilderContract|FormBuilderContract|ActionButtonContract>
  */
 class HasMany extends ModelRelationField implements HasFieldsContract, FieldWithComponentContract
 {
@@ -87,7 +88,7 @@ class HasMany extends ModelRelationField implements HasFieldsContract, FieldWith
 
     protected bool $withoutModals = false;
 
-    protected ?ComponentContract $resolvedComponent = null;
+    protected null|TableBuilderContract|FormBuilderContract|ActionButtonContract $resolvedComponent = null;
 
     public function withoutModals(): static
     {

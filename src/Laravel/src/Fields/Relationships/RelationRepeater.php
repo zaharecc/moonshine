@@ -37,7 +37,7 @@ use Throwable;
 
 /**
  * @implements HasFieldsContract<Fields|FieldsContract>
- * @implements FieldWithComponentContract<TableBuilder>
+ * @implements FieldWithComponentContract<TableBuilderContract>
  */
 class RelationRepeater extends ModelRelationField implements
     HasFieldsContract,
@@ -70,7 +70,7 @@ class RelationRepeater extends ModelRelationField implements
 
     protected ?Closure $modifyRemoveButton = null;
 
-    protected ?ComponentContract $resolvedComponent = null;
+    protected ?TableBuilderContract $resolvedComponent = null;
 
     public function __construct(
         string|Closure $label,

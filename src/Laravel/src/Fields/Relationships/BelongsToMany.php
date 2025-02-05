@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use MoonShine\Contracts\Core\DependencyInjection\FieldsContract;
 use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
+use MoonShine\Contracts\UI\ActionButtonContract;
 use MoonShine\Contracts\UI\Collection\ActionButtonsContract;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FieldWithComponentContract;
@@ -47,7 +48,7 @@ use Throwable;
  *
  * @extends ModelRelationField<R>
  * @implements HasFieldsContract<Fields|FieldsContract>
- * @implements FieldWithComponentContract<TableBuilder>
+ * @implements FieldWithComponentContract<TableBuilderContract|ActionButtonContract>
  */
 class BelongsToMany extends ModelRelationField implements
     HasRelatedValuesContact,

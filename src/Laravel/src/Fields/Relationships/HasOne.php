@@ -33,7 +33,7 @@ use Throwable;
  * @template-covariant R of HasOneOrMany|HasOneOrManyThrough
  * @extends ModelRelationField<R>
  * @implements HasFieldsContract<Fields|FieldsContract>
- * @implements FieldWithComponentContract<FormBuilder>
+ * @implements FieldWithComponentContract<FormBuilderContract>
  */
 class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithComponentContract
 {
@@ -59,7 +59,7 @@ class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithC
 
     protected ?Closure $modifyTable = null;
 
-    protected ?ComponentContract $resolvedComponent = null;
+    protected ?FormBuilderContract $resolvedComponent = null;
 
     public function hasWrapper(): bool
     {
