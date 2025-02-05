@@ -17,13 +17,17 @@ use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
 use MoonShine\Contracts\UI\ActionButtonContract;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FieldContract;
+use MoonShine\Contracts\UI\FieldWithComponent;
+use MoonShine\Contracts\UI\FormBuilderContract;
 use MoonShine\Contracts\UI\HasFieldsContract;
 use MoonShine\Contracts\UI\TableBuilderContract;
 use MoonShine\Laravel\Buttons\HasManyButton;
 use MoonShine\Laravel\Collections\Fields;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Laravel\Traits\Fields\WithRelatedLink;
+use MoonShine\UI\Components\ActionButton;
 use MoonShine\UI\Components\ActionGroup;
+use MoonShine\UI\Components\FormBuilder;
 use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\UI\Contracts\HasUpdateOnPreviewContract;
 use MoonShine\UI\Fields\Field;
@@ -34,8 +38,9 @@ use Throwable;
  * @template-covariant R of (HasOneOrMany|HasOneOrManyThrough|MorphOneOrMany)
  * @extends ModelRelationField<R>
  * @implements HasFieldsContract<Fields|FieldsContract>
+ * @implements FieldWithComponent<TableBuilder|FormBuilder|ActionButton>
  */
-class HasMany extends ModelRelationField implements HasFieldsContract
+class HasMany extends ModelRelationField implements HasFieldsContract, FieldWithComponent
 {
     use WithFields;
     use WithRelatedLink;
@@ -82,6 +87,8 @@ class HasMany extends ModelRelationField implements HasFieldsContract
     protected ?Closure $redirectAfter = null;
 
     protected bool $withoutModals = false;
+
+    protected ?ComponentContract $resolvedComponent = null;
 
     public function withoutModals(): static
     {
@@ -559,7 +566,11 @@ class HasMany extends ModelRelationField implements HasFieldsContract
      */
     public function getComponent(): ComponentContract
     {
-        return $this->isRelatedLink()
+        if(!\is_null($this->resolvedComponent)) {
+            return $this->resolvedComponent;
+        }
+
+        return $this->resolvedComponent = $this->isRelatedLink()
             ? $this->getRelatedLink()
             : $this->getTableValue();
     }

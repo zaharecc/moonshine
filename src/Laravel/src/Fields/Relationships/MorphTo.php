@@ -163,6 +163,10 @@ class MorphTo extends BelongsTo
 
     protected function resolveValue(): string
     {
+        if($this->isOldValue()) {
+            return $this->toValue();
+        }
+
         return (string) $this->getRelatedModel()->{$this->getMorphKey()};
     }
 
