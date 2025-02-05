@@ -263,7 +263,7 @@ class BelongsToMany extends ModelRelationField implements
 
     public function getAvailableValues(): mixed
     {
-        if(!\is_null($this->memoizeValues)) {
+        if (! \is_null($this->memoizeValues)) {
             return $this->memoizeValues;
         }
 
@@ -305,7 +305,7 @@ class BelongsToMany extends ModelRelationField implements
 
     public function getComponent(): ComponentContract
     {
-        if(!\is_null($this->resolvedComponent)) {
+        if (! \is_null($this->resolvedComponent)) {
             return $this->resolvedComponent;
         }
 
@@ -380,7 +380,7 @@ class BelongsToMany extends ModelRelationField implements
     protected function resolveOldValue(mixed $old): mixed
     {
         // otherwise you will have to make a db query to receive records by keys
-        if($this->isAsyncSearch()) {
+        if ($this->isAsyncSearch()) {
             return $this->toValue();
         }
 

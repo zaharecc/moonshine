@@ -230,7 +230,7 @@ class RelationRepeater extends ModelRelationField implements
     protected function resolveOldValue(mixed $old): mixed
     {
         foreach ($this->getFields() as $field) {
-            if($field instanceof Json) {
+            if ($field instanceof Json) {
                 foreach ($old as $index => $value) {
                     $column = $field->getColumn();
                     $old[$index][$column] = $field->prepareOnApplyRecursive(
@@ -248,7 +248,7 @@ class RelationRepeater extends ModelRelationField implements
      */
     public function getComponent(): ComponentContract
     {
-        if(!\is_null($this->resolvedComponent)) {
+        if (! \is_null($this->resolvedComponent)) {
             return $this->resolvedComponent;
         }
 

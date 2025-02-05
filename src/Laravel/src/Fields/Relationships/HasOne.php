@@ -212,7 +212,7 @@ class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithC
      */
     public function getComponent(): ComponentContract
     {
-        if(!\is_null($this->resolvedComponent)) {
+        if (! \is_null($this->resolvedComponent)) {
             return $this->resolvedComponent;
         }
 
