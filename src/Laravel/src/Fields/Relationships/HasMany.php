@@ -17,7 +17,7 @@ use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
 use MoonShine\Contracts\UI\ActionButtonContract;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FieldContract;
-use MoonShine\Contracts\UI\FieldWithComponent;
+use MoonShine\Contracts\UI\FieldWithComponentContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
 use MoonShine\Contracts\UI\HasFieldsContract;
 use MoonShine\Contracts\UI\TableBuilderContract;
@@ -38,9 +38,9 @@ use Throwable;
  * @template-covariant R of (HasOneOrMany|HasOneOrManyThrough|MorphOneOrMany)
  * @extends ModelRelationField<R>
  * @implements HasFieldsContract<Fields|FieldsContract>
- * @implements FieldWithComponent<TableBuilder|FormBuilder|ActionButton>
+ * @implements FieldWithComponentContract<TableBuilder|FormBuilder|ActionButton>
  */
-class HasMany extends ModelRelationField implements HasFieldsContract, FieldWithComponent
+class HasMany extends ModelRelationField implements HasFieldsContract, FieldWithComponentContract
 {
     use WithFields;
     use WithRelatedLink;

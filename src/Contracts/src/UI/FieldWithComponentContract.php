@@ -7,7 +7,7 @@ namespace MoonShine\Contracts\UI;
 /**
  * @template TComponent of ComponentContract
  */
-interface FieldWithComponent
+interface FieldWithComponentContract
 {
     /**
      * @return TComponent

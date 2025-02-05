@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOneOrMany;
 use MoonShine\Contracts\Core\DependencyInjection\FieldsContract;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FieldContract;
-use MoonShine\Contracts\UI\FieldWithComponent;
+use MoonShine\Contracts\UI\FieldWithComponentContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
 use MoonShine\Contracts\UI\HasFieldsContract;
 use MoonShine\Contracts\UI\TableBuilderContract;
@@ -33,9 +33,9 @@ use Throwable;
  * @template-covariant R of HasOneOrMany|HasOneOrManyThrough
  * @extends ModelRelationField<R>
  * @implements HasFieldsContract<Fields|FieldsContract>
- * @implements FieldWithComponent<FormBuilder>
+ * @implements FieldWithComponentContract<FormBuilder>
  */
-class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithComponent
+class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithComponentContract
 {
     use WithFields;
 

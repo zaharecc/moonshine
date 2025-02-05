@@ -13,7 +13,7 @@ use MoonShine\Contracts\Core\DependencyInjection\FieldsContract;
 use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
 use MoonShine\Contracts\UI\Collection\ActionButtonsContract;
 use MoonShine\Contracts\UI\ComponentContract;
-use MoonShine\Contracts\UI\FieldWithComponent;
+use MoonShine\Contracts\UI\FieldWithComponentContract;
 use MoonShine\Contracts\UI\HasFieldsContract;
 use MoonShine\Contracts\UI\TableBuilderContract;
 use MoonShine\Laravel\Collections\Fields;
@@ -48,14 +48,14 @@ use Throwable;
  *
  * @extends ModelRelationField<R>
  * @implements HasFieldsContract<Fields|FieldsContract>
- * @implements FieldWithComponent<TableBuilder>
+ * @implements FieldWithComponentContract<TableBuilder>
  */
 class BelongsToMany extends ModelRelationField implements
     HasRelatedValuesContact,
     HasPivotContract,
     HasFieldsContract,
     HasAsyncSearchContract,
-    FieldWithComponent
+    FieldWithComponentContract
 {
     use WithFields;
     use WithRelatedValues;
