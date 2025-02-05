@@ -25,7 +25,6 @@ use MoonShine\Laravel\Traits\Fields\HasTreeMode;
 use MoonShine\Laravel\Traits\Fields\WithAsyncSearch;
 use MoonShine\Laravel\Traits\Fields\WithRelatedLink;
 use MoonShine\Laravel\Traits\Fields\WithRelatedValues;
-use MoonShine\Support\DTOs\Select\Options;
 use MoonShine\Support\Enums\Color;
 use MoonShine\UI\Collections\ActionButtons;
 use MoonShine\UI\Components\ActionButton;
@@ -388,7 +387,7 @@ class BelongsToMany extends ModelRelationField implements
         $oldPivot = $this->getCore()->getRequest()->getOld($this->getPivotName());
 
         return collect($old)
-            ->map(fn ($key) => clone $this->makeRelatedModel($key, relations: $oldPivot[$key] ?? []))
+            ->map(fn ($key): ?Model => clone $this->makeRelatedModel($key, relations: $oldPivot[$key] ?? []))
             ->values();
     }
 
@@ -581,7 +580,7 @@ class BelongsToMany extends ModelRelationField implements
     {
         $casted = $this->getRelatedModel();
         $value = collect($value)
-            ->map(fn ($key) => clone $this->makeRelatedModel($key))
+            ->map(fn ($key): ?Model => clone $this->makeRelatedModel($key))
             ->values();
 
         $casted?->setRelation($this->getRelationName(), $value);
