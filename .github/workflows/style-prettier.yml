@@ -1,6 +1,8 @@
 name: Style Prettier
 
-on: [push]
+on:
+  push:
+    branches: ['3.x']
 
 jobs:
   style:

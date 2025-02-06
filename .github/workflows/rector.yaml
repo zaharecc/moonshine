@@ -1,7 +1,9 @@
 # github action that checks code with Rector
 name: Rector
 
-on: [push]
+on:
+  push:
+    branches: ['3.x']
 
 jobs:
     rector:
