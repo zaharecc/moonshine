@@ -312,6 +312,8 @@ export default (name = '', initData = {}, reactive = {}) => ({
 })
 
 function submitState(form, loading = true, reset = false) {
+  clearErrors(form)
+
   const button = form.querySelector('.js-form-submit-button')
   const loader = form.querySelector('.js-form-submit-button-loader')
 
@@ -344,15 +346,29 @@ function submitState(form, loading = true, reset = false) {
   }
 }
 
+function clearErrors(form) {
+  form.querySelectorAll('.form-error').forEach(div => div.remove())
+}
+
 function inputsErrors(data, form) {
   if (!data.errors) {
     return
   }
+
   for (let key in data.errors) {
     let formattedKey = key.replace(/\.(\d+|\w+)/g, '[$1]')
-    const input = form.querySelector(`[name="${formattedKey}"]`)
-    if (input) {
-      input.classList.add('form-invalid')
+    const inputs = form.querySelectorAll(`[name="${formattedKey}"], [data-validation-field="${formattedKey}"]`)
+    if (inputs.length) {
+      inputs.forEach(input => input.classList.add('form-invalid'))
+
+      const fieldArea = inputs[0].closest('[data-validation-wrapper]') ?? null
+
+      if (fieldArea) {
+        const errorDiv = document.createElement('div')
+        errorDiv.classList.add('form-error')
+        errorDiv.textContent = data.errors[key]
+        fieldArea.after(errorDiv)
+      }
     }
   }
 }

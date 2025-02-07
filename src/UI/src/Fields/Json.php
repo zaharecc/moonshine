@@ -426,8 +426,9 @@ class Json extends Field implements
                             'data-handle' => '.handle',
                         ]),
                     )
-                    ->jsonSerialize(),
+                    ->jsonSerialize()
             )
+            ->customAttributes(['data-validation-wrapper' => true])
             ->when(
                 $reorderable,
                 static fn (TableBuilderContract $table): TableBuilderContract => $table->reorderable(),

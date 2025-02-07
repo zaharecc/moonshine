@@ -19,6 +19,7 @@
 <div x-id="['belongs-to-many']"
      :id="$id('belongs-to-many')"
      data-show-when-field="{{ $attributes->get('name') }}"
+     data-validation-field="{{$relationName}}"
 >
     @if($isCreatable)
         {!! $createButton !!}
