@@ -163,7 +163,7 @@ class MorphTo extends BelongsTo
 
     protected function resolveValue(): string
     {
-        if (is_scalar($this->toValue())) {
+        if (\is_scalar($this->toValue())) {
             return $this->toValue();
         }
 
