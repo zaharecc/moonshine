@@ -392,6 +392,19 @@ class BelongsToMany extends ModelRelationField implements
             ->values();
     }
 
+    protected function resolveValue(): mixed
+    {
+        if(is_array($this->toValue())) {
+            $this->setValue(
+                collect($this->toValue())
+                    ->map(fn ($key): ?Model => clone $this->makeRelatedModel($key))
+                    ->values()
+            );
+        }
+
+        return parent::resolveValue();
+    }
+
     protected function resolveRawValue(): mixed
     {
         return $this->getCollectionValue()
