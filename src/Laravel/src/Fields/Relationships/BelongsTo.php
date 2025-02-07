@@ -73,6 +73,10 @@ class BelongsTo extends ModelRelationField implements
 
     protected function resolveValue(): mixed
     {
+        if (\is_scalar($this->toValue())) {
+            return $this->toValue();
+        }
+
         return $this->toValue()?->getKey();
     }
 
@@ -122,13 +126,7 @@ class BelongsTo extends ModelRelationField implements
         $value = data_get($value, 'value', $value);
 
         $casted = $this->getRelatedModel();
-        $related = $this->getRelation()?->getRelated();
-
-        $target = $related?->forceFill([
-            $related->getKeyName() => $value,
-        ]);
-
-        $casted?->setRelation($this->getRelationName(), $target);
+        $casted?->setRelation($this->getRelationName(), $this->makeRelatedModel($value));
 
         return $value;
     }

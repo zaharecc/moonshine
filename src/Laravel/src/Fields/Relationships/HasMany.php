@@ -17,6 +17,8 @@ use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
 use MoonShine\Contracts\UI\ActionButtonContract;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FieldContract;
+use MoonShine\Contracts\UI\FieldWithComponentContract;
+use MoonShine\Contracts\UI\FormBuilderContract;
 use MoonShine\Contracts\UI\HasFieldsContract;
 use MoonShine\Contracts\UI\TableBuilderContract;
 use MoonShine\Laravel\Buttons\HasManyButton;
@@ -34,8 +36,9 @@ use Throwable;
  * @template-covariant R of (HasOneOrMany|HasOneOrManyThrough|MorphOneOrMany)
  * @extends ModelRelationField<R>
  * @implements HasFieldsContract<Fields|FieldsContract>
+ * @implements FieldWithComponentContract<TableBuilderContract|FormBuilderContract|ActionButtonContract>
  */
-class HasMany extends ModelRelationField implements HasFieldsContract
+class HasMany extends ModelRelationField implements HasFieldsContract, FieldWithComponentContract
 {
     use WithFields;
     use WithRelatedLink;
@@ -82,6 +85,8 @@ class HasMany extends ModelRelationField implements HasFieldsContract
     protected ?Closure $redirectAfter = null;
 
     protected bool $withoutModals = false;
+
+    protected null|TableBuilderContract|FormBuilderContract|ActionButtonContract $resolvedComponent = null;
 
     public function withoutModals(): static
     {
@@ -559,7 +564,11 @@ class HasMany extends ModelRelationField implements HasFieldsContract
      */
     public function getComponent(): ComponentContract
     {
-        return $this->isRelatedLink()
+        if (! \is_null($this->resolvedComponent)) {
+            return $this->resolvedComponent;
+        }
+
+        return $this->resolvedComponent = $this->isRelatedLink()
             ? $this->getRelatedLink()
             : $this->getTableValue();
     }

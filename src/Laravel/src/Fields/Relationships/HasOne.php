@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOneOrMany;
 use MoonShine\Contracts\Core\DependencyInjection\FieldsContract;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FieldContract;
+use MoonShine\Contracts\UI\FieldWithComponentContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
 use MoonShine\Contracts\UI\HasFieldsContract;
 use MoonShine\Contracts\UI\TableBuilderContract;
@@ -32,8 +33,9 @@ use Throwable;
  * @template-covariant R of HasOneOrMany|HasOneOrManyThrough
  * @extends ModelRelationField<R>
  * @implements HasFieldsContract<Fields|FieldsContract>
+ * @implements FieldWithComponentContract<FormBuilderContract>
  */
-class HasOne extends ModelRelationField implements HasFieldsContract
+class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithComponentContract
 {
     use WithFields;
 
@@ -56,6 +58,8 @@ class HasOne extends ModelRelationField implements HasFieldsContract
     protected ?Closure $modifyForm = null;
 
     protected ?Closure $modifyTable = null;
+
+    protected ?FormBuilderContract $resolvedComponent = null;
 
     public function hasWrapper(): bool
     {
@@ -206,8 +210,12 @@ class HasOne extends ModelRelationField implements HasFieldsContract
      * @throws Throwable
      * @throws FieldException
      */
-    protected function getComponent(): FormBuilder
+    public function getComponent(): ComponentContract
     {
+        if (! \is_null($this->resolvedComponent)) {
+            return $this->resolvedComponent;
+        }
+
         $resource = $this->getResource()->stopGettingItemFromUrl();
 
         /** @var ?ModelResource $parentResource */
@@ -240,7 +248,7 @@ class HasOne extends ModelRelationField implements HasFieldsContract
 
         $isAsync = ! \is_null($item) && ($this->isAsync() || $resource->isAsync());
 
-        return FormBuilder::make($action)
+        return $this->resolvedComponent = FormBuilder::make($action)
             ->reactiveUrl(
                 static fn (): string => moonshineRouter()
                     ->getEndpoints()

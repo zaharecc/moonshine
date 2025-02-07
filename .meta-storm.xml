@@ -29,6 +29,49 @@
         </classMethod>
 
         <classMethod
+            class="\MoonShine\AssetManager\InlineJs"
+            method="make"
+            argument="0"
+        >
+            <languageInjection language="JavaScript"/>
+            <stopCompletion />
+        </classMethod>
+
+        <classConstructor
+            class="\MoonShine\AssetManager\InlineJs"
+            argument="0"
+        >
+            <languageInjection language="JavaScript"/>
+            <stopCompletion />
+        </classConstructor>
+
+        <classMethod
+            class="\MoonShine\AssetManager\InlineCss"
+            method="make"
+            argument="0"
+        >
+            <languageInjection language="CSS"/>
+            <stopCompletion />
+        </classMethod>
+
+        <classConstructor
+            class="\MoonShine\AssetManager\InlineCss"
+            argument="0"
+        >
+            <languageInjection language="CSS"/>
+            <stopCompletion />
+        </classConstructor>
+
+        <classMethod
+            class="\MoonShine\UI\Components\ActionButton"
+            method="onClick"
+            argument="1"
+        >
+            <collection name="onclick-modifiers" argument="1" />
+            <stopCompletion />
+        </classMethod>
+
+        <classMethod
             class="\MoonShine\Contracts\UI\FormBuilderContract"
             method="asyncMethod"
             argument="0"
@@ -111,6 +154,21 @@
             <value>md</value>
             <value>lg</value>
             <value>xl</value>
+        </strings>
+        <strings name="onclick-modifiers">
+            <value>prevent</value>
+            <value>stop</value>
+            <value>outside</value>
+            <value>window</value>
+            <value>document</value>
+            <value>once</value>
+            <value>debounce</value>
+            <value>throttle</value>
+            <value>self</value>
+            <value>camel</value>
+            <value>dot</value>
+            <value>passive</value>
+            <value>capture</value>
         </strings>
     </collections>
 </meta-storm>
