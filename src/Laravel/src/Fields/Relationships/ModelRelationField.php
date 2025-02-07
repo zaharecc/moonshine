@@ -258,6 +258,20 @@ abstract class ModelRelationField extends Field implements HasResourceContract
         return $this->relatedModel;
     }
 
+    public function makeRelatedModel(int|string $key, array $attributes = [], array $relations = []): ?Model
+    {
+        $related = $this->getRelatedModel();
+
+        if (\is_null($related)) {
+            return null;
+        }
+
+        return $related->forceFill([
+            $related->getKeyName() => $key,
+            ...$attributes,
+        ])->setRelations($relations);
+    }
+
     /**
      * @return ?R
      */

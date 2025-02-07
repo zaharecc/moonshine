@@ -53,13 +53,12 @@ trait HasTreeMode
             foreach ($data->get($parentKey) as $item) {
                 $label = $this->getColumnOrFormattedValue($item, data_get($item, $this->getResourceColumn()));
 
-                $this->setAttribute('name', $this->getNameAttribute((string) $item->getKey()));
-
                 $element = Checkbox::make($label)
                     ->formName($this->getFormName())
                     ->simpleMode()
                     ->customAttributes($this->getAttributes()->jsonSerialize())
                     ->customAttributes($this->getReactiveAttributes())
+                    ->setNameAttribute($this->getNameAttribute((string) $item->getKey()))
                     ->setValue($item->getKey());
 
                 $this->treeHtml .= str((string) $element)->wrap(

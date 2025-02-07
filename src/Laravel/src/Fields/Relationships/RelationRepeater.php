@@ -12,6 +12,7 @@ use MoonShine\Contracts\Core\DependencyInjection\FieldsContract;
 use MoonShine\Contracts\UI\ActionButtonContract;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FieldContract;
+use MoonShine\Contracts\UI\FieldWithComponentContract;
 use MoonShine\Contracts\UI\HasFieldsContract;
 use MoonShine\Contracts\UI\TableBuilderContract;
 use MoonShine\Laravel\Collections\Fields;
@@ -25,6 +26,7 @@ use MoonShine\UI\Contracts\DefaultValueTypes\CanBeObject;
 use MoonShine\UI\Contracts\HasDefaultValueContract;
 use MoonShine\UI\Contracts\RemovableContract;
 use MoonShine\UI\Fields\Field;
+use MoonShine\UI\Fields\Json;
 use MoonShine\UI\Traits\Fields\HasVerticalMode;
 use MoonShine\UI\Traits\Fields\WithDefaultValue;
 use MoonShine\UI\Traits\Removable;
@@ -35,9 +37,11 @@ use Throwable;
 
 /**
  * @implements HasFieldsContract<Fields|FieldsContract>
+ * @implements FieldWithComponentContract<TableBuilderContract>
  */
 class RelationRepeater extends ModelRelationField implements
     HasFieldsContract,
+    FieldWithComponentContract,
     RemovableContract,
     HasDefaultValueContract,
     CanBeArray,
@@ -52,8 +56,6 @@ class RelationRepeater extends ModelRelationField implements
 
     protected bool $isGroup = true;
 
-    protected bool $hasOld = false;
-
     protected bool $resolveValueOnce = true;
 
     protected bool $isCreatable = true;
@@ -67,6 +69,8 @@ class RelationRepeater extends ModelRelationField implements
     protected ?Closure $modifyTable = null;
 
     protected ?Closure $modifyRemoveButton = null;
+
+    protected ?TableBuilderContract $resolvedComponent = null;
 
     public function __construct(
         string|Closure $label,
@@ -223,14 +227,34 @@ class RelationRepeater extends ModelRelationField implements
         );
     }
 
+    protected function resolveOldValue(mixed $old): mixed
+    {
+        foreach ($this->getFields() as $field) {
+            if ($field instanceof Json) {
+                foreach ($old as $index => $value) {
+                    $column = $field->getColumn();
+                    $old[$index][$column] = $field->prepareOnApplyRecursive(
+                        $value[$column] ?? []
+                    );
+                }
+            }
+        }
+
+        return $old;
+    }
+
     /**
      * @throws Throwable
      */
-    protected function getComponent(): TableBuilder
+    public function getComponent(): ComponentContract
     {
+        if (! \is_null($this->resolvedComponent)) {
+            return $this->resolvedComponent;
+        }
+
         $fields = $this->getPreparedFields();
 
-        return TableBuilder::make($fields, $this->getValue())
+        return $this->resolvedComponent = TableBuilder::make($fields, $this->getValue())
             ->name("relation_repeater_{$this->getIdentity()}")
             ->inside('field')
             ->customAttributes(
