@@ -36,16 +36,19 @@ abstract class Page extends CorePage implements WithResponseModifierContract
 
     public function simulateRoute(?PageContract $page = null, ?ResourceContract $resource = null): static
     {
+        $targetPage = $page ?? $this;
+        $targetResource = $resource ?? $targetPage->getResource();
+
         request()
             ->route()
-            ?->setParameter('pageUri', ($page ?? $this)->getUriKey());
+            ?->setParameter('pageUri', $targetPage->getUriKey());
 
-        if (! \is_null($resource)) {
-            $this->setResource($resource);
+        if (! \is_null($targetResource)) {
+            $this->setResource($targetResource);
 
             request()
                 ->route()
-                ?->setParameter('resourceUri', $resource->getUriKey());
+                ?->setParameter('resourceUri', $targetResource->getUriKey());
         }
 
         return $this;
