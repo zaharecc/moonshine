@@ -41,6 +41,7 @@ abstract class CrudPage extends Page implements CrudPageContract
                     Div::make()->customAttributes(['id' => 'resource-edit-modal']),
                 ]
             )
+                ->wide()
                 ->name('resource-edit-modal');
         }
 
@@ -51,6 +52,7 @@ abstract class CrudPage extends Page implements CrudPageContract
                     Div::make()->customAttributes(['id' => 'resource-detail-modal']),
                 ]
             )
+                ->wide()
                 ->name('resource-detail-modal');
         }
 

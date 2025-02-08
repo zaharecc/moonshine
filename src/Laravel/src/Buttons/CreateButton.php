@@ -9,6 +9,7 @@ use MoonShine\Laravel\Enums\Ability;
 use MoonShine\Laravel\Enums\Action;
 use MoonShine\Laravel\Resources\CrudResource;
 use MoonShine\UI\Components\ActionButton;
+use MoonShine\UI\Components\Modal;
 
 final class CreateButton
 {
@@ -47,7 +48,8 @@ final class CreateButton
                 static fn (ActionButtonContract $button): ActionButtonContract => $button->async()->inModal(
                     static fn (): array|string => __('moonshine::ui.create'),
                     static fn (): string => '',
-                    name: $modalName
+                    name: $modalName,
+                    builder: static fn(Modal $modal) =>  $modal->wide(),
                 )
             )
             ->canSee(
