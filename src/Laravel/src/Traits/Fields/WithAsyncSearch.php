@@ -131,10 +131,11 @@ trait WithAsyncSearch
         }
 
         $resourceUri = $this->getNowOnResource()?->getUriKey() ?? moonshineRequest()->getResourceUri();
+        $itemID = data_get($this->getNowOnQueryParams(), 'resourceItem', moonshineRequest()->getItemID());
 
         return moonshineRouter()->getEndpoints()->withRelation(
             'async-search',
-            resourceItem: moonshineRequest()->getItemID(),
+            resourceItem: $itemID,
             relation: $this->getRelationName(),
             resourceUri: $resourceUri,
             parentField: $parentName,

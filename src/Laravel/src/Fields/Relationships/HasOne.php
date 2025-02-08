@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOneOrMany;
 use Illuminate\Database\Eloquent\Relations\HasOneOrManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphOneOrMany;
+use MoonShine\Contracts\Core\CrudResourceContract;
 use MoonShine\Contracts\Core\DependencyInjection\FieldsContract;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FieldContract;
@@ -181,9 +182,10 @@ class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithC
 
     public function getDefaultRedirect(Model|int|null|string $parentId): ?string
     {
-        return moonshineRequest()
-            ->getResource()
-            ?->getFormPageUrl($parentId);
+        /** @var ?CrudResourceContract $resource */
+        $resource = $this->getNowOnResource() ?? moonshineRequest()->getResource();
+
+        return $resource->getFormPageUrl($parentId);
     }
 
     /**
@@ -219,7 +221,7 @@ class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithC
         $resource = $this->getResource()->stopGettingItemFromUrl();
 
         /** @var ?ModelResource $parentResource */
-        $parentResource = moonshineRequest()->getResource();
+        $parentResource = $this->getNowOnResource() ?? moonshineRequest()->getResource();
 
         $item = $this->toValue();
 

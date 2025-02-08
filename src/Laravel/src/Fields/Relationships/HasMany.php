@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasOneOrMany;
 use Illuminate\Database\Eloquent\Relations\HasOneOrManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphOneOrMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use MoonShine\Contracts\Core\CrudResourceContract;
 use MoonShine\Contracts\Core\DependencyInjection\FieldsContract;
 use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
 use MoonShine\Contracts\UI\ActionButtonContract;
@@ -125,9 +126,10 @@ class HasMany extends ModelRelationField implements HasFieldsContract, FieldWith
 
     public function getDefaultRedirect(Model|int|null|string $parentId): ?string
     {
-        return moonshineRequest()
-            ->getResource()
-            ?->getFormPageUrl($parentId);
+        /** @var ?CrudResourceContract $resource */
+        $resource = $this->getNowOnResource() ?? moonshineRequest()->getResource();
+
+        return $resource->getFormPageUrl($parentId);
     }
 
     /**
@@ -425,7 +427,9 @@ class HasMany extends ModelRelationField implements HasFieldsContract, FieldWith
         $asyncUrl = moonshineRouter()->getEndpoints()->withRelation(
             'has-many.list',
             resourceItem: $this->getRelatedModel()?->getKey(),
-            relation: $this->getRelationName()
+            relation: $this->getRelationName(),
+            resourceUri: $this->getNowOnResource()?->getUriKey(),
+            pageUri: $this->getNowOnPage()?->getUriKey()
         );
 
         return TableBuilder::make(items: $items)

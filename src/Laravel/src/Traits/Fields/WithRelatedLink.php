@@ -63,7 +63,9 @@ trait WithRelatedLink
             return $this->parentRelationName;
         }
 
-        $relationName = str((string) moonshineRequest()->getResourceUri())
+        $resource = $this->getNowOnResource() ?? moonshineRequest()->getResource();
+
+        $relationName = str((string) $resource?->getUriKey())
             ->remove('-resource')
             ->replace('-', '_');
 
