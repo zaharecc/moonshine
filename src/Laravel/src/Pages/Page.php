@@ -8,6 +8,9 @@ use Closure;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\View\View;
 use MoonShine\Contracts\Core\CrudResourceContract;
+use MoonShine\Contracts\Core\DependencyInjection\CoreContract;
+use MoonShine\Contracts\Core\PageContract;
+use MoonShine\Contracts\Core\ResourceContract;
 use MoonShine\Core\Pages\Page as CorePage;
 use MoonShine\Laravel\Contracts\WithResponseModifierContract;
 use MoonShine\Laravel\DependencyInjection\MoonShine;
@@ -29,9 +32,24 @@ abstract class Page extends CorePage implements WithResponseModifierContract
             oops404();
         }
 
+        $this->simulateRoute();
+    }
+
+    public function simulateRoute(?PageContract $page = null, ?ResourceContract $resource = null): static
+    {
         request()
             ->route()
-            ?->setParameter('pageUri', $this->getUriKey());
+            ?->setParameter('pageUri', ($page ?? $this)->getUriKey());
+
+        if(!\is_null($resource)) {
+            $this->setResource($resource);
+
+            request()
+                ->route()
+                ?->setParameter('resourceUri', $resource->getUriKey());
+        }
+
+        return $this;
     }
 
     protected function prepareRender(Renderable|Closure|string $view): Renderable|Closure|string
@@ -41,6 +59,11 @@ abstract class Page extends CorePage implements WithResponseModifierContract
             moonshineRequest()->isFragmentLoad(),
             moonshineRequest()->getFragmentLoad(),
         );
+    }
+
+    public function nowOn(): static
+    {
+        return $this;
     }
 
     public function isResponseModified(): bool

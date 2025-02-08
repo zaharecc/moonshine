@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MoonShine\Laravel\Buttons;
 
 use Illuminate\Database\Eloquent\Model;
+use MoonShine\Contracts\Core\CrudResourceContract;
 use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
 use MoonShine\Contracts\UI\ActionButtonContract;
 use MoonShine\Laravel\Enums\Ability;
@@ -27,8 +28,10 @@ final class HasManyButton
     ): ActionButtonContract {
         /** @var ModelResource $resource */
         $resource = $field->getResource()->stopGettingItemFromUrl();
-        $parentResource = moonshineRequest()->getResource();
-        $parentPage = moonshineRequest()->getPage();
+        /** @var ?CrudResourceContract $parentResource */
+        $parentResource = $field->getNowOnResource() ?? moonshineRequest()->getResource();
+        $parentPage = $field->getNowOnPage() ?? moonshineRequest()->getPage();
+        $itemID = data_get($field->getNowOnQueryParams(), 'resourceItem', moonshineRequest()->getItemID());
 
         if (! $resource->getFormPage()) {
             return ActionButton::emptyHidden();
@@ -36,7 +39,7 @@ final class HasManyButton
 
         $action = static fn (?Model $data) => $parentResource->getRoute(
             'has-many.form',
-            moonshineRequest()->getItemID(),
+            $itemID,
             [
                 'pageUri' => $parentPage->getUriKey(),
                 '_relation' => $field->getRelationName(),
