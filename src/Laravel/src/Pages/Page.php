@@ -40,7 +40,7 @@ abstract class Page extends CorePage implements WithResponseModifierContract
             ->route()
             ?->setParameter('pageUri', ($page ?? $this)->getUriKey());
 
-        if(!\is_null($resource)) {
+        if (! \is_null($resource)) {
             $this->setResource($resource);
 
             request()
