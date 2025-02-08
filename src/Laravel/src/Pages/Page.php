@@ -8,7 +8,6 @@ use Closure;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\View\View;
 use MoonShine\Contracts\Core\CrudResourceContract;
-use MoonShine\Contracts\Core\DependencyInjection\CoreContract;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Contracts\Core\ResourceContract;
 use MoonShine\Core\Pages\Page as CorePage;
