@@ -49,7 +49,7 @@ final class CreateButton
                     static fn (): array|string => __('moonshine::ui.create'),
                     static fn (): string => '',
                     name: $modalName,
-                    builder: static fn(Modal $modal) =>  $modal->wide(),
+                    builder: static fn(Modal $modal): Modal =>  $modal->wide(),
                 )
             )
             ->canSee(
