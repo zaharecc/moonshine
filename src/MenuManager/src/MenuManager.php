@@ -72,7 +72,7 @@ final class MenuManager implements MenuManagerContract
     public function all(?iterable $items = null): MenuElementsContract
     {
         return MenuElements::make($items ?: $this->items)
-            ->map(static fn(array|MenuElementContract $item): MenuElementContract => $item)
+            ->map(static fn (array|MenuElementContract $item): MenuElementContract => $item)
             ->onlyVisible()
             ->when(
                 $this->conditionItems !== [],
