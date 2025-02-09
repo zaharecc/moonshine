@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <meta-storm xmlns="meta-storm">
     <definitions>
+        <classProperty
+            class="\MoonShine\Laravel\Resources\CrudResource"
+            property="column"
+        >
+            <arrayValues xpath="$containingClass.$model.$fillable"/>
+            <stopCompletion />
+        </classProperty>
+
+        <classProperty
+            class="\MoonShine\Laravel\Resources\ModelResource"
+            property="with"
+            targetInArray="value"
+        >
+            <methods xpath="$containingClass.$model"/>
+            <stopCompletion />
+        </classProperty>
+
         <classMethod
             class="\MoonShine\Contracts\UI\HasIconContract"
             method="icon"
