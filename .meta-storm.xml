@@ -132,6 +132,7 @@
             <collection name="justify-align" argument="0" />
             <stopCompletion />
         </classMethod>
+
         <classMethod
             class="\MoonShine\UI\Components\ProgressBar"
             method="make"
@@ -140,12 +141,40 @@
             <collection name="size" argument="1" />
             <stopCompletion />
         </classMethod>
+
         <classMethod
             class="\MoonShine\UI\Components\Spinner"
             method="make"
             argument="0"
         >
             <collection name="size" argument="0" />
+            <stopCompletion />
+        </classMethod>
+
+        <classMethod
+            class="\MoonShine\UI\Components\Popover"
+            method="make"
+            argument="2"
+        >
+            <collection name="placement" argument="2" />
+            <stopCompletion />
+        </classMethod>
+
+        <classMethod
+            class="\MoonShine\UI\Components\Dropdown"
+            method="placement"
+            argument="0"
+        >
+            <collection name="placement" argument="0" />
+            <stopCompletion />
+        </classMethod>
+
+        <classMethod
+            class="\MoonShine\UI\Components\Dropdown"
+            method="strategy"
+            argument="0"
+        >
+            <collection name="strategy" argument="0" />
             <stopCompletion />
         </classMethod>
     </definitions>
@@ -186,6 +215,27 @@
             <value>dot</value>
             <value>passive</value>
             <value>capture</value>
+        </strings>
+        <strings name="placement">
+            <value>top</value>
+            <value>top-start</value>
+            <value>top-end</value>
+            <value>right</value>
+            <value>right-start</value>
+            <value>right-end</value>
+            <value>bottom</value>
+            <value>bottom-start</value>
+            <value>bottom-end</value>
+            <value>left</value>
+            <value>left-start</value>
+            <value>left-end</value>
+            <value>auto</value>
+            <value>auto-start</value>
+            <value>auto-end</value>
+        </strings>
+        <strings name="strategy">
+            <value>absolute</value>
+            <value>fixed</value>
         </strings>
     </collections>
 </meta-storm>
