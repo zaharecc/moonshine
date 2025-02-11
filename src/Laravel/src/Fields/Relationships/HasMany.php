@@ -89,6 +89,13 @@ class HasMany extends ModelRelationField implements HasFieldsContract, FieldWith
 
     protected null|TableBuilderContract|FormBuilderContract|ActionButtonContract $resolvedComponent = null;
 
+    public function disableOutside(): static
+    {
+        $this->outsideComponent = false;
+
+        return $this->searchable(false);
+    }
+
     public function withoutModals(): static
     {
         $this->withoutModals = true;
@@ -257,6 +264,10 @@ class HasMany extends ModelRelationField implements HasFieldsContract, FieldWith
     public function searchable(Closure|bool|null $condition = null): static
     {
         $this->isSearchable = value($condition, $this) ?? true;
+
+        if($this->isOutsideComponent()) {
+            $this->isSearchable = false;
+        }
 
         return $this;
     }
