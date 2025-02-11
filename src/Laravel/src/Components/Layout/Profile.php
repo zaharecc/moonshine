@@ -86,17 +86,35 @@ final class Profile extends MoonShineComponent
 
     private function getDefaultName(): string
     {
+        $userField = moonshineConfig()->getUserField('name');
+
+        if($userField === false) {
+            return '';
+        }
+
         return $this->user?->{moonshineConfig()->getUserField('name')} ?? '';
     }
 
     private function getDefaultUsername(): string
     {
+        $userField = moonshineConfig()->getUserField('username', 'email');
+
+        if($userField === false) {
+            return '';
+        }
+
         return $this->user?->{moonshineConfig()->getUserField('username', 'email')} ?? '';
     }
 
     private function getDefaultAvatar(): string
     {
-        $avatar = $this->user?->{moonshineConfig()->getUserField('avatar')};
+        $userField = moonshineConfig()->getUserField('avatar');
+
+        if($userField === false) {
+            return '';
+        }
+
+        $avatar = $this->user?->{$userField};
 
         return $avatar
             ? Storage::disk(moonshineConfig()->getDisk())->url($avatar)

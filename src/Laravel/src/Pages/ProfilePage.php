@@ -42,37 +42,48 @@ class ProfilePage extends Page
 
     protected function fields(): iterable
     {
+        $userFields = array_filter([
+            ID::make()->sortable(),
+
+            moonshineConfig()->getUserField('name')
+                ? Text::make(__('moonshine::ui.resource.name'), moonshineConfig()->getUserField('name'))
+                ->required()
+                : null,
+
+            moonshineConfig()->getUserField('username')
+                ? Text::make(__('moonshine::ui.login.username'), moonshineConfig()->getUserField('username'))
+                ->required()
+                : null,
+
+            moonshineConfig()->getUserField('avatar')
+                ? Image::make(__('moonshine::ui.resource.avatar'), moonshineConfig()->getUserField('avatar'))
+                ->disk(moonshineConfig()->getDisk())
+                ->options(moonshineConfig()->getDiskOptions())
+                ->dir('moonshine_users')
+                ->removable()
+                ->allowedExtensions(['jpg', 'png', 'jpeg', 'gif'])
+                : null,
+        ]);
+
+        $userPasswordsFields = moonshineConfig()->getUserField('password') ? [
+            Heading::make(__('moonshine::ui.resource.change_password')),
+
+            Password::make(__('moonshine::ui.resource.password'), moonshineConfig()->getUserField('password'))
+                ->customAttributes(['autocomplete' => 'new-password'])
+                ->eye(),
+
+            PasswordRepeat::make(__('moonshine::ui.resource.repeat_password'), 'password_repeat')
+                ->customAttributes(['autocomplete' => 'confirm-password'])
+                ->eye(),
+        ] : [];
+
         return [
             Box::make([
                 Tabs::make([
-                    Tab::make(__('moonshine::ui.resource.main_information'), [
-                        ID::make()->sortable(),
-
-                        Text::make(__('moonshine::ui.resource.name'), moonshineConfig()->getUserField('name'))
-                            ->required(),
-
-                        Text::make(__('moonshine::ui.login.username'), moonshineConfig()->getUserField('username'))
-                            ->required(),
-
-                        Image::make(__('moonshine::ui.resource.avatar'), moonshineConfig()->getUserField('avatar'))
-                            ->disk(moonshineConfig()->getDisk())
-                            ->options(moonshineConfig()->getDiskOptions())
-                            ->dir('moonshine_users')
-                            ->removable()
-                            ->allowedExtensions(['jpg', 'png', 'jpeg', 'gif']),
-                    ]),
-
-                    Tab::make(__('moonshine::ui.resource.password'), [
-                        Heading::make(__('moonshine::ui.resource.change_password')),
-
-                        Password::make(__('moonshine::ui.resource.password'), moonshineConfig()->getUserField('password'))
-                            ->customAttributes(['autocomplete' => 'new-password'])
-                            ->eye(),
-
-                        PasswordRepeat::make(__('moonshine::ui.resource.repeat_password'), 'password_repeat')
-                            ->customAttributes(['autocomplete' => 'confirm-password'])
-                            ->eye(),
-                    ]),
+                    Tab::make(__('moonshine::ui.resource.main_information'), $userFields),
+                    Tab::make(__('moonshine::ui.resource.password'), $userPasswordsFields)->canSee(
+                        fn() => $userPasswordsFields !== [],
+                    ),
                 ]),
             ]),
         ];
