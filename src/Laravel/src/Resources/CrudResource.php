@@ -12,6 +12,7 @@ use MoonShine\Contracts\Core\DependencyInjection\FieldsContract;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Contracts\Core\TypeCasts\DataCasterContract;
 use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
+use MoonShine\Contracts\UI\TableBuilderContract;
 use MoonShine\Core\Resources\Resource;
 use MoonShine\Core\TypeCasts\MixedDataCaster;
 use MoonShine\Laravel\Components\Fragment;
@@ -299,7 +300,7 @@ abstract class CrudResource extends Resource implements CrudResourceContract
     }
 
     /**
-     * @return ?Closure(array $components): Fragment
+     * @return null|Closure(array $components): Fragment
      */
     protected function fragmentMetrics(): ?Closure
     {
@@ -360,6 +361,14 @@ abstract class CrudResource extends Resource implements CrudResourceContract
             AlpineJs::event($this->getListEventType(), $name, $params),
             false,
         );
+    }
+
+    /**
+     * @return null|Closure(iterable $items, TableBuilderContract $table): iterable
+     */
+    public function getItemsResolver(): ?Closure
+    {
+        return null;
     }
 
     /**

@@ -222,6 +222,11 @@ class IndexPage extends CrudPage
             })
             ->when($this->getResource()->isColumnSelection(), function (TableBuilderContract $table): void {
                 $table->columnSelection();
+            })
+            ->when(!\is_null($this->getResource()->getItemsResolver()), function (TableBuilderContract $table): void {
+                $table->itemsResolver(
+                    $this->getResource()->getItemsResolver()
+                );
             });
     }
 
