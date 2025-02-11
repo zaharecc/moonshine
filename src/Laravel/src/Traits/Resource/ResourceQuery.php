@@ -260,7 +260,7 @@ trait ResourceQuery
     {
         $page = $this->paginatorPage ?? (int)$this->getQueryParams()->get('page');
 
-        if ($this->isSaveQueryState() && ! $this->getQueryParams()->has('reset')) {
+        if ($this->isSaveQueryState() && ! moonshineRequest()->has('reset')) {
             return (int)data_get(
                 moonshineCache()->get($this->getQueryCacheKey(), []),
                 'page',
@@ -320,7 +320,7 @@ trait ResourceQuery
             return $this;
         }
 
-        if ($this->getQueryParams()->has('reset')) {
+        if (moonshineRequest()->has('reset')) {
             moonshineCache()->forget($this->getQueryCacheKey());
 
             return $this;
@@ -345,10 +345,8 @@ trait ResourceQuery
     protected function withCache(): static
     {
         if ($this->isSaveQueryState()
-            && ! $this->getQueryParams()->hasAny([
-                ...$this->getCachedRequestKeys(),
-                'reset',
-            ])
+            && ! moonshineRequest()->has('reset')
+            && ! $this->getQueryParams()->hasAny($this->getCachedRequestKeys())
         ) {
             $this->setQueryParams(
                 $this->getQueryParams()->merge(
@@ -369,7 +367,7 @@ trait ResourceQuery
     {
         $default = $this->getQueryParams()->get('filter', []);
 
-        if ($this->isSaveQueryState()) {
+        if ($this->isSaveQueryState() && !moonshineRequest()->has('reset')) {
             return data_get(
                 moonshineCache()->get($this->getQueryCacheKey(), []),
                 'filter',
@@ -392,7 +390,7 @@ trait ResourceQuery
 
         $filters->fill(
             $params,
-            $this->getCaster()->cast($this->getDataInstance()),
+            $this->getCaster()->cast($params),
         );
 
         return $filters;

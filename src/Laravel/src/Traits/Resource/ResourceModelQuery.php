@@ -289,6 +289,8 @@ trait ResourceModelQuery
         }
 
         $filters->each(function (Field $filter): void {
+            $filter->onRequestValue(fn(mixed $value) => $value === false ? $filter->getValue() : $value);
+
             if ($filter->getRequestValue() === false) {
                 return;
             }
