@@ -19,17 +19,22 @@ class ProfileFormRequest extends MoonShineFormRequest
 
     public function rules(): array
     {
-        return [
-            moonshineConfig()->getUserField('name') => ['required'],
-            moonshineConfig()->getUserField('username') => [
+        $name = moonshineConfig()->getUserField('name');
+        $username = moonshineConfig()->getUserField('username');
+        $avatar = moonshineConfig()->getUserField('avatar');
+        $password = moonshineConfig()->getUserField('password');
+
+        return array_filter([
+            $name => blank($name) ? null : ['required'],
+            $username => blank($username) ? null : [
                 'required',
                 Rule::unique(
                     MoonShineAuth::getModel()?->getTable(),
                     moonshineConfig()->getUserField('username')
                 )->ignore(MoonShineAuth::getGuard()->id()),
             ],
-            moonshineConfig()->getUserField('avatar') => ['image'],
-            moonshineConfig()->getUserField('password') => 'sometimes|nullable|min:6|required_with:password_repeat|same:password_repeat',
-        ];
+            $avatar => blank($avatar) ? null : ['image'],
+            $password => blank($password) ? null : 'sometimes|nullable|min:6|required_with:password_repeat|same:password_repeat',
+        ]);
     }
 }

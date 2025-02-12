@@ -88,6 +88,10 @@ final class Profile extends MoonShineComponent
     {
         $userField = moonshineConfig()->getUserField('name');
 
+        if($userField === '') {
+            return $this->getDefaultUsername();
+        }
+
         if($userField === false) {
             return '';
         }
@@ -109,6 +113,10 @@ final class Profile extends MoonShineComponent
     private function getDefaultAvatar(): string
     {
         $userField = moonshineConfig()->getUserField('avatar');
+
+        if($userField === '') {
+            return $this->getAvatarPlaceholder();
+        }
 
         if($userField === false) {
             return '';
