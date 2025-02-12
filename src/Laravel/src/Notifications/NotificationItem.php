@@ -55,6 +55,6 @@ final readonly class NotificationItem implements NotificationItemContract
 
     public function getIcon(): string
     {
-        return 'information-circle';
+        return $this->notification->data['icon'] ?? 'information-circle';
     }
 }

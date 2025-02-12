@@ -12,6 +12,7 @@ use MoonShine\Laravel\Contracts\Notifications\MoonShineNotificationContract;
 use MoonShine\Laravel\Contracts\Notifications\NotificationButtonContract;
 use MoonShine\Laravel\MoonShineAuth;
 use MoonShine\Support\Enums\Color;
+use MoonShine\UI\Components\Icon;
 
 /**
  * @implements MoonShineNotificationContract<NotificationItem>
@@ -25,9 +26,10 @@ final class MoonShineNotification implements MoonShineNotificationContract
         string $message,
         ?NotificationButtonContract $button = null,
         array $ids = [],
-        string|Color|null $color = null
+        string|Color|null $color = null,
+        string|Icon|null $icon = null
     ): void {
-        app(MoonShineNotificationContract::class)->notify($message, $button, $ids, $color);
+        app(MoonShineNotificationContract::class)->notify($message, $button, $ids, $color, $icon);
     }
 
     /**
@@ -37,13 +39,15 @@ final class MoonShineNotification implements MoonShineNotificationContract
         string $message,
         ?NotificationButtonContract $button = null,
         array $ids = [],
-        string|Color|null $color = null
+        string|Color|null $color = null,
+        string|Icon|null $icon = null
     ): void {
         if (! moonshineConfig()->isUseNotifications()) {
             return;
         }
 
         $color = $color instanceof Color ? $color->value : $color;
+        $icon = $icon instanceof Icon ? $icon->icon : $icon;
 
         Notification::sendNow(
             MoonShineAuth::getModel()?->query()
@@ -58,7 +62,8 @@ final class MoonShineNotification implements MoonShineNotificationContract
             new DatabaseNotification(
                 $message,
                 $button,
-                $color
+                $color,
+                $icon
             )
         );
     }

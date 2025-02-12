@@ -7,6 +7,7 @@ namespace MoonShine\Laravel\Notifications;
 use DateTimeInterface;
 use MoonShine\Laravel\Contracts\Notifications\NotificationButtonContract;
 use MoonShine\Laravel\Contracts\Notifications\NotificationItemContract;
+use MoonShine\UI\Components\Icon;
 
 final readonly class NotificationMemoryItem implements NotificationItemContract
 {
@@ -16,6 +17,7 @@ final readonly class NotificationMemoryItem implements NotificationItemContract
         private ?string $color = null,
         private ?DateTimeInterface $date = null,
         private ?NotificationButtonContract $button = null,
+        private ?string $icon = null
     ) {
     }
 
@@ -51,6 +53,6 @@ final readonly class NotificationMemoryItem implements NotificationItemContract
 
     public function getIcon(): string
     {
-        return 'information-circle';
+        return $this->icon ?? 'information-circle';
     }
 }
