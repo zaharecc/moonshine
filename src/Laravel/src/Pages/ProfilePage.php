@@ -82,7 +82,7 @@ class ProfilePage extends Page
                 Tabs::make([
                     Tab::make(__('moonshine::ui.resource.main_information'), $userFields),
                     Tab::make(__('moonshine::ui.resource.password'), $userPasswordsFields)->canSee(
-                        fn(): bool => $userPasswordsFields !== [],
+                        fn (): bool => $userPasswordsFields !== [],
                     ),
                 ]),
             ]),
