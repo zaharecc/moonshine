@@ -208,8 +208,10 @@ class IndexPage extends CrudPage
             )
             ->buttons($this->getResource()->getIndexButtons())
             ->clickAction($this->getResource()->getClickAction())
-            ->when($this->getResource()->isAsync(), static function (TableBuilderContract $table): void {
-                $table->async()->pushState();
+            ->when($this->getResource()->isAsync(), function (TableBuilderContract $table): void {
+                $table->async(
+                    url: fn() => $this->getRouter()->getEndpoints()->component(name: $table->getName(), additionally: request()->query())
+                )->pushState();
             })
             ->when($this->getResource()->isStickyTable(), function (TableBuilderContract $table): void {
                 $table->sticky();
