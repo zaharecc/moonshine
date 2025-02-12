@@ -9,7 +9,6 @@ use Illuminate\Support\Str;
 use MoonShine\Laravel\Contracts\Notifications\MoonShineNotificationContract;
 use MoonShine\Laravel\Contracts\Notifications\NotificationButtonContract;
 use MoonShine\Support\Enums\Color;
-use MoonShine\UI\Components\Icon;
 
 /**
  * @implements MoonShineNotificationContract<NotificationMemoryItem>
@@ -26,9 +25,9 @@ final class MoonShineMemoryNotification implements MoonShineNotificationContract
         ?NotificationButtonContract $button = null,
         array $ids = [],
         string|Color|null $color = null,
-        string|Icon|null $icon = null
+        ?string $icon = null
     ): void {
-        (new self())->notify($message, $button, $ids, $color);
+        (new self())->notify($message, $button, $ids, $color, $icon);
     }
 
     /**
@@ -39,14 +38,13 @@ final class MoonShineMemoryNotification implements MoonShineNotificationContract
         ?NotificationButtonContract $button = null,
         array $ids = [],
         string|Color|null $color = null,
-        string|Icon|null $icon = null
+        ?string $icon = null
     ): void {
         if (! moonshineConfig()->isUseNotifications()) {
             return;
         }
 
         $color = $color instanceof Color ? $color->value : $color;
-        $icon = $icon instanceof Icon ? $icon->icon : $icon;
 
         $id = (string)Str::uuid();
 

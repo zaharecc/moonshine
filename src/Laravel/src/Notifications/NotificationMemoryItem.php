@@ -7,7 +7,6 @@ namespace MoonShine\Laravel\Notifications;
 use DateTimeInterface;
 use MoonShine\Laravel\Contracts\Notifications\NotificationButtonContract;
 use MoonShine\Laravel\Contracts\Notifications\NotificationItemContract;
-use MoonShine\UI\Components\Icon;
 
 final readonly class NotificationMemoryItem implements NotificationItemContract
 {
