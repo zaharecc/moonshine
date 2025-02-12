@@ -367,7 +367,7 @@ trait ResourceQuery
     {
         $default = $this->getQueryParams()->get('filter', []);
 
-        if ($this->isSaveQueryState() && !moonshineRequest()->has('reset')) {
+        if ($this->isSaveQueryState() && ! moonshineRequest()->has('reset')) {
             return data_get(
                 moonshineCache()->get($this->getQueryCacheKey(), []),
                 'filter',
