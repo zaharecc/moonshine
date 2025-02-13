@@ -39,7 +39,7 @@
         <classMethod
             class="\MoonShine\Laravel\Notifications\MoonShineNotification"
             method="send"
-            argument="3"
+            argument="4"
         >
             <files extension="blade.php" xpath="$project/vendor/moonshine/moonshine/src/UI/resources/views/icons"/>
             <stopCompletion />
