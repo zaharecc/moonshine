@@ -37,7 +37,9 @@ final class MenuElements extends Collection implements MenuElementsContract
                     $item->getItems()->onlyVisible()
                 );
 
-                $item->canSee(static fn (): int => $item->getItems()->count());
+                if(!$item->hasCanSeeCallback()) {
+                    $item->canSee(static fn (): int => $item->getItems()->count());
+                }
             }
 
             return $item->isSee();
