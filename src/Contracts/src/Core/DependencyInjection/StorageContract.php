@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace MoonShine\Contracts\Core\DependencyInjection;
 
+use SplFileInfo;
+
 interface StorageContract
 {
     public function store(string $path, mixed $file = null, array $options = []): false|string;
@@ -23,7 +25,7 @@ interface StorageContract
     public function getUrl(string $path): string;
 
     /**
-     * @return list<\SplFileInfo>
+     * @return list<SplFileInfo>
      */
     public function getFiles(string $directory, bool $recursive = false): array;
 
