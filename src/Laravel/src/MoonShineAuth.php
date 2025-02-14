@@ -15,17 +15,19 @@ final class MoonShineAuth
 {
     public static function getModel(): ?Model
     {
-        $model = self::getProvider()?->getModel();
+        $provider = self::getProvider();
 
-        return $model ? new $model() : null;
+        if(!$provider instanceof EloquentUserProvider) {
+            return null;
+        }
+
+        $model = $provider->getModel();
+
+        return new $model();
     }
 
-    /**
-     * @return ?EloquentUserProvider
-     */
-    public static function getProvider(): ?UserProvider
+    public static function getProvider(): UserProvider
     {
-        /** @phpstan-ignore-next-line  */
         return self::getGuard()->getProvider();
     }
 

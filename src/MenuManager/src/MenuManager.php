@@ -15,7 +15,7 @@ final class MenuManager implements MenuManagerContract
     use Conditionable;
 
     /**
-     * @var list<MenuElementContract>
+     * @var array|list<MenuElementContract>
      */
     private array $items = [];
 
@@ -72,7 +72,14 @@ final class MenuManager implements MenuManagerContract
     public function all(?iterable $items = null): MenuElementsContract
     {
         return MenuElements::make($items ?: $this->items)
-            ->map(static fn (array|MenuElementContract $item): MenuElementContract => $item)
+            ->map(static function (array|MenuElementContract $item): MenuElementContract {
+                /** @phpstan-ignore-next-line  */
+                if (\is_array($item)) {
+                    return MenuItem::make($item['label'], $item['url']);
+                }
+
+                return $item;
+            })
             ->onlyVisible()
             ->when(
                 $this->conditionItems !== [],

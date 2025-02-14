@@ -22,7 +22,13 @@ interface StorageContract
 
     public function getUrl(string $path): string;
 
+    /**
+     * @return list<\SplFileInfo>
+     */
     public function getFiles(string $directory, bool $recursive = false): array;
 
+    /**
+     * @return string[]
+     */
     public function getDirectories(string $directory, bool $recursive = false): array;
 }

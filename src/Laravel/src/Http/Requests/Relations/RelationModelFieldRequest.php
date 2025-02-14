@@ -35,7 +35,10 @@ class RelationModelFieldRequest extends FormRequest
     public function getPageField(): ?ModelRelationField
     {
         return memoize(function () {
-            /** @var Fields $fields */
+            /**
+             * @var Fields $fields
+             * @phpstan-ignore-next-line
+             */
             $fields = $this->getPage()->getComponents();
 
             if ($parentField = request()->getScalar('_parent_field')) {

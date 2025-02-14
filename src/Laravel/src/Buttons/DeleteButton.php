@@ -25,11 +25,9 @@ final class DeleteButton
         $action = static fn (mixed $item, ?DataWrapperContract $data): string => $resource->getRoute(
             'crud.destroy',
             $data?->getKey(),
-            array_filter([
-                ...$redirectAfterDelete
-                    ? ['_redirect' => $redirectAfterDelete]
-                    : [],
-            ])
+            $redirectAfterDelete
+            ? ['_redirect' => $redirectAfterDelete]
+            : []
         );
 
         return ActionButton::make(

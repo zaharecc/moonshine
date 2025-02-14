@@ -38,7 +38,7 @@ trait WithRelatedLink
 
     public function toRelatedCollection(): Collection
     {
-        return $this->getRelatedModel()?->{$this->getRelationName()} ?? new Collection();
+        return $this->getRelatedModel()->{$this->getRelationName()} ?? new Collection();
     }
 
     protected function isRelatedLink(): bool

@@ -33,6 +33,8 @@ use MoonShine\UI\Fields\Field;
 use MoonShine\UI\Traits\WithFields;
 use Throwable;
 
+use function Pest\Laravel\call;
+
 /**
  * @template-covariant R of (HasOneOrMany|HasOneOrManyThrough|MorphOneOrMany)
  * @extends ModelRelationField<R>
@@ -114,7 +116,7 @@ class HasMany extends ModelRelationField implements HasFieldsContract, FieldWith
     public function getRedirectAfter(Model|int|null|string $parentId): ?string
     {
         if (! \is_null($this->redirectAfter)) {
-            return (string) value($this->redirectAfter, $parentId, $this);
+            return (string) \call_user_func($this->redirectAfter, $parentId, $this);
         }
 
         if ($this->isAsync()) {

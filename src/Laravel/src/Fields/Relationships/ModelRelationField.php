@@ -153,7 +153,7 @@ abstract class ModelRelationField extends Field implements HasResourceContract
 
     protected function prepareFill(array $raw = [], ?DataWrapperContract $casted = null): mixed
     {
-        return $casted?->getOriginal()?->{$this->getRelationName()} ?? null;
+        return $casted?->getOriginal()->{$this->getRelationName()} ?? null;
     }
 
     /**

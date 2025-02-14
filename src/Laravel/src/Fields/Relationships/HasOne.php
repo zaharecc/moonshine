@@ -170,7 +170,7 @@ class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithC
     public function getRedirectAfter(Model|int|null|string $parentId): ?string
     {
         if (! \is_null($this->redirectAfter)) {
-            return (string) value($this->redirectAfter, $parentId, $this);
+            return (string) \call_user_func($this->redirectAfter, $parentId, $this);
         }
 
         if ($this->isAsync() && ! \is_null($this->toValue())) {

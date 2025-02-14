@@ -119,7 +119,7 @@ abstract class MoonShineCommand extends Command
                 $replaceContent->value(),
             ],
             [
-                $headSection->replaceLast(';', (";\nuse $namespace;" . ($use ? "\nuse $use;" : ''))),
+                $headSection->replaceLast(';', (";\nuse $namespace;" . ($use ? "\nuse $use;" : '')))->value(),
                 $replace($replaceContent, $tab)->value(),
             ],
             $content->value(),

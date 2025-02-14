@@ -9,7 +9,6 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use MoonShine\Contracts\UI\ApplyContract;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Laravel\Fields\Relationships\BelongsToMany;
-use MoonShine\Laravel\Fields\Relationships\ModelRelationField;
 
 /**
  * @implements ApplyContract<BelongsToMany>
@@ -20,10 +19,6 @@ class BelongsToManyModelApply implements ApplyContract
     public function apply(FieldContract $field): Closure
     {
         return static function (Builder $query) use ($field): void {
-            if (! $field instanceof ModelRelationField) {
-                return;
-            }
-
             $checkedKeys = $field->getCheckedKeys();
 
             $relation = $field->getRelation();
