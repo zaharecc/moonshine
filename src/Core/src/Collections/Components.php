@@ -26,8 +26,11 @@ final class Components extends BaseCollection implements ComponentsContract
     use Conditionable;
 
     /**
-     * @param  list<ComponentContract>  $elements
-     * @param  list<ComponentContract>  $data
+     * @template TType
+     * @param  FieldsContract|ComponentsContract|list<ComponentContract>  $elements
+     * @param  class-string<TType>  $type
+     * @param  list<TType>  $data
+     *
      * @throws Throwable
      */
     protected function extractOnly(iterable $elements, string $type, array &$data): void

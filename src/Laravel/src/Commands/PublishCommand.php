@@ -90,8 +90,8 @@ class PublishCommand extends MoonShineCommand
             info('Node packages installed');
         }
 
-        info('App.css, postcss/tailwind.config published');
-        info("Don't forget to add to MoonShineServiceProvider `Vite::asset('resources/css/app.css')`");
+        info('app.css, postcss/tailwind.config published');
+        info("Don't forget to add styles to the Layout (Css::make(`Vite::asset('resources/css/app.css')`))");
     }
 
     private function publishResources(): void

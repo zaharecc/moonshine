@@ -8,7 +8,7 @@ interface AssetResolverContract
 {
     public function get(string $path): string;
 
-    public function getDev(string $path): ?string;
+    public function getDev(string $path): string;
 
     public function isDev(): bool;
 

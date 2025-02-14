@@ -3,15 +3,13 @@ includes:
 
 parameters:
     editorUrl: 'anything'
-    editorUrlTitle: "\nat packages/moonshine/%%relFile%%:%%line%%"
     paths:
         - src/
     level: 5
     reportUnmatchedIgnoredErrors: false
+    treatPhpDocTypesAsCertain: false
 
     ignoreErrors:
-        - '#Cannot cast Closure to string#'
-        - '#Cannot cast Closure\|null to string#'
         - '#mixin contains invalid type Illuminate\\Support\\Traits\\Conditionable#'
         - '#does not accept Illuminate\\View\\ComponentAttributeBag#'
         - '#should return MoonShine\\Contracts\\UI\\ComponentAttributesBagContract but returns Illuminate\\View\\ComponentAttributeBag#'
@@ -19,7 +17,9 @@ parameters:
         - '#getParentResource\(\) should return#'
         - '#when\(\) expects#'
         - '#Call to an undefined method Illuminate\\Http\\Request::getScalar#'
+        - '#Trait MoonShine\\Laravel\\Traits\\Resource\\ResourceWithParent is used zero times#'
     excludePaths:
         - ./src/Support/src/Traits/Makeable.php
         - ./src/Laravel/routes/moonshine.php
+        - ./src/Laravel/config/moonshine.php
         - ./src/Laravel/src/Providers/MoonShineServiceProvider.php

@@ -43,9 +43,7 @@ class AuthenticateController extends MoonShineController
     {
         if (filled(moonshineConfig()->getAuthPipelines())) {
             $request = Pipeline::send($request)->through(
-                array_filter(
-                    moonshineConfig()->getAuthPipelines()
-                )
+                moonshineConfig()->getAuthPipelines()
             )->thenReturn();
         }
 

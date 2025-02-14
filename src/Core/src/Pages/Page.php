@@ -329,6 +329,6 @@ abstract class Page implements PageContract
 
     public function getView(): string
     {
-        return 'moonshine::page';
+        return $this->customView ?? $this->view ?: 'moonshine::page';
     }
 }

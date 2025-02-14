@@ -8,5 +8,5 @@ use Illuminate\Contracts\Support\Renderable;
 
 interface ViewRendererContract
 {
-    public function render(string $view, array $data = []): Renderable|string;
+    public function render(string $view, array $data = []): Renderable;
 }

@@ -242,7 +242,7 @@ trait ResourceModelQuery
     {
         $this->newQuery()->where(function (Builder $builder) use ($terms): void {
             foreach ($this->getSearchColumns() as $key => $column) {
-                if (\is_string($column) && str($column)->contains('.')) {
+                if (str($column)->contains('.')) {
                     $column = str($column)
                         ->explode('.')
                         ->tap(static function (Collection $data) use (&$key): void {

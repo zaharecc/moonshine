@@ -18,7 +18,7 @@ final readonly class NotificationItem implements NotificationItemContract
 
     public function getId(): int|string|null
     {
-        return $this->notification->id;
+        return $this->notification->getKey();
     }
 
     public function getReadRoute(): string

@@ -48,9 +48,12 @@ class ErrorPage extends Page
             ->getTranslator()
             ->get('moonshine::ui.back');
 
+        /** @var view-string $view */
+        $view = 'moonshine::errors.404';
+
         return [
             FlexibleRender::make(
-                static fn () => view('moonshine::errors.404'),
+                static fn () => view($view),
                 ['code' => $code, 'message' => $message, 'logo' => $logo, 'backUrl' => $backUrl, 'backTitle' => $backTitle]
             ),
         ];
