@@ -23,8 +23,7 @@ class CompactLayout extends AppLayout
     {
         return [
             ...parent::assets(),
-
-            Css::make('/vendor/moonshine/assets/minimalistic.css')->defer(),
+            $this->getCompactThemeCss(),
         ];
     }
 
