@@ -17,7 +17,7 @@ final class MoonShineAuth
     {
         $provider = self::getProvider();
 
-        if(!$provider instanceof EloquentUserProvider) {
+        if (! $provider instanceof EloquentUserProvider) {
             return null;
         }
 

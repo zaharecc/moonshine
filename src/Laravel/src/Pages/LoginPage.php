@@ -14,7 +14,7 @@ class LoginPage extends Page
     protected function components(): iterable
     {
         return [
-            moonshineConfig()->getForm('login', LoginForm::class)
+            moonshineConfig()->getForm('login', LoginForm::class),
         ];
     }
 }
