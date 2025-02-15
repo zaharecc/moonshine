@@ -23,9 +23,9 @@ interface FormBuilderContract extends
 
     /**
      * @param  Closure(mixed $values, FieldsContract $fields): bool  $apply
-     * @param ?Closure(FieldContract $field): void  $default
-     * @param ?Closure(mixed $values): mixed  $before
-     * @param ?Closure(mixed $values): void  $after
+     * @param null|Closure(FieldContract $field): void  $default
+     * @param null|Closure(mixed $values): mixed  $before
+     * @param null|Closure(mixed $values): void  $after
      */
     public function apply(
         Closure $apply,
