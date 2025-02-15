@@ -25,8 +25,9 @@ final class MoonShineMemoryNotification implements MoonShineNotificationContract
         ?NotificationButtonContract $button = null,
         array $ids = [],
         string|Color|null $color = null,
+        ?string $icon = null
     ): void {
-        (new self())->notify($message, $button, $ids, $color);
+        (new self())->notify($message, $button, $ids, $color, $icon);
     }
 
     /**
@@ -37,12 +38,14 @@ final class MoonShineMemoryNotification implements MoonShineNotificationContract
         ?NotificationButtonContract $button = null,
         array $ids = [],
         string|Color|null $color = null,
+        ?string $icon = null
     ): void {
         if (! moonshineConfig()->isUseNotifications()) {
             return;
         }
 
         $color = $color instanceof Color ? $color->value : $color;
+
         $id = (string)Str::uuid();
 
         $this->messages[$id] = new NotificationMemoryItem(
@@ -51,6 +54,7 @@ final class MoonShineMemoryNotification implements MoonShineNotificationContract
             color: $color,
             date: now(),
             button: $button,
+            icon: $icon
         );
     }
 
