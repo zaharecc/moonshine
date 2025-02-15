@@ -55,6 +55,15 @@
         </classMethod>
 
         <classMethod
+            class="\MoonShine\Laravel\Resources\ModelResource"
+            method="getAsyncMethodUrl"
+            argument="0"
+        >
+            <methods xpath="$containingClass" private="false" protected="false" static="false" />
+            <stopCompletion />
+        </classMethod>
+
+        <classMethod
             class="\MoonShine\AssetManager\InlineJs"
             method="make"
             argument="0"
