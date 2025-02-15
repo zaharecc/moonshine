@@ -50,6 +50,7 @@ final readonly class NotificationItem implements NotificationItemContract
         return new NotificationButton(
             $this->notification->data['button']['label'],
             $this->notification->data['button']['link'],
+            $this->notification->data['button']['attributes'] ?? [],
         );
     }
 
