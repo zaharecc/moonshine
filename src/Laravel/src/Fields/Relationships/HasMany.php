@@ -265,7 +265,7 @@ class HasMany extends ModelRelationField implements HasFieldsContract, FieldWith
     {
         $this->isSearchable = value($condition, $this) ?? true;
 
-        if($this->isOutsideComponent()) {
+        if ($this->isOutsideComponent()) {
             $this->isSearchable = false;
         }
 
