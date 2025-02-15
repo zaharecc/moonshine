@@ -40,7 +40,7 @@ final class DatabaseNotification extends Notification
                 'link' => $this->button->getLink(),
             ],
             'color' => $this->color,
-            'icon' => $this->icon
+            'icon' => $this->icon,
         ];
     }
 }

@@ -25,8 +25,8 @@ final class MoonShineNotification implements MoonShineNotificationContract
         string $message,
         ?NotificationButtonContract $button = null,
         array $ids = [],
-            string|Color|null $color = null,
-            ?string $icon = null
+        string|Color|null $color = null,
+        ?string $icon = null
     ): void {
         app(MoonShineNotificationContract::class)->notify($message, $button, $ids, $color, $icon);
     }
