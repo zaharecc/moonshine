@@ -60,6 +60,10 @@ final class MethodController extends MoonShineController
             return $result;
         }
 
+        if (\is_string($result)) {
+            return \response($result);
+        }
+
         return $this->json(
             message: $result instanceof Throwable ? $result->getMessage() : $toast['message'],
             redirect: $result instanceof RedirectResponse ? $result->getTargetUrl() : null,
