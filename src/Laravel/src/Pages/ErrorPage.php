@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace MoonShine\Laravel\Pages;
 
+use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Laravel\Layouts\BlankLayout;
 use MoonShine\UI\Components\FlexibleRender;
 
 /**
  * @method static static make(int $code, string $message)
+ * @extends Page<null>
  */
 class ErrorPage extends Page
 {
@@ -32,6 +34,9 @@ class ErrorPage extends Page
         return $this;
     }
 
+    /**
+     * @return list<ComponentContract>
+     */
     protected function components(): iterable
     {
         $logo = moonshineAssets()->getAsset('vendor/moonshine/logo-small.svg');

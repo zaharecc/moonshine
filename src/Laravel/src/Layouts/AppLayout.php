@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MoonShine\Laravel\Layouts;
 
+use MoonShine\Contracts\MenuManager\MenuElementContract;
 use MoonShine\Laravel\Components\Fragment;
 use MoonShine\Laravel\Resources\MoonShineUserResource;
 use MoonShine\Laravel\Resources\MoonShineUserRoleResource;
@@ -21,6 +22,9 @@ use MoonShine\UI\Components\{Components,
 
 class AppLayout extends BaseLayout
 {
+    /**
+     * @return list<MenuElementContract>
+     */
     protected function menu(): array
     {
         return [

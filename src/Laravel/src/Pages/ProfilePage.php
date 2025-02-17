@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace MoonShine\Laravel\Pages;
 
 use LogicException;
+use MoonShine\Contracts\UI\ComponentContract;
+use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
 use MoonShine\Laravel\Http\Controllers\ProfileController;
 use MoonShine\Laravel\MoonShineAuth;
@@ -21,6 +23,9 @@ use MoonShine\UI\Fields\Password;
 use MoonShine\UI\Fields\PasswordRepeat;
 use MoonShine\UI\Fields\Text;
 
+/**
+ * @extends Page<null>
+ */
 class ProfilePage extends Page
 {
     use WithComponentsPusher;
@@ -40,6 +45,9 @@ class ProfilePage extends Page
         return __('moonshine::ui.profile');
     }
 
+    /**
+     * @return list<ComponentContract|FieldContract>
+     */
     protected function fields(): iterable
     {
         $userFields = array_filter([
@@ -89,6 +97,9 @@ class ProfilePage extends Page
         ];
     }
 
+    /**
+     * @return list<ComponentContract>
+     */
     protected function components(): iterable
     {
         return [

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MoonShine\Laravel\Pages;
 
+use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Support\Traits\Makeable;
 use MoonShine\UI\Components\FlexibleRender;
 
@@ -26,6 +27,9 @@ final class QuickPage extends Page
         );
     }
 
+    /**
+     * @return list<ComponentContract>
+     */
     public function components(): iterable
     {
         return [];

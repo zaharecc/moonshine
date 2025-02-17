@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MoonShine\Laravel\Layouts;
 
 use MoonShine\ColorManager\ColorManager;
+use MoonShine\Contracts\AssetManager\AssetElementContract;
 use MoonShine\Contracts\ColorManager\ColorManagerContract;
 use MoonShine\Laravel\Components\Fragment;
 use MoonShine\UI\Components\{Components,
@@ -18,6 +19,9 @@ use MoonShine\UI\Components\{Components,
 
 class CompactLayout extends AppLayout
 {
+    /**
+     * @return list<AssetElementContract>
+     */
     protected function assets(): array
     {
         return [
