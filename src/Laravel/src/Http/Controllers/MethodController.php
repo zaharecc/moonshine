@@ -61,7 +61,7 @@ final class MethodController extends MoonShineController
         }
 
         if (\is_string($result)) {
-            return \response($result);
+            return response($result);
         }
 
         return $this->json(
