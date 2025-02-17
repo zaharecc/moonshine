@@ -161,7 +161,8 @@ class DetailPage extends CrudPage
                 value: $this->getResource()->isDetailInModal() ? 9 : 10,
             )
             ->simple()
-            ->preview();
+            ->preview()
+            ->class('table-divider');
     }
 
     /**
