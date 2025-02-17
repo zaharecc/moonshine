@@ -17,7 +17,7 @@ use MoonShine\Laravel\Http\Responses\MoonShineJsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @template TResource of CrudResourceContract
+ * @template TResource of CrudResourceContract|null
  * @extends CorePage<MoonShine, TResource>
  */
 abstract class Page extends CorePage implements WithResponseModifierContract

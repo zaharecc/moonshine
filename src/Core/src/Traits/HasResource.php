@@ -8,23 +8,23 @@ use MoonShine\Contracts\Core\ResourceContract;
 use MoonShine\Core\Exceptions\ResourceException;
 
 /**
- * @template T of ResourceContract
- * @template PT of ResourceContract
+ * @template T of ResourceContract|null
+ * @template PT of ResourceContract|null
  */
 trait HasResource
 {
     /**
-     * @var ?T
+     * @var T
      */
     protected ?ResourceContract $resource = null;
 
     /**
-     * @var ?PT
+     * @var PT
      */
     protected ?ResourceContract $parentResource = null;
 
     /**
-     * @return ?PT
+     * @return PT
      */
     public function getParentResource(): ?ResourceContract
     {
@@ -34,7 +34,7 @@ trait HasResource
     /**
      * @param PT $resource
      */
-    public function setParentResource(ResourceContract $resource): static
+    public function setParentResource(?ResourceContract $resource): static
     {
         $this->parentResource = $resource;
 
