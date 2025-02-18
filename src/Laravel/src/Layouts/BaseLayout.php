@@ -63,6 +63,11 @@ abstract class BaseLayout extends AbstractLayout
         );
     }
 
+    protected function getProfileComponent(bool $sidebar = false): Profile
+    {
+        return Profile::make(withBorder: $sidebar);
+    }
+
     protected function getSidebarComponent(): Sidebar
     {
         return Sidebar::make([
@@ -84,7 +89,9 @@ abstract class BaseLayout extends AbstractLayout
                 Menu::make(),
                 When::make(
                     fn (): bool => $this->isAuthEnabled(),
-                    static fn (): array => [Profile::make(withBorder: true)],
+                    fn (): array => [
+                        $this->getProfileComponent(sidebar: true)
+                    ],
                 ),
             ])->customAttributes([
                 'class' => 'menu',
@@ -107,7 +114,9 @@ abstract class BaseLayout extends AbstractLayout
             Div::make([
                 When::make(
                     fn (): bool => $this->isAuthEnabled(),
-                    static fn (): array => [Profile::make()],
+                    fn (): array => [
+                        $this->getProfileComponent()
+                    ],
                 ),
 
                 Div::make()->class('menu-inner-divider'),
