@@ -243,4 +243,14 @@ abstract class ModelResource extends CrudResource implements
 
         return $item;
     }
+
+    /**
+     * @return string[]
+     */
+    protected function search(): array
+    {
+        return [
+            $this->getModel()->getKeyName(),
+        ];
+    }
 }
