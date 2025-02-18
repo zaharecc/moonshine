@@ -90,7 +90,7 @@ abstract class BaseLayout extends AbstractLayout
                 When::make(
                     fn (): bool => $this->isAuthEnabled(),
                     fn (): array => [
-                        $this->getProfileComponent(sidebar: true)
+                        $this->getProfileComponent(sidebar: true),
                     ],
                 ),
             ])->customAttributes([
@@ -115,7 +115,7 @@ abstract class BaseLayout extends AbstractLayout
                 When::make(
                     fn (): bool => $this->isAuthEnabled(),
                     fn (): array => [
-                        $this->getProfileComponent()
+                        $this->getProfileComponent(),
                     ],
                 ),
 
