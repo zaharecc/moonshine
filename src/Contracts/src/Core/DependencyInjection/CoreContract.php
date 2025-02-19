@@ -68,5 +68,5 @@ interface CoreContract
 
     public function getPages(): PagesContract;
 
-    public function autoload(): static;
+    public function autoload(): CoreContract;
 }

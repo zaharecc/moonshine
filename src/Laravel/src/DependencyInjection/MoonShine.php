@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MoonShine\Laravel\DependencyInjection;
 
+use MoonShine\Contracts\Core\DependencyInjection\CoreContract;
 use MoonShine\Contracts\Core\DependencyInjection\StorageContract;
 use MoonShine\Core\Core;
 use MoonShine\Core\Storage\FileStorage;
@@ -65,5 +66,20 @@ final class MoonShine extends Core
         parent::flushState();
 
         ModelRelationField::$excludeInstancing = [];
+    }
+
+    public function autoload(): CoreContract
+    {
+        if (! $this->config->isUseAutoloader()) {
+            return $this;
+        }
+
+        $cached = $this->autoload->getResources(
+            $this->getConfig()->getNamespace()
+        );
+
+        return $this
+            ->resources($cached['resources'] ?? [])
+            ->pages($cached['pages'] ?? []);
     }
 }

@@ -242,21 +242,4 @@ abstract class Core implements CoreContract, StatefulContract
             )
         );
     }
-
-    public function autoload(): static
-    {
-        // @phpstan-ignore-next-line
-        if (! $this->config->isUseAutoloader()) {
-            return $this;
-        }
-
-        $cached = $this->autoload->getResources(
-            // @phpstan-ignore-next-line
-            $this->getConfig()->getNamespace()
-        );
-
-        return $this
-            ->resources($cached['resources'] ?? [])
-            ->pages($cached['pages'] ?? []);
-    }
 }

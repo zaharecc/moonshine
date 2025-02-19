@@ -23,12 +23,13 @@ final class AutoloadCollection
 
     /**
      * @param  string  $namespace
+     * @param  bool  $withCache
      *
      * @return array<string, list<class-string<PageContract|ResourceContract>>>
      */
-    public function getResources(string $namespace): array
+    public function getResources(string $namespace, bool $withCache = true): array
     {
-        return $this->resources ??= $this->getDetected($namespace);
+        return $this->resources ??= $this->getDetected($namespace, $withCache);
     }
 
     public function getFilename(): string
@@ -38,12 +39,12 @@ final class AutoloadCollection
 
     /**
      * @param  string  $namespace
-     *
+     * @param  bool  $withCache
      * @return array<string, list<class-string<PageContract|ResourceContract>>>
      */
-    protected function getDetected(string $namespace): array
+    protected function getDetected(string $namespace, bool $withCache): array
     {
-        if (file_exists($path = $this->getFilename())) {
+        if ($withCache && file_exists($path = $this->getFilename())) {
             return require $path;
         }
 
@@ -58,7 +59,6 @@ final class AutoloadCollection
     /**
      * @param  list<class-string<PageContract>>  $pages
      * @param  array<string, list<class-string<PageContract|ResourceContract>>>  $autoload
-     *
      * @return array<string, list<class-string<PageContract|ResourceContract>>>
      */
     protected function getMerged(array $pages, array $autoload): array
@@ -74,7 +74,6 @@ final class AutoloadCollection
 
     /**
      * @param  array<string, list<class-string<PageContract|ResourceContract>>>  $items
-     *
      * @return array<string, list<class-string<PageContract|ResourceContract>>>
      */
     protected function getPrepared(array $items): array
@@ -98,7 +97,6 @@ final class AutoloadCollection
 
     /**
      * @param  string  $namespace
-     *
      * @return array<string, list<class-string<PageContract|ResourceContract>>>
      */
     protected function getFiltered(string $namespace): array
@@ -121,7 +119,6 @@ final class AutoloadCollection
 
     /**
      * @param  class-string<PageContract|ResourceContract>  $class
-     *
      * @return string
      */
     protected function getGroupName(string $class): string
@@ -136,7 +133,6 @@ final class AutoloadCollection
     /**
      * @param  class-string  $haystack
      * @param  list<class-string>|string  $needles
-     *
      * @return bool
      */
     protected function isInstanceOf(string $haystack, array|string $needles): bool
@@ -154,7 +150,6 @@ final class AutoloadCollection
 
     /**
      * @param  class-string<PageContract|ResourceContract>  $class
-     *
      * @throws \ReflectionException
      * @return bool
      */

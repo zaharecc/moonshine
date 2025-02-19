@@ -55,4 +55,8 @@ interface ConfiguratorContract extends ArrayAccess
      * @return string[]
      */
     public function getDiskOptions(): array;
+
+    public function isUseAutoloader(): bool;
+
+    public function useAutoloader(): ConfiguratorContract;
 }
