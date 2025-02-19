@@ -20,31 +20,31 @@ final class AutoloadCollection
         protected ConfiguratorContract $config,
     ) {}
 
-    public function all(string $namespace): array
+    public function getResources(string $namespace): array
     {
-        return $this->resources ??= $this->detect($namespace);
+        return $this->resources ??= $this->getDetected($namespace);
     }
 
-    public function file(): string
+    public function getFilename(): string
     {
         return base_path('bootstrap/cache/moonshine.php');
     }
 
-    protected function detect(string $namespace): array
+    protected function getDetected(string $namespace): array
     {
-        if (file_exists($path = $this->file())) {
+        if (file_exists($path = $this->getFilename())) {
             return require $path;
         }
 
-        return $this->prepare(
-            $this->merge(
-                $this->pages(),
-                $this->search($namespace)
+        return $this->getPrepared(
+            $this->getMerged(
+                $this->getPages(),
+                $this->getFiltered($namespace)
             )
         );
     }
 
-    protected function merge(array $pages, array $autoload): array
+    protected function getMerged(array $pages, array $autoload): array
     {
         if (! $pages) {
             return $autoload;
@@ -55,7 +55,7 @@ final class AutoloadCollection
         return $autoload;
     }
 
-    protected function prepare(array $items): array
+    protected function getPrepared(array $items): array
     {
         foreach ($items as &$values) {
             $values = Collection::make($values)->map(
@@ -66,13 +66,13 @@ final class AutoloadCollection
         return $items;
     }
 
-    protected function pages(): array
+    protected function getPages(): array
     {
         // @phpstan-ignore-next-line
         return $this->config->getPages();
     }
 
-    protected function search(string $namespace): array
+    protected function getFiltered(string $namespace): array
     {
         return Collection::make(ClassLoader::getRegisteredLoaders())
             ->map(
@@ -81,25 +81,25 @@ final class AutoloadCollection
                     ->flip()
                     ->values()
                     ->filter(function (string $class) {
-                        return $this->instanceOf($class, [PageContract::class, ResourceContract::class])
+                        return $this->isInstanceOf($class, [PageContract::class, ResourceContract::class])
                             && $this->isNotAbstract($class);
                     })
             )
             ->collapse()
-            ->groupBy(fn (string $class) => $this->groupBy($class))
+            ->groupBy(fn (string $class) => $this->getGroupName($class))
             ->toArray();
     }
 
-    protected function groupBy(string $class): string
+    protected function getGroupName(string $class): string
     {
-        if ($this->instanceOf($class, PageContract::class)) {
+        if ($this->isInstanceOf($class, PageContract::class)) {
             return 'pages';
         }
 
         return 'resources';
     }
 
-    protected function instanceOf(string $haystack, array|string $needles): bool
+    protected function isInstanceOf(string $haystack, array|string $needles): bool
     {
         $needles = is_array($needles) ? $needles : [$needles];
 

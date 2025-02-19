@@ -21,14 +21,14 @@ class OptimizeCommand extends MoonShineCommand
         $this->components->info('Caching MoonShine pages and resources.');
 
         $this->components->task('Search', fn () => $this->search($autoload));
-        $this->components->task('Storing', fn () => $this->store($autoload->file()));
+        $this->components->task('Storing', fn () => $this->store($autoload->getFilename()));
 
         return self::SUCCESS;
     }
 
     protected function search(AutoloadCollection $autoload): void
     {
-        $this->sources = $autoload->all($this->getNamespace());
+        $this->sources = $autoload->getResources($this->getNamespace());
     }
 
     protected function store(string $filename): void

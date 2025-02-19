@@ -250,7 +250,7 @@ abstract class Core implements CoreContract, StatefulContract
             return $this;
         }
 
-        $cached = $this->autoload->all(
+        $cached = $this->autoload->getResources(
             // @phpstan-ignore-next-line
             $this->getConfig()->getNamespace()
         );

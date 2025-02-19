@@ -20,7 +20,7 @@ final class OptimizeCommandTest extends TestCase
     #[TestDox('it successfully make the cache file')]
     public function successfulMakeCache(): void
     {
-        $path = $this->app->make(AutoloadCollection::class)->file();
+        $path = $this->app->make(AutoloadCollection::class)->getFilename();
 
         if (file_exists($path)) {
             @unlink($path);

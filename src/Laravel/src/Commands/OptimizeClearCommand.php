@@ -20,7 +20,7 @@ class OptimizeClearCommand extends MoonShineCommand
     {
         $this->components->info('Clearing cached moonshine file.');
 
-        if (file_exists($file = $autoload->file())) {
+        if (file_exists($file = $autoload->getFilename())) {
             @unlink($file);
 
             info('MoonShine\'s cache has been cleared.');

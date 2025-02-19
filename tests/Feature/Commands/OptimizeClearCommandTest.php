@@ -20,7 +20,7 @@ final class OptimizeClearCommandTest extends TestCase
     #[TestDox('it successfully delete the cache file')]
     public function deletedSuccessfully(): void
     {
-        $path = $this->app->make(AutoloadCollection::class)->file();
+        $path = $this->app->make(AutoloadCollection::class)->getFilename();
 
         file_put_contents($path, "<?php\nreturn [];");
 
@@ -38,7 +38,7 @@ final class OptimizeClearCommandTest extends TestCase
     #[TestDox('it successfully delete the cache file')]
     public function notExist(): void
     {
-        $path = $this->app->make(AutoloadCollection::class)->file();
+        $path = $this->app->make(AutoloadCollection::class)->getFilename();
 
         if (file_exists($path)) {
             @unlink($path);
