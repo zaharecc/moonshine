@@ -14,12 +14,18 @@ use ReflectionClass;
 
 final class AutoloadCollection
 {
+    /** @var array<string, list<class-string<PageContract|ResourceContract>>>|null */
     protected ?array $resources = null;
 
     public function __construct(
         protected ConfiguratorContract $config,
     ) {}
 
+    /**
+     * @param  string  $namespace
+     *
+     * @return array<string, list<class-string<PageContract|ResourceContract>>>
+     */
     public function getResources(string $namespace): array
     {
         return $this->resources ??= $this->getDetected($namespace);
@@ -30,6 +36,11 @@ final class AutoloadCollection
         return base_path('bootstrap/cache/moonshine.php');
     }
 
+    /**
+     * @param  string  $namespace
+     *
+     * @return array<string, list<class-string<PageContract|ResourceContract>>>
+     */
     protected function getDetected(string $namespace): array
     {
         if (file_exists($path = $this->getFilename())) {
@@ -44,6 +55,12 @@ final class AutoloadCollection
         );
     }
 
+    /**
+     * @param  list<class-string<PageContract>>  $pages
+     * @param  array<string, list<class-string<PageContract|ResourceContract>>>  $autoload
+     *
+     * @return array<string, list<class-string<PageContract|ResourceContract>>>
+     */
     protected function getMerged(array $pages, array $autoload): array
     {
         if (! $pages) {
@@ -55,6 +72,11 @@ final class AutoloadCollection
         return $autoload;
     }
 
+    /**
+     * @param  array<string, list<class-string<PageContract|ResourceContract>>>  $items
+     *
+     * @return array<string, list<class-string<PageContract|ResourceContract>>>
+     */
     protected function getPrepared(array $items): array
     {
         foreach ($items as &$values) {
@@ -66,12 +88,19 @@ final class AutoloadCollection
         return $items;
     }
 
+    /**
+     * @return array<class-string<PageContract>>
+     */
     protected function getPages(): array
     {
-        // @phpstan-ignore-next-line
         return $this->config->getPages();
     }
 
+    /**
+     * @param  string  $namespace
+     *
+     * @return array<string, list<class-string<PageContract|ResourceContract>>>
+     */
     protected function getFiltered(string $namespace): array
     {
         return Collection::make(ClassLoader::getRegisteredLoaders())
@@ -90,6 +119,11 @@ final class AutoloadCollection
             ->toArray();
     }
 
+    /**
+     * @param  class-string<PageContract|ResourceContract>  $class
+     *
+     * @return string
+     */
     protected function getGroupName(string $class): string
     {
         if ($this->isInstanceOf($class, PageContract::class)) {
@@ -99,6 +133,12 @@ final class AutoloadCollection
         return 'resources';
     }
 
+    /**
+     * @param  class-string  $haystack
+     * @param  list<class-string>|string  $needles
+     *
+     * @return bool
+     */
     protected function isInstanceOf(string $haystack, array|string $needles): bool
     {
         $needles = is_array($needles) ? $needles : [$needles];
@@ -112,6 +152,12 @@ final class AutoloadCollection
         return false;
     }
 
+    /**
+     * @param  class-string<PageContract|ResourceContract>  $class
+     *
+     * @throws \ReflectionException
+     * @return bool
+     */
     protected function isNotAbstract(string $class): bool
     {
         return ! (new ReflectionClass($class))->isAbstract();
