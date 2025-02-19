@@ -25,6 +25,8 @@
         "php": "^8.2",
         "ext-curl": "*",
         "ext-json": "*",
+        "composer-plugin-api": "^2.0",
+        "illuminate/collections": "^10|^11",
         "illuminate/contracts": "^10|^11",
         "illuminate/support": "^10|^11",
         "illuminate/view": "^10|^11",

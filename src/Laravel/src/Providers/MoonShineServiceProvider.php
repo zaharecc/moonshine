@@ -50,6 +50,8 @@ use MoonShine\Laravel\Commands\MakePolicyCommand;
 use MoonShine\Laravel\Commands\MakeResourceCommand;
 use MoonShine\Laravel\Commands\MakeTypeCastCommand;
 use MoonShine\Laravel\Commands\MakeUserCommand;
+use MoonShine\Laravel\Commands\OptimizeClearCommand;
+use MoonShine\Laravel\Commands\OptimizeCommand;
 use MoonShine\Laravel\Commands\PublishCommand;
 use MoonShine\Laravel\Contracts\Notifications\MoonShineNotificationContract;
 use MoonShine\Laravel\DependencyInjection\AssetResolver;
@@ -95,6 +97,8 @@ final class MoonShineServiceProvider extends ServiceProvider
         MakeTypeCastCommand::class,
         PublishCommand::class,
         MakePolicyCommand::class,
+        OptimizeCommand::class,
+        OptimizeClearCommand::class,
     ];
 
     /**
@@ -282,6 +286,14 @@ final class MoonShineServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->commands($this->commands);
+
+            if (method_exists($this, 'optimizes')) {
+                $this->optimizes(
+                    optimize: 'moonshine:optimize',
+                    clear   : 'moonshine:optimize-clear',
+                    key     : 'moonshine'
+                );
+            }
         }
 
         Blade::componentNamespace('MoonShine\UI\Components', 'moonshine');

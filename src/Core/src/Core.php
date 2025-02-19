@@ -20,6 +20,7 @@ use MoonShine\Contracts\Core\ResourceContract;
 use MoonShine\Contracts\Core\ResourcesContract;
 use MoonShine\Contracts\Core\StatefulContract;
 use MoonShine\Contracts\MenuManager\MenuManagerContract;
+use MoonShine\Core\Collections\AutoloadCollection;
 use MoonShine\Core\Pages\Pages;
 use MoonShine\Core\Resources\Resources;
 use MoonShine\Support\Memoize\MemoizeRepository;
@@ -50,6 +51,7 @@ abstract class Core implements CoreContract, StatefulContract
         protected RouterContract $router,
         protected ConfiguratorContract $config,
         protected TranslatorContract $translator,
+        protected AutoloadCollection $autoload,
     ) {
         static::setInstance(
             fn (): mixed => $this->getContainer(CoreContract::class)
@@ -239,5 +241,22 @@ abstract class Core implements CoreContract, StatefulContract
                 collect($this->pages)->except('error')
             )
         );
+    }
+
+    public function autoload(): static
+    {
+        // @phpstan-ignore-next-line
+        if (! $this->config->isUseAutoloader()) {
+            return $this;
+        }
+
+        $cached = $this->autoload->all(
+            // @phpstan-ignore-next-line
+            $this->getConfig()->getNamespace()
+        );
+
+        return $this
+            ->resources($cached['resources'] ?? [])
+            ->pages($cached['pages'] ?? []);
     }
 }

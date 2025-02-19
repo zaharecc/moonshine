@@ -26,6 +26,7 @@ return [
 
 
     // Default flags
+    'use_autoloader' => true,
     'use_migrations' => false,
     'use_notifications' => false,
     'use_database_notifications' => false,
