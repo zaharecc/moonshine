@@ -15,7 +15,7 @@ use ReflectionClass;
 final class AutoloadCollection
 {
     /** @var array<string, list<class-string<PageContract|ResourceContract>>>|null */
-    protected ?array $resources = null;
+    protected ?array $sources = null;
 
     public function __construct(
         protected ConfiguratorContract $config,
@@ -24,12 +24,11 @@ final class AutoloadCollection
     /**
      * @param  string  $namespace
      * @param  bool  $withCache
-     *
      * @return array<string, list<class-string<PageContract|ResourceContract>>>
      */
-    public function getResources(string $namespace, bool $withCache = true): array
+    public function getSources(string $namespace, bool $withCache = true): array
     {
-        return $this->resources ??= $this->getDetected($namespace, $withCache);
+        return $this->sources ??= $this->getDetected($namespace, $withCache);
     }
 
     public function getFilename(): string

@@ -30,8 +30,7 @@ final class OptimizeCommandTest extends TestCase
 
         $this->artisan(OptimizeCommand::class)
             ->expectsOutputToContain('Caching MoonShine pages and resources.')
-            ->expectsOutputToContain('Search')
-            ->expectsOutputToContain('Storing')
+            ->expectsOutputToContain('MoonShine cached successfully.')
             ->assertSuccessful();
 
         $this->assertFileExists($path);

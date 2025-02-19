@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace MoonShine\Laravel\Commands;
 
 use Illuminate\Filesystem\Filesystem;
+use LogicException;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Contracts\Core\ResourceContract;
 use MoonShine\Core\Collections\AutoloadCollection;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Throwable;
 
 #[AsCommand(name: 'moonshine:optimize')]
 class OptimizeCommand extends MoonShineCommand
@@ -17,28 +19,53 @@ class OptimizeCommand extends MoonShineCommand
 
     protected $description = 'Cache MoonShine pages and resources to increase performance';
 
-    /** @var array<string, list<class-string<PageContract|ResourceContract>>>|null */
-    protected ?array $sources = null;
-
-    public function handle(AutoloadCollection $autoload, Filesystem $storage): int
+    public function handle(AutoloadCollection $autoload, Filesystem $files): int
     {
         $this->components->info('Caching MoonShine pages and resources.');
 
-        $this->components->task('Search', fn () => $this->search($autoload));
-        $this->components->task('Storing', fn () => $this->store($storage, $autoload->getFilename()));
+        $filename = $autoload->getFilename();
+
+        $this->store($files, $filename, $this->getFreshSources($autoload));
+
+        $this->validateCache($files, $filename);
+
+        $this->components->info('MoonShine cached successfully.');
 
         return self::SUCCESS;
     }
 
-    protected function search(AutoloadCollection $autoload): void
+    /**
+     * @param  \MoonShine\Core\Collections\AutoloadCollection  $autoload
+     * @return array<string, list<class-string<PageContract|ResourceContract>>>
+     */
+    protected function getFreshSources(AutoloadCollection $autoload): array
     {
-        $this->sources = $autoload->getResources($this->getNamespace(), false);
+        return $autoload->getSources($this->getNamespace(), false);
     }
 
-    protected function store(Filesystem $storage, string $cachePath): void
+    /**
+     * @param  \Illuminate\Filesystem\Filesystem  $storage
+     * @param  string  $cachePath
+     * @param  array<string, list<class-string<PageContract|ResourceContract>>>  $sources
+     * @return void
+     */
+    protected function store(Filesystem $storage, string $cachePath, array $sources): void
     {
         $storage->put(
-            $cachePath, '<?php return '.var_export($this->sources, true).';'.PHP_EOL
+            $cachePath,
+            '<?php return ' . var_export($sources, true) . ';' . PHP_EOL
         );
+    }
+
+    protected function validateCache(Filesystem $files, string $filename): void
+    {
+        try {
+            require $filename;
+        }
+        catch (Throwable $e) {
+            $files->delete($filename);
+
+            throw new LogicException('Your MoonShine file are not serializable.', 0, $e);
+        }
     }
 }

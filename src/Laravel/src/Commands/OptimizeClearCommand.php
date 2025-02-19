@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MoonShine\Laravel\Commands;
 
+use Illuminate\Filesystem\Filesystem;
 use MoonShine\Core\Collections\AutoloadCollection;
 use Symfony\Component\Console\Attribute\AsCommand;
 
@@ -16,12 +17,12 @@ class OptimizeClearCommand extends MoonShineCommand
 
     protected $description = 'Remove the cached bootstrap files';
 
-    public function handle(AutoloadCollection $autoload): int
+    public function handle(AutoloadCollection $autoload, Filesystem $files): int
     {
         $this->components->info('Clearing cached moonshine file.');
 
-        if (file_exists($file = $autoload->getFilename())) {
-            @unlink($file);
+        if ($files->exists($file = $autoload->getFilename())) {
+            $files->delete($file);
 
             info('MoonShine\'s cache has been cleared.');
         }

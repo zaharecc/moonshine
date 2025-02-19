@@ -74,7 +74,7 @@ final class MoonShine extends Core
             return $this;
         }
 
-        $cached = $this->autoload->getResources(
+        $cached = $this->autoload->getSources(
             $this->getConfig()->getNamespace()
         );
 
