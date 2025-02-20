@@ -13,7 +13,7 @@ use UnitEnum;
 final readonly class Options implements Arrayable
 {
     /**
-     * @param  array<Option|OptionGroup|array<int|string,string>>  $values
+     * @param  array<int|string,string|Option|OptionGroup|array<int|string,string>>  $values
      * @param  mixed|null  $value
      * @param  array<OptionProperty>|Closure  $properties
      */
