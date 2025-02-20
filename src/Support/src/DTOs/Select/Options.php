@@ -130,7 +130,7 @@ final readonly class Options implements Arrayable
         $values = $this->getValues();
 
         $options = $values->mapWithKeys(function (Option|OptionGroup $option): array {
-            if($option instanceof OptionGroup) {
+            if ($option instanceof OptionGroup) {
                 return [$option->getLabel() => collect($option->getValues()->toArray())->pluck('label', 'value')->toArray()];
             }
 
