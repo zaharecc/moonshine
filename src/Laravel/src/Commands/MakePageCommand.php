@@ -101,7 +101,7 @@ class MakePageCommand extends MoonShineCommand
 
         $this->wasCreatedInfo($stubsPath);
 
-        if (! $this->option('without-register')) {
+        if ($extends === 'Page' && ! $this->option('without-register')) {
             self::addResourceOrPageToProviderFile(
                 $stubsPath->name,
                 page: true,
