@@ -32,7 +32,7 @@ class Fragment extends AbstractWithComponents implements HasAsyncContract
             $page = $fragment->getNowOnPage() ?? moonshineRequest()->findPage();
             $resource = $fragment->getNowOnResource() ?? moonshineRequest()->getResource();
 
-            if(\is_null($page) && \is_null($resource)) {
+            if (\is_null($page) && \is_null($resource)) {
                 return moonshineRequest()->fullUrlWithQuery([
                     '_fragment-load' => $fragment->getName(),
                 ]);
