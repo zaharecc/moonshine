@@ -7,6 +7,7 @@ namespace MoonShine\Laravel\Pages\Crud;
 use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
+use MoonShine\Contracts\UI\HasModalMode;
 use MoonShine\Core\Exceptions\ResourceException;
 use MoonShine\Laravel\Collections\Fields;
 use MoonShine\Laravel\Components\Fragment;
@@ -17,6 +18,7 @@ use MoonShine\Laravel\Resources\CrudResource;
 use MoonShine\Support\AlpineJs;
 use MoonShine\Support\Enums\JsEvent;
 use MoonShine\Support\Enums\PageType;
+use MoonShine\UI\Components\ActionButton;
 use MoonShine\UI\Components\ActionGroup;
 use MoonShine\UI\Components\FormBuilder;
 use MoonShine\UI\Components\Heading;
@@ -152,9 +154,10 @@ class FormPage extends CrudPage
 
             /** @var ModelRelationField $field */
             foreach ($outsideFields as $field) {
+
                 $components[] = LineBreak::make();
 
-                $components[] = Fragment::make([
+                $fieldComponent = Fragment::make([
                     Heading::make($field->getLabel()),
 
                     $field->fillCast(
@@ -162,6 +165,15 @@ class FormPage extends CrudPage
                         $field->getResource()?->getCaster()
                     ),
                 ])->name($field->getRelationName());
+
+                $components[] = $field instanceof HasModalMode && $field->isModalMode()
+                    ? ActionButton::make($field->getLabel())
+                        ->inModal(
+                            title: $field->getLabel(),
+                            content: (string) $fieldComponent
+                        )
+                    : $fieldComponent
+                ;
             }
         }
 
