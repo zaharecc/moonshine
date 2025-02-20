@@ -28,6 +28,10 @@ final readonly class Options implements Arrayable
     {
         return collect($this->values)
             ->map(function (array|string|OptionGroup|Option $labelOrValues, int|string $valueOrLabel): OptionGroup|Option {
+                if ($labelOrValues instanceof Option) {
+                    return $labelOrValues;
+                }
+
                 $toOption = fn (string $label, string $value): Option => new Option(
                     label: $label,
                     value: $value,
@@ -50,10 +54,6 @@ final readonly class Options implements Arrayable
                         label: $valueOrLabel,
                         values: new Options($options)
                     );
-                }
-
-                if ($labelOrValues instanceof Option) {
-                    return $labelOrValues;
                 }
 
                 return $toOption($labelOrValues, (string) $valueOrLabel);
