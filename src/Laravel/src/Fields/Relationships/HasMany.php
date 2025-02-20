@@ -28,14 +28,14 @@ use MoonShine\Laravel\Collections\Fields;
 use MoonShine\Laravel\Contracts\Fields\HasModalModeContract;
 use MoonShine\Laravel\Contracts\Fields\HasTabModeContract;
 use MoonShine\Laravel\Resources\ModelResource;
-use MoonShine\Laravel\Traits\Fields\ModalModeTrait;
+use MoonShine\Laravel\Traits\Fields\HasModalModeConcern;
 use MoonShine\Laravel\Traits\Fields\WithRelatedLink;
 use MoonShine\UI\Components\ActionGroup;
 use MoonShine\UI\Components\Layout\Flex;
 use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\UI\Contracts\HasUpdateOnPreviewContract;
 use MoonShine\UI\Fields\Field;
-use MoonShine\UI\Traits\Fields\TabModeTrait;
+use MoonShine\UI\Traits\Fields\HasTabModeConcern;
 use MoonShine\UI\Traits\WithFields;
 use Throwable;
 
@@ -49,8 +49,8 @@ class HasMany extends ModelRelationField implements HasFieldsContract, FieldWith
 {
     use WithFields;
     use WithRelatedLink;
-    use ModalModeTrait;
-    use TabModeTrait;
+    use HasModalModeConcern;
+    use HasTabModeConcern;
 
     protected string $view = 'moonshine::fields.relationships.has-many';
 
@@ -626,8 +626,8 @@ class HasMany extends ModelRelationField implements HasFieldsContract, FieldWith
     protected function viewData(): array
     {
         return $this->isModalMode()
-            ? $this->modalView()
-            : $this->defaultView()
+            ? $this->modalViewData()
+            : $this->defaultViewData()
         ;
     }
 
@@ -635,7 +635,7 @@ class HasMany extends ModelRelationField implements HasFieldsContract, FieldWith
      * @return array<string, mixed>
      * @throws Throwable
      */
-    public function modalView(): array
+    protected function modalViewData(): array
     {
         $components = new Components();
         $flexComponents = new Components();
@@ -665,7 +665,7 @@ class HasMany extends ModelRelationField implements HasFieldsContract, FieldWith
      * @return array<string, mixed>
      * @throws Throwable
      */
-    public function defaultView(): array
+    public function defaultViewData(): array
     {
         return [
             'component' => $this->getComponent(),

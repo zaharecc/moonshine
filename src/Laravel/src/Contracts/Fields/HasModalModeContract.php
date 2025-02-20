@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace MoonShine\Laravel\Contracts\Fields;
 
 use Closure;
+use MoonShine\Contracts\UI\ActionButtonContract;
 use MoonShine\Core\Collections\Components;
-use MoonShine\UI\Components\ActionButton;
 
 interface HasModalModeContract
 {
@@ -18,5 +18,5 @@ interface HasModalModeContract
         Components $components,
         string $label,
         string $fragmentName
-    ): ActionButton;
+    ): ActionButtonContract;
 }
