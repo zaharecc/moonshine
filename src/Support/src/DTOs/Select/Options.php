@@ -12,10 +12,15 @@ use UnitEnum;
 
 final readonly class Options implements Arrayable
 {
+    /**
+     * @param  array<Option|OptionGroup|array<int|string,string>>  $values
+     * @param  mixed|null  $value
+     * @param  array<OptionProperty>|Closure  $properties
+     */
     public function __construct(
         private array $values = [],
         private mixed $value = null,
-        private array|Closure|OptionProperty $properties = []
+        private array|Closure $properties = []
     ) {
     }
 
@@ -115,5 +120,28 @@ final readonly class Options implements Arrayable
     public function toArray(): array
     {
         return $this->getValues()->toArray();
+    }
+
+    /**
+     * @return array{options: array, properties: array}
+     */
+    public function toRaw(): array
+    {
+        $values = $this->getValues();
+
+        $options = $values->mapWithKeys(function (Option|OptionGroup $option): array {
+            if($option instanceof OptionGroup) {
+                return [$option->getLabel() => collect($option->getValues()->toArray())->pluck('label', 'value')->toArray()];
+            }
+
+            return [$option->getValue() => $option->getLabel()];
+        })->toArray();
+
+        $properties = collect($this->flatten())->pluck('properties', 'value')->toArray();
+
+        return [
+            'options' => $options,
+            'properties' => $properties,
+        ];
     }
 }
