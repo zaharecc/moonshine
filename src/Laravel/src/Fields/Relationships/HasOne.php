@@ -71,6 +71,8 @@ class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithC
 
     public function disableOutside(): static
     {
+        $this->modalMode();
+
         $this->outsideComponent = false;
 
         return $this;
