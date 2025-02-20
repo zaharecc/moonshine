@@ -22,6 +22,7 @@ use MoonShine\Contracts\UI\FieldWithComponentContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
 use MoonShine\Contracts\UI\HasFieldsContract;
 use MoonShine\Contracts\UI\HasModalMode;
+use MoonShine\Contracts\UI\HasTabMode;
 use MoonShine\Contracts\UI\TableBuilderContract;
 use MoonShine\Laravel\Buttons\HasManyButton;
 use MoonShine\Laravel\Collections\Fields;
@@ -32,6 +33,7 @@ use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\UI\Contracts\HasUpdateOnPreviewContract;
 use MoonShine\UI\Fields\Field;
 use MoonShine\UI\Traits\Fields\ModalModeTrait;
+use MoonShine\UI\Traits\Fields\TabModeTrait;
 use MoonShine\UI\Traits\WithFields;
 use Throwable;
 
@@ -41,11 +43,12 @@ use Throwable;
  * @implements HasFieldsContract<Fields|FieldsContract>
  * @implements FieldWithComponentContract<TableBuilderContract|FormBuilderContract|ActionButtonContract>
  */
-class HasMany extends ModelRelationField implements HasFieldsContract, FieldWithComponentContract, HasModalMode
+class HasMany extends ModelRelationField implements HasFieldsContract, FieldWithComponentContract, HasModalMode, HasTabMode
 {
     use WithFields;
     use WithRelatedLink;
     use ModalModeTrait;
+    use TabModeTrait;
 
     protected string $view = 'moonshine::fields.relationships.has-many';
 

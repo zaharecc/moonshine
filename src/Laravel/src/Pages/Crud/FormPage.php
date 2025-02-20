@@ -8,6 +8,7 @@ use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
 use MoonShine\Contracts\UI\HasModalMode;
+use MoonShine\Contracts\UI\HasTabMode;
 use MoonShine\Core\Exceptions\ResourceException;
 use MoonShine\Laravel\Collections\Fields;
 use MoonShine\Laravel\Components\Fragment;
@@ -25,6 +26,8 @@ use MoonShine\UI\Components\Heading;
 use MoonShine\UI\Components\Layout\Divider;
 use MoonShine\UI\Components\Layout\LineBreak;
 use MoonShine\UI\Components\MoonShineComponent;
+use MoonShine\UI\Components\Tabs;
+use MoonShine\UI\Components\Tabs\Tab;
 use MoonShine\UI\Fields\Hidden;
 use Throwable;
 
@@ -149,32 +152,49 @@ class FormPage extends CrudPage
 
         $outsideFields = $this->getResource()->getOutsideFields()->formFields();
 
-        if ($outsideFields->isNotEmpty()) {
-            $components[] = Divider::make();
+        if ($outsideFields->isEmpty()) {
+            $components = array_merge($components, $this->getEmptyModals());
+            return array_merge($components, $this->getResource()->getFormPageComponents());
+        }
 
-            /** @var ModelRelationField $field */
-            foreach ($outsideFields as $field) {
+        $tabs = [];
 
-                $components[] = LineBreak::make();
+        $components[] = Divider::make();
 
-                $fieldComponent = Fragment::make([
-                    Heading::make($field->getLabel()),
+        /** @var ModelRelationField $field */
+        foreach ($outsideFields as $field) {
 
-                    $field->fillCast(
-                        $item,
-                        $field->getResource()?->getCaster()
-                    ),
-                ])->name($field->getRelationName());
+            $components[] = LineBreak::make();
 
-                $components[] = $field instanceof HasModalMode && $field->isModalMode()
-                    ? ActionButton::make($field->getLabel())
-                        ->inModal(
-                            title: $field->getLabel(),
-                            content: (string) $fieldComponent
-                        )
-                    : $fieldComponent
-                ;
+            $fieldComponent = Fragment::make([
+                Heading::make($field->getLabel()),
+
+                $field->fillCast(
+                    $item,
+                    $field->getResource()?->getCaster()
+                ),
+            ])->name($field->getRelationName());
+
+            if($field instanceof HasModalMode && $field->isModalMode()) {
+                $fieldComponent = ActionButton::make($field->getLabel())
+                    ->inModal(
+                        title: $field->getLabel(),
+                        content: (string) $fieldComponent
+                    );
             }
+
+            if($field instanceof HasTabMode && $field->isTabMode()) {
+                $tabs[] = Tab::make($field->getLabel(), [
+                    $fieldComponent
+                ]);
+                continue;
+            }
+
+            $components[] = $fieldComponent;
+        }
+
+        if($tabs !== []) {
+            $components[] = Tabs::make($tabs);
         }
 
         $components = array_merge($components, $this->getEmptyModals());

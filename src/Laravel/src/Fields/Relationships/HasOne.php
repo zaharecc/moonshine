@@ -18,6 +18,7 @@ use MoonShine\Contracts\UI\FieldWithComponentContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
 use MoonShine\Contracts\UI\HasFieldsContract;
 use MoonShine\Contracts\UI\HasModalMode;
+use MoonShine\Contracts\UI\HasTabMode;
 use MoonShine\Contracts\UI\TableBuilderContract;
 use MoonShine\Laravel\Collections\Fields;
 use MoonShine\Laravel\Exceptions\ModelRelationFieldException;
@@ -29,6 +30,7 @@ use MoonShine\UI\Exceptions\FieldException;
 use MoonShine\UI\Fields\Field;
 use MoonShine\UI\Fields\Hidden;
 use MoonShine\UI\Traits\Fields\ModalModeTrait;
+use MoonShine\UI\Traits\Fields\TabModeTrait;
 use MoonShine\UI\Traits\WithFields;
 use Throwable;
 
@@ -38,10 +40,11 @@ use Throwable;
  * @implements HasFieldsContract<Fields|FieldsContract>
  * @implements FieldWithComponentContract<FormBuilderContract>
  */
-class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithComponentContract, HasModalMode
+class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithComponentContract, HasModalMode, HasTabMode
 {
     use WithFields;
     use ModalModeTrait;
+    use TabModeTrait;
 
     protected string $view = 'moonshine::fields.relationships.has-one';
 
