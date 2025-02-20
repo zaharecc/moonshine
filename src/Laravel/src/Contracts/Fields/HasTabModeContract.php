@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MoonShine\Contracts\UI;
+namespace MoonShine\Laravel\Contracts\Fields;
 
 use Closure;
 

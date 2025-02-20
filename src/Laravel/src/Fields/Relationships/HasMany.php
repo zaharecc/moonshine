@@ -21,14 +21,16 @@ use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Contracts\UI\FieldWithComponentContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
 use MoonShine\Contracts\UI\HasFieldsContract;
-use MoonShine\Contracts\UI\HasModalModeContract;
-use MoonShine\Contracts\UI\HasTabModeContract;
 use MoonShine\Contracts\UI\TableBuilderContract;
+use MoonShine\Core\Collections\Components;
 use MoonShine\Laravel\Buttons\HasManyButton;
 use MoonShine\Laravel\Collections\Fields;
+use MoonShine\Laravel\Contracts\Fields\HasModalModeContract;
+use MoonShine\Laravel\Contracts\Fields\HasTabModeContract;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Laravel\Traits\Fields\WithRelatedLink;
 use MoonShine\UI\Components\ActionGroup;
+use MoonShine\UI\Components\Layout\Flex;
 use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\UI\Contracts\HasUpdateOnPreviewContract;
 use MoonShine\UI\Fields\Field;
@@ -622,6 +624,48 @@ class HasMany extends ModelRelationField implements HasFieldsContract, FieldWith
      * @throws Throwable
      */
     protected function viewData(): array
+    {
+        return $this->isModalMode()
+            ? $this->modalView()
+            : $this->defaultView()
+        ;
+    }
+
+    /**
+     * @return array<string, mixed>
+     * @throws Throwable
+     */
+    public function modalView(): array
+    {
+        $components = new Components();
+        $flexComponents = new Components();
+
+        if($this->isCreatable()) {
+            $flexComponents->add($this->getCreateButton());
+        }
+
+        if(! \is_null($this->buttons)) {
+            $flexComponents->add($this->getButtons());
+        }
+
+        if($flexComponents->isNotEmpty()) {
+            $components->add(Flex::make($flexComponents)->justifyAlign('between'));
+        }
+
+        $components->add($this->getComponent());
+
+        return [
+            'component' => $this->getModalButton(
+                $components, $this->getLabel(), $this->getRelationName()
+            ),
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     * @throws Throwable
+     */
+    public function defaultView(): array
     {
         return [
             'component' => $this->getComponent(),

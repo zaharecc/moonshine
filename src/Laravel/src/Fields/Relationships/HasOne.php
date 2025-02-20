@@ -17,10 +17,11 @@ use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Contracts\UI\FieldWithComponentContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
 use MoonShine\Contracts\UI\HasFieldsContract;
-use MoonShine\Contracts\UI\HasModalModeContract;
-use MoonShine\Contracts\UI\HasTabModeContract;
 use MoonShine\Contracts\UI\TableBuilderContract;
+use MoonShine\Core\Collections\Components;
 use MoonShine\Laravel\Collections\Fields;
+use MoonShine\Laravel\Contracts\Fields\HasModalModeContract;
+use MoonShine\Laravel\Contracts\Fields\HasTabModeContract;
 use MoonShine\Laravel\Exceptions\ModelRelationFieldException;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\UI\Components\FormBuilder;
@@ -67,6 +68,13 @@ class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithC
     protected ?Closure $modifyTable = null;
 
     protected ?FormBuilderContract $resolvedComponent = null;
+
+    public function disableOutside(): static
+    {
+        $this->outsideComponent = false;
+
+        return $this;
+    }
 
     public function hasWrapper(): bool
     {
@@ -341,7 +349,11 @@ class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithC
     protected function viewData(): array
     {
         return [
-            'component' => $this->getComponent(),
+            'component' => $this->isModalMode()
+                ? $this->getModalButton(
+                    Components::make([$this->getComponent()]), $this->getLabel(), $this->getRelationName()
+                )
+                : $this->getComponent(),
         ];
     }
 }

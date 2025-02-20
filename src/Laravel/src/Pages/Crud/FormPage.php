@@ -7,11 +7,12 @@ namespace MoonShine\Laravel\Pages\Crud;
 use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
-use MoonShine\Contracts\UI\HasModalModeContract;
-use MoonShine\Contracts\UI\HasTabModeContract;
+use MoonShine\Contracts\UI\HasTabMode;
 use MoonShine\Core\Exceptions\ResourceException;
 use MoonShine\Laravel\Collections\Fields;
 use MoonShine\Laravel\Components\Fragment;
+use MoonShine\Laravel\Contracts\Fields\HasModalModeContract;
+use MoonShine\Laravel\Contracts\Fields\HasTabModeContract;
 use MoonShine\Laravel\Enums\Ability;
 use MoonShine\Laravel\Enums\Action;
 use MoonShine\Laravel\Fields\Relationships\ModelRelationField;
@@ -19,7 +20,6 @@ use MoonShine\Laravel\Resources\CrudResource;
 use MoonShine\Support\AlpineJs;
 use MoonShine\Support\Enums\JsEvent;
 use MoonShine\Support\Enums\PageType;
-use MoonShine\UI\Components\ActionButton;
 use MoonShine\UI\Components\ActionGroup;
 use MoonShine\UI\Components\FormBuilder;
 use MoonShine\UI\Components\Heading;
@@ -166,22 +166,20 @@ class FormPage extends CrudPage
 
             $components[] = LineBreak::make();
 
-            $fieldComponent = Fragment::make([
-                Heading::make($field->getLabel()),
-
-                $field->fillCast(
+            $fieldComponent = $field instanceof HasModalModeContract && $field->isModalMode()
+                // With the modalMode, the field is already inside the fragment
+                ? $field->fillCast(
                     $item,
                     $field->getResource()?->getCaster()
-                ),
-            ])->name($field->getRelationName());
+                )
+                : Fragment::make([
+                    Heading::make($field->getLabel()),
 
-            if($field instanceof HasModalModeContract && $field->isModalMode()) {
-                $fieldComponent = ActionButton::make($field->getLabel())
-                    ->inModal(
-                        title: $field->getLabel(),
-                        content: (string) $fieldComponent
-                    );
-            }
+                    $field->fillCast(
+                        $item,
+                        $field->getResource()?->getCaster()
+                    ),
+                ])->name($field->getRelationName());
 
             if($field instanceof HasTabModeContract && $field->isTabMode()) {
                 $tabs[] = Tab::make($field->getLabel(), [
