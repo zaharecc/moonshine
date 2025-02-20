@@ -350,6 +350,10 @@ class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithC
      */
     protected function viewData(): array
     {
+        if (\is_null($this->getRelatedModel()?->getKey())) {
+            return ['component' => ''];
+        }
+
         return [
             'component' => $this->isModalMode()
                 ? $this->getModalButton(
