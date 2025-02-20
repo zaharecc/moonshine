@@ -15,6 +15,7 @@ use MoonShine\Laravel\MoonShineRequest;
 use MoonShine\Laravel\Providers\MoonShineServiceProvider;
 use MoonShine\Laravel\Resources\MoonShineUserResource;
 use MoonShine\Laravel\Resources\MoonShineUserRoleResource;
+use MoonShine\Tests\Fixtures\QuickPageController;
 use MoonShine\Tests\Fixtures\Resources\TestCategoryResource;
 use MoonShine\Tests\Fixtures\Resources\TestCommentResource;
 use MoonShine\Tests\Fixtures\Resources\TestCoverResource;
@@ -156,5 +157,16 @@ class TestCase extends Orchestra
             MoonShineServiceProvider::class,
             TestServiceProvider::class,
         ];
+    }
+
+    /**
+     * Define routes setup.
+     *
+     * @param  \Illuminate\Routing\Router  $router
+     * @return void
+     */
+    protected function defineRoutes($router): void
+    {
+        $router->get('/quick-page', QuickPageController::class)->name('tests.quick-page');
     }
 }

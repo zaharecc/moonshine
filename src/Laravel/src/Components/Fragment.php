@@ -28,12 +28,23 @@ class Fragment extends AbstractWithComponents implements HasAsyncContract
     {
         parent::__construct($components);
 
-        $this->async(static fn (Fragment $fragment): RedirectResponse|string => toPage(
-            page: $fragment->getNowOnPage() ?? moonshineRequest()->getPage(),
-            resource: $fragment->getNowOnResource() ?? moonshineRequest()->getResource(),
-            params: $fragment->getNowOnQueryParams(),
-            fragment: $fragment->getName()
-        ));
+        $this->async(static function (Fragment $fragment): RedirectResponse|string {
+            $page = $fragment->getNowOnPage() ?? moonshineRequest()->findPage();
+            $resource = $fragment->getNowOnResource() ?? moonshineRequest()->getResource();
+
+            if(\is_null($page) && \is_null($resource)) {
+                return moonshineRequest()->fullUrlWithQuery([
+                    '_fragment-load' => $fragment->getName(),
+                ]);
+            }
+
+            return toPage(
+                page: $fragment->getNowOnPage() ?? moonshineRequest()->getPage(),
+                resource: $fragment->getNowOnResource() ?? moonshineRequest()->getResource(),
+                params: $fragment->getNowOnQueryParams(),
+                fragment: $fragment->getName()
+            );
+        });
     }
 
     /**
