@@ -6,7 +6,7 @@ namespace MoonShine\Contracts\UI;
 
 use Closure;
 
-interface HasTabMode
+interface HasTabModeContract
 {
     public function tabMode(Closure|bool|null $condition = null): static;
 

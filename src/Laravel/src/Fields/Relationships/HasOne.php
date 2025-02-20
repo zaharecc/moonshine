@@ -17,8 +17,8 @@ use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Contracts\UI\FieldWithComponentContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
 use MoonShine\Contracts\UI\HasFieldsContract;
-use MoonShine\Contracts\UI\HasModalMode;
-use MoonShine\Contracts\UI\HasTabMode;
+use MoonShine\Contracts\UI\HasModalModeContract;
+use MoonShine\Contracts\UI\HasTabModeContract;
 use MoonShine\Contracts\UI\TableBuilderContract;
 use MoonShine\Laravel\Collections\Fields;
 use MoonShine\Laravel\Exceptions\ModelRelationFieldException;
@@ -40,7 +40,7 @@ use Throwable;
  * @implements HasFieldsContract<Fields|FieldsContract>
  * @implements FieldWithComponentContract<FormBuilderContract>
  */
-class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithComponentContract, HasModalMode, HasTabMode
+class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithComponentContract, HasModalModeContract, HasTabModeContract
 {
     use WithFields;
     use ModalModeTrait;

@@ -6,7 +6,7 @@ namespace MoonShine\Contracts\UI;
 
 use Closure;
 
-interface HasModalMode
+interface HasModalModeContract
 {
     public function modalMode(Closure|bool|null $condition = null): static;
 

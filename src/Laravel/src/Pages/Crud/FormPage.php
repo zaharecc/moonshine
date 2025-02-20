@@ -7,8 +7,8 @@ namespace MoonShine\Laravel\Pages\Crud;
 use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
-use MoonShine\Contracts\UI\HasModalMode;
-use MoonShine\Contracts\UI\HasTabMode;
+use MoonShine\Contracts\UI\HasModalModeContract;
+use MoonShine\Contracts\UI\HasTabModeContract;
 use MoonShine\Core\Exceptions\ResourceException;
 use MoonShine\Laravel\Collections\Fields;
 use MoonShine\Laravel\Components\Fragment;
@@ -175,7 +175,7 @@ class FormPage extends CrudPage
                 ),
             ])->name($field->getRelationName());
 
-            if($field instanceof HasModalMode && $field->isModalMode()) {
+            if($field instanceof HasModalModeContract && $field->isModalMode()) {
                 $fieldComponent = ActionButton::make($field->getLabel())
                     ->inModal(
                         title: $field->getLabel(),
@@ -183,7 +183,7 @@ class FormPage extends CrudPage
                     );
             }
 
-            if($field instanceof HasTabMode && $field->isTabMode()) {
+            if($field instanceof HasTabModeContract && $field->isTabMode()) {
                 $tabs[] = Tab::make($field->getLabel(), [
                     $fieldComponent
                 ]);
