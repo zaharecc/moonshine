@@ -109,12 +109,12 @@ class MorphTo extends BelongsTo
     {
         $item = $this->getRelatedModel();
 
-        if (empty(data_get($item, $this->getMorphKey()))) {
-            return parent::getValues();
+        if (blank(data_get($item, $this->getMorphKey()))) {
+            return new Options();
         }
 
         if (\is_null($item)) {
-            return parent::getValues();
+            return new Options();
         }
 
         if (\is_null($this->getFormattedValueCallback())) {
