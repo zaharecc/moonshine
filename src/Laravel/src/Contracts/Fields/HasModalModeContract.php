@@ -16,7 +16,7 @@ interface HasModalModeContract
 
     public function getModalButton(
         Components $components,
-        string $buttonName,
+        string $label,
         string $fragmentName
     ): ActionButton;
 }

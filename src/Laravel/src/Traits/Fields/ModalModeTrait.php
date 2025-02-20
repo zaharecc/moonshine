@@ -27,11 +27,11 @@ trait ModalModeTrait
 
     public function getModalButton(
         Components $components,
-        string $buttonName,
+        string $label,
         string $fragmentName
     ): ActionButton {
-        return ActionButton::make($buttonName)->inModal(
-            title: $this->getLabel(),
+        return ActionButton::make($label)->inModal(
+            title: $label,
             content: (string) Fragment::make($components)->name($fragmentName)
         );
     }
