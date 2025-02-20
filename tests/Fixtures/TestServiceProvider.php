@@ -11,5 +11,6 @@ class TestServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->loadMigrationsFrom(realpath('./tests/Fixtures/Migrations'));
+        $this->loadViewsFrom(realpath('./tests/Fixtures/Views'), 'moonshine-tests');
     }
 }
