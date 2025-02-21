@@ -24,10 +24,12 @@ class MoonShineServiceProvider extends ServiceProvider
         // $config->authEnable();
 
         $core
-            ->autoload()
             ->resources([
                 MoonShineUserResource::class,
                 MoonShineUserRoleResource::class,
+            ])
+            ->pages([
+                ...$config->getPages(),
             ])
         ;
     }
