@@ -38,15 +38,13 @@ final class BelongsToOrManyButton
 
         $action = $resource->getRoute('crud.store');
 
-        $getFields = static function () use ($resource, $field) {
+        $getFields = static function () use ($resource, $field): array {
             $fields = $resource->getFormFields();
 
             $fields->onlyFields()
                 ->each(static fn (FieldContract $nestedFields): FieldContract => $nestedFields->setParent($field));
 
-            return $fields
-                ->push(Hidden::make('_async_field')->setValue(true))
-                ->toArray();
+            return $fields->toArray();
         };
 
         $actionButton = $button

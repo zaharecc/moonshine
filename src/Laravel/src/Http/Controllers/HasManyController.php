@@ -54,7 +54,7 @@ final class HasManyController extends MoonShineController
 
         $isAsync = $field->isAsync();
 
-        $getFields = static function () use ($resource, $field, $isAsync, $parent, $update) {
+        $getFields = static function () use ($resource, $field, $parent, $update): array {
             $fields = $resource->getFormFields();
 
             $fields->onlyFields()->each(static fn (FieldContract $nestedFields): FieldContract => $nestedFields->setParent($field));
@@ -76,7 +76,6 @@ final class HasManyController extends MoonShineController
                     Hidden::make($relation?->getForeignKeyName())
                         ->setValue($parent->getKey())
                 )
-                ->push(Hidden::make('_async_field')->setValue($isAsync))
                 ->toArray();
         };
 
