@@ -7,13 +7,20 @@ namespace MoonShine\Laravel\Contracts\Fields;
 use Closure;
 use MoonShine\Contracts\UI\ActionButtonContract;
 use MoonShine\Core\Collections\Components;
+use MoonShine\UI\Components\Modal;
 
 interface HasModalModeContract
 {
     /**
      * @param (Closure(static $ctx): bool)|bool|null  $condition
+     * @param (Closure(ActionButtonContract $button, static $ctx): ActionButtonContract)|null  $modifyModalModeButton
+     * @param (Closure(Modal $modal, ActionButtonContract $ctx): Modal)|null  $modifyModalModeModal
      */
-    public function modalMode(Closure|bool|null $condition = null): static;
+    public function modalMode(
+        Closure|bool|null $condition = null,
+        ?Closure $modifyModalModeButton = null,
+        ?Closure $modifyModalModeModal = null
+    ): static;
 
     public function isModalMode(): bool;
 

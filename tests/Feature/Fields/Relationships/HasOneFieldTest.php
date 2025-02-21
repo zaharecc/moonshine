@@ -11,6 +11,7 @@ use MoonShine\Laravel\Pages\Crud\FormPage;
 use MoonShine\Tests\Fixtures\Models\Item;
 use MoonShine\Tests\Fixtures\Resources\TestFileResource;
 use MoonShine\Tests\Fixtures\Resources\TestResourceBuilder;
+use MoonShine\UI\Components\Modal;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
 
@@ -46,6 +47,48 @@ it('modal mode in edit form', function () {
     expect($fieldData['component'])
         ->not()->toBeEmpty()
         ->toBeInstanceOf(ActionButtonContract::class)
+    ;
+});
+
+it('modalMode in edit form with callbacks', function () {
+    $item = createItem(countComments: 6);
+
+    $resource = TestResourceBuilder::new(Item::class)->setTestFields([
+        ID::make(),
+        Text::make('Name'),
+        HasOne::make('File', 'itemFile', resource: TestFileResource::class)
+            ->modalMode(
+                modifyModalModeButton: function (ActionButtonContract $button, HasOne $ctx) {
+                    $button->customAttributes([
+                        'data-button-html' => $ctx->getRelationName() . 'TestRelation'
+                    ]);
+                    return $button;
+                },
+                modifyModalModeModal: function (Modal $modal, ActionButtonContract $button) {
+                    $button->customAttributes([
+                        'data-button-html-for-modal' => 'true'
+                    ]);
+                    $modal->customAttributes([
+                        'data-modal-html' => 'true'
+                    ]);
+                    return $modal;
+                }
+            )
+    ]);
+
+    asAdmin()
+        ->get($this->moonshineCore->getRouter()->getEndpoints()
+            ->toPage(
+                page: FormPage::class,
+                resource: $resource,
+                params: ['resourceItem' => $item->id]
+            )
+        )
+        ->assertOk()
+        ->assertSee('data-button-html')
+        ->assertSee('itemFileTestRelation')
+        ->assertSee('data-modal-html')
+        ->assertSee('data-button-html-for-modal')
     ;
 });
 

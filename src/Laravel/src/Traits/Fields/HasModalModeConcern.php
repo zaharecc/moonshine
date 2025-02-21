@@ -14,12 +14,21 @@ trait HasModalModeConcern
 {
     protected bool $isModalMode = false;
 
-    /**
-     * @param (Closure(static $ctx): bool)|bool|null  $condition
-     */
-    public function modalMode(Closure|bool|null $condition = null): static
+    protected ?Closure $modifyModalModeButton = null;
+
+    protected ?Closure $modifyModalModeModal = null;
+
+    public function modalMode(
+        Closure|bool|null $condition = null,
+        ?Closure $modifyModalModeButton = null,
+        ?Closure $modifyModalModeModal = null
+    ): static
     {
         $this->isModalMode = \is_null($condition) || value($condition, $this);
+
+        $this->modifyModalModeButton = $modifyModalModeButton;
+
+        $this->modifyModalModeModal = $modifyModalModeModal;
 
         return $this;
     }
@@ -34,9 +43,16 @@ trait HasModalModeConcern
         string $label,
         string $fragmentName
     ): ActionButtonContract {
-        return ActionButton::make($label)->inModal(
+        $button = ActionButton::make($label)->inModal(
             title: $label,
-            content: (string) Fragment::make($components)->name($fragmentName)
+            content: (string) Fragment::make($components)->name($fragmentName),
+            builder: $this->modifyModalModeModal
         );
+
+        if (! \is_null($this->modifyModalModeButton)) {
+            $button = value($this->modifyModalModeButton, $button, $this);
+        }
+
+        return $button;
     }
 }
