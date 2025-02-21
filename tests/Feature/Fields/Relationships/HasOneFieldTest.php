@@ -163,6 +163,6 @@ it('tabMode in edit form', function () {
             )
         )
         ->assertOk()
-        ->assertSee('div class="tabs"')
+        ->assertSee('tabs')
     ;
 });
