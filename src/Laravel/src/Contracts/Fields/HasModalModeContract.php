@@ -10,6 +10,9 @@ use MoonShine\Core\Collections\Components;
 
 interface HasModalModeContract
 {
+    /**
+     * @param (Closure(static $ctx): bool)|bool|null  $condition
+     */
     public function modalMode(Closure|bool|null $condition = null): static;
 
     public function isModalMode(): bool;
