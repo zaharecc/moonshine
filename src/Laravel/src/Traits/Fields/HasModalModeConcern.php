@@ -20,15 +20,14 @@ trait HasModalModeConcern
 
     public function modalMode(
         Closure|bool|null $condition = null,
-        ?Closure $modifyModalModeButton = null,
-        ?Closure $modifyModalModeModal = null
-    ): static
-    {
+        ?Closure $modifyButton = null,
+        ?Closure $modifyModal = null
+    ): static {
         $this->isModalMode = \is_null($condition) || value($condition, $this);
 
-        $this->modifyModalModeButton = $modifyModalModeButton;
+        $this->modifyModalModeButton = $modifyButton;
 
-        $this->modifyModalModeModal = $modifyModalModeModal;
+        $this->modifyModalModeModal = $modifyModal;
 
         return $this;
     }

@@ -58,13 +58,13 @@ it('modalMode in edit form with callbacks', function () {
         Text::make('Name'),
         HasOne::make('File', 'itemFile', resource: TestFileResource::class)
             ->modalMode(
-                modifyModalModeButton: function (ActionButtonContract $button, HasOne $ctx) {
+                modifyButton: function (ActionButtonContract $button, HasOne $ctx) {
                     $button->customAttributes([
                         'data-button-html' => $ctx->getRelationName() . 'TestRelation'
                     ]);
                     return $button;
                 },
-                modifyModalModeModal: function (Modal $modal, ActionButtonContract $button) {
+                modifyModal: function (Modal $modal, ActionButtonContract $button) {
                     $button->customAttributes([
                         'data-button-html-for-modal' => 'true'
                     ]);

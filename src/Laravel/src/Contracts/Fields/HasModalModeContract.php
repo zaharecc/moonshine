@@ -13,13 +13,13 @@ interface HasModalModeContract
 {
     /**
      * @param (Closure(static $ctx): bool)|bool|null  $condition
-     * @param (Closure(ActionButtonContract $button, static $ctx): ActionButtonContract)|null  $modifyModalModeButton
-     * @param (Closure(Modal $modal, ActionButtonContract $ctx): Modal)|null  $modifyModalModeModal
+     * @param (Closure(ActionButtonContract $button, static $ctx): ActionButtonContract)|null  $modifyButton
+     * @param (Closure(Modal $modal, ActionButtonContract $ctx): Modal)|null  $modifyModal
      */
     public function modalMode(
         Closure|bool|null $condition = null,
-        ?Closure $modifyModalModeButton = null,
-        ?Closure $modifyModalModeModal = null
+        ?Closure $modifyButton = null,
+        ?Closure $modifyModal = null
     ): static;
 
     public function isModalMode(): bool;
