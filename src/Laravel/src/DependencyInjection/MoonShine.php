@@ -6,6 +6,8 @@ namespace MoonShine\Laravel\DependencyInjection;
 
 use MoonShine\Contracts\Core\DependencyInjection\CoreContract;
 use MoonShine\Contracts\Core\DependencyInjection\StorageContract;
+use MoonShine\Contracts\Core\PageContract;
+use MoonShine\Contracts\Core\ResourceContract;
 use MoonShine\Core\Core;
 use MoonShine\Core\Storage\FileStorage;
 use MoonShine\Laravel\Fields\Relationships\ModelRelationField;
@@ -78,8 +80,11 @@ final class MoonShine extends Core
             $namespace ?? $this->getConfig()->getNamespace()
         );
 
+        $pagesGroup     = $this->getAutoload()->getGroupNameByContract(PageContract::class);
+        $resourcesGroup = $this->getAutoload()->getGroupNameByContract(ResourceContract::class);
+
         return $this
-            ->resources($cached['resources'] ?? [])
-            ->pages($cached['pages'] ?? []);
+            ->pages($cached[$pagesGroup] ?? [])
+            ->resources($cached[$resourcesGroup] ?? []);
     }
 }

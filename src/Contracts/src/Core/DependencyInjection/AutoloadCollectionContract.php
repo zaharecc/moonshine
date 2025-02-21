@@ -18,4 +18,11 @@ interface AutoloadCollectionContract
      * @return array<string, list<class-string<PageContract|ResourceContract>>>
      */
     public function getSources(string $namespace, bool $withCache = true): array;
+
+    /**
+     * @param  class-string<PageContract|ResourceContract>  $contract
+     *
+     * @return string
+     */
+    public function getGroupNameByContract(string $contract): string;
 }

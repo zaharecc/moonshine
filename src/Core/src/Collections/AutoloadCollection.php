@@ -46,6 +46,16 @@ final class AutoloadCollection implements AutoloadCollectionContract
     }
 
     /**
+     * @param  class-string<PageContract|ResourceContract>  $contract
+     *
+     * @return string
+     */
+    public function getGroupNameByContract(string $contract): string
+    {
+        return $this->groups[$contract] ?? $contract;
+    }
+
+    /**
      * @param  string  $namespace
      * @param  bool  $withCache
      *
@@ -77,7 +87,9 @@ final class AutoloadCollection implements AutoloadCollectionContract
             return $autoload;
         }
 
-        $autoload['pages'] = array_unique(array_merge($pages, $autoload['pages'] ?? []));
+        $pagesName = $this->getGroupNameByContract(PageContract::class);
+
+        $autoload[$pagesName] = array_unique(array_merge($pages, $autoload[$pagesName] ?? []));
 
         return $autoload;
     }
