@@ -59,16 +59,14 @@ final class BelongsToOrManyButton
             ->inModal(
                 title: static fn (): array|string => __('moonshine::ui.create'),
                 content: static fn (?Model $data): string => (string) FormBuilder::make($action)
+                    ->withoutRedirect()
                     ->reactiveUrl(
                         moonshineRouter()->getEndpoints()->reactive($resource->getFormPage(), $resource)
                     )
-                    ->switchFormMode(
-                        true,
-                        [
-                            AlpineJs::event(JsEvent::FRAGMENT_UPDATED, $field->getRelationName()),
-                            AlpineJs::event(JsEvent::FORM_RESET, $resource->getUriKey()),
-                        ]
-                    )
+                    ->async(events: [
+                        AlpineJs::event(JsEvent::FRAGMENT_UPDATED, $field->getRelationName()),
+                        AlpineJs::event(JsEvent::FORM_RESET, $resource->getUriKey()),
+                    ])
                     ->name($resource->getUriKey())
                     ->fillCast(
                         [],
