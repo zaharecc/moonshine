@@ -88,7 +88,7 @@ abstract class BaseLayout extends AbstractLayout
             Div::make([
                 Menu::make(),
                 When::make(
-                    fn (): bool => $this->isAuthEnabled(),
+                    fn (): bool => $this->isProfileEnabled(),
                     fn (): array => [
                         $this->getProfileComponent(sidebar: true),
                     ],
@@ -113,7 +113,7 @@ abstract class BaseLayout extends AbstractLayout
 
             Div::make([
                 When::make(
-                    fn (): bool => $this->isAuthEnabled(),
+                    fn (): bool => $this->isProfileEnabled(),
                     fn (): array => [
                         $this->getProfileComponent(),
                     ],
@@ -196,6 +196,11 @@ abstract class BaseLayout extends AbstractLayout
     protected function isAuthEnabled(): bool
     {
         return $this->getCore()->getConfig()->isAuthEnabled();
+    }
+
+    protected function isProfileEnabled(): bool
+    {
+        return $this->getCore()->getConfig()->isUseProfile();
     }
 
     protected function isUseNotifications(): bool
