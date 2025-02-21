@@ -80,6 +80,10 @@ class CompactLayout extends AppLayout
             ->infoBg('38, 93, 205', dark: true)
             ->infoText('179, 220, 255', dark: true);
     }
+    protected function withTitle(): bool
+    {
+        return false;
+    }
 
     public function build(): Layout
     {
@@ -96,11 +100,7 @@ class CompactLayout extends AppLayout
 
                                 $this->getHeaderComponent(),
 
-                                Content::make([
-                                    Components::make(
-                                        $this->getPage()->getComponents()
-                                    ),
-                                ]),
+                                Content::make($this->getContentComponents()),
 
                                 $this->getFooterComponent(),
                             ])->class('layout-page')->name(self::CONTENT_FRAGMENT_NAME),

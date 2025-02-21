@@ -57,12 +57,7 @@ class AppLayout extends BaseLayout
 
                                 $this->getHeaderComponent(),
 
-                                Content::make([
-                                    Title::make($this->getPage()->getTitle())->class('mb-6'),
-                                    Components::make(
-                                        $this->getPage()->getComponents()
-                                    ),
-                                ]),
+                                Content::make($this->getContentComponents()),
 
                                 $this->getFooterComponent(),
                             ])->class('layout-page')->name(self::CONTENT_FRAGMENT_NAME),
