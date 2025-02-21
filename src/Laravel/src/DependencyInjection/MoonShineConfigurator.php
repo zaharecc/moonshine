@@ -187,16 +187,6 @@ final class MoonShineConfigurator implements ConfiguratorContract
         return $this->get('disk_options', []);
     }
 
-    public function isUseAutoloader(): bool
-    {
-        return $this->get('use_autoloader', true);
-    }
-
-    public function useAutoloader(): self
-    {
-        return $this->set('use_autoloader', true);
-    }
-
     public function isUseMigrations(): bool
     {
         return $this->get('use_migrations', true);

@@ -71,10 +71,6 @@ final class MoonShine extends Core
 
     public function autoload(?string $namespace = null): static
     {
-        if (! $this->config->isUseAutoloader()) {
-            return $this;
-        }
-
         $namespace ??= $this->getConfig()->getNamespace();
 
         $pages     = $this->getAutoload()->getSource(PageContract::class, $namespace);
