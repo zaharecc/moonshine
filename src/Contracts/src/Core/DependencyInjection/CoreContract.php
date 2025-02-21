@@ -68,5 +68,12 @@ interface CoreContract
 
     public function getPages(): PagesContract;
 
-    public function autoload(): CoreContract;
+    public function autoload(?string $namespace = null): CoreContract;
+
+    /**
+     * Get an autoload instance
+     *
+     * @return AutoloadCollectionContract
+     */
+    public function getAutoload(): AutoloadCollectionContract;
 }

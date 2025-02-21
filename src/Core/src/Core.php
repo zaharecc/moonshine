@@ -7,6 +7,7 @@ namespace MoonShine\Core;
 use Closure;
 use Illuminate\Support\Traits\Conditionable;
 use MoonShine\Contracts\AssetManager\AssetManagerContract;
+use MoonShine\Contracts\Core\DependencyInjection\AutoloadCollectionContract;
 use MoonShine\Contracts\Core\DependencyInjection\ConfiguratorContract;
 use MoonShine\Contracts\Core\DependencyInjection\CoreContract;
 use MoonShine\Contracts\Core\DependencyInjection\FieldsContract;
@@ -20,7 +21,6 @@ use MoonShine\Contracts\Core\ResourceContract;
 use MoonShine\Contracts\Core\ResourcesContract;
 use MoonShine\Contracts\Core\StatefulContract;
 use MoonShine\Contracts\MenuManager\MenuManagerContract;
-use MoonShine\Core\Collections\AutoloadCollection;
 use MoonShine\Core\Pages\Pages;
 use MoonShine\Core\Resources\Resources;
 use MoonShine\Support\Memoize\MemoizeRepository;
@@ -51,7 +51,7 @@ abstract class Core implements CoreContract, StatefulContract
         protected RouterContract $router,
         protected ConfiguratorContract $config,
         protected TranslatorContract $translator,
-        protected AutoloadCollection $autoload,
+        protected AutoloadCollectionContract $autoload,
     ) {
         static::setInstance(
             fn (): mixed => $this->getContainer(CoreContract::class)
@@ -241,5 +241,15 @@ abstract class Core implements CoreContract, StatefulContract
                 collect($this->pages)->except('error')
             )
         );
+    }
+
+    /**
+     * Get an autoload instance
+     *
+     * @return AutoloadCollectionContract
+     */
+    public function getAutoload(): AutoloadCollectionContract
+    {
+        return $this->autoload;
     }
 }

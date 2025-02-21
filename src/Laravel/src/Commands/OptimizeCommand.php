@@ -6,9 +6,9 @@ namespace MoonShine\Laravel\Commands;
 
 use Illuminate\Filesystem\Filesystem;
 use LogicException;
+use MoonShine\Contracts\Core\DependencyInjection\AutoloadCollectionContract;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Contracts\Core\ResourceContract;
-use MoonShine\Core\Collections\AutoloadCollection;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Throwable;
 
@@ -19,11 +19,11 @@ class OptimizeCommand extends MoonShineCommand
 
     protected $description = 'Cache MoonShine pages and resources to increase performance';
 
-    public function handle(AutoloadCollection $autoload, Filesystem $files): int
+    public function handle(AutoloadCollectionContract $autoload, Filesystem $files): int
     {
         $this->components->info('Caching MoonShine pages and resources.');
 
-        $filename = $autoload->getFilename();
+        $filename = $autoload->getCachePath();
 
         $this->store($files, $filename, $this->getFreshSources($autoload));
 
@@ -35,10 +35,11 @@ class OptimizeCommand extends MoonShineCommand
     }
 
     /**
-     * @param  \MoonShine\Core\Collections\AutoloadCollection  $autoload
+     * @param  AutoloadCollectionContract  $autoload
+     *
      * @return array<string, list<class-string<PageContract|ResourceContract>>>
      */
-    protected function getFreshSources(AutoloadCollection $autoload): array
+    protected function getFreshSources(AutoloadCollectionContract $autoload): array
     {
         return $autoload->getSources($this->getNamespace(), false);
     }
@@ -47,6 +48,7 @@ class OptimizeCommand extends MoonShineCommand
      * @param  \Illuminate\Filesystem\Filesystem  $storage
      * @param  string  $cachePath
      * @param  array<string, list<class-string<PageContract|ResourceContract>>>  $sources
+     *
      * @return void
      */
     protected function store(Filesystem $storage, string $cachePath, array $sources): void

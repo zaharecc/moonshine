@@ -68,14 +68,14 @@ final class MoonShine extends Core
         ModelRelationField::$excludeInstancing = [];
     }
 
-    public function autoload(): CoreContract
+    public function autoload(?string $namespace = null): CoreContract
     {
         if (! $this->config->isUseAutoloader()) {
             return $this;
         }
 
-        $cached = $this->autoload->getSources(
-            $this->getConfig()->getNamespace()
+        $cached = $this->getAutoload()->getSources(
+            $namespace ?? $this->getConfig()->getNamespace()
         );
 
         return $this
