@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MoonShine\Laravel\DependencyInjection;
 
-use MoonShine\Contracts\Core\DependencyInjection\CoreContract;
 use MoonShine\Contracts\Core\DependencyInjection\StorageContract;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Contracts\Core\ResourceContract;
@@ -70,7 +69,7 @@ final class MoonShine extends Core
         ModelRelationField::$excludeInstancing = [];
     }
 
-    public function autoload(?string $namespace = null): CoreContract
+    public function autoload(?string $namespace = null): static
     {
         if (! $this->config->isUseAutoloader()) {
             return $this;
