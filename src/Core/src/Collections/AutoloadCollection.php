@@ -47,12 +47,16 @@ final class AutoloadCollection implements AutoloadCollectionContract
 
     /**
      * @param  class-string<PageContract|ResourceContract>  $contract
+     * @param  string  $namespace
+     * @param  bool  $withCache
      *
-     * @return string
+     * @return list<class-string<PageContract|ResourceContract>>
      */
-    public function getGroupNameByContract(string $contract): string
+    public function getSource(string $contract, string $namespace, bool $withCache = true): array
     {
-        return $this->groups[$contract] ?? $contract;
+        $group = $this->getGroupNameByContract($contract);
+
+        return $this->getSources($namespace, $withCache)[$group] ?? [];
     }
 
     /**
@@ -155,6 +159,16 @@ final class AutoloadCollection implements AutoloadCollectionContract
         }
 
         return $class;
+    }
+
+    /**
+     * @param  class-string<PageContract|ResourceContract>  $contract
+     *
+     * @return string
+     */
+    protected function getGroupNameByContract(string $contract): string
+    {
+        return $this->groups[$contract] ?? $contract;
     }
 
     /**

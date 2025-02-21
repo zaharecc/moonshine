@@ -76,15 +76,13 @@ final class MoonShine extends Core
             return $this;
         }
 
-        $cached = $this->getAutoload()->getSources(
-            $namespace ?? $this->getConfig()->getNamespace()
-        );
+        $namespace ??= $this->getConfig()->getNamespace();
 
-        $pagesGroup     = $this->getAutoload()->getGroupNameByContract(PageContract::class);
-        $resourcesGroup = $this->getAutoload()->getGroupNameByContract(ResourceContract::class);
+        $pages     = $this->getAutoload()->getSource(PageContract::class, $namespace);
+        $resources = $this->getAutoload()->getSource(ResourceContract::class, $namespace);
 
         return $this
-            ->pages($cached[$pagesGroup] ?? [])
-            ->resources($cached[$resourcesGroup] ?? []);
+            ->pages($pages)
+            ->resources($resources);
     }
 }

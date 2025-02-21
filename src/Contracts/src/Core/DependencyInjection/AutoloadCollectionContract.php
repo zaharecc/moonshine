@@ -12,17 +12,19 @@ interface AutoloadCollectionContract
     public function getCachePath(): string;
 
     /**
+     * @param  class-string<PageContract|ResourceContract>  $contract
+     * @param  string  $namespace
+     * @param  bool  $withCache
+     *
+     * @return list<class-string<PageContract|ResourceContract>>
+     */
+    public function getSource(string $contract, string $namespace, bool $withCache = true): array;
+
+    /**
      * @param  string  $namespace
      * @param  bool  $withCache
      *
      * @return array<string, list<class-string<PageContract|ResourceContract>>>
      */
     public function getSources(string $namespace, bool $withCache = true): array;
-
-    /**
-     * @param  class-string<PageContract|ResourceContract>  $contract
-     *
-     * @return string
-     */
-    public function getGroupNameByContract(string $contract): string;
 }
