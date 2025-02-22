@@ -14,14 +14,11 @@ use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Contracts\Core\ResourceContract;
 use ReflectionClass;
 
-/**
- * @template T of string
- */
 final class OptimizerCollection implements OptimizerCollectionContract
 {
     protected ?array $sources = null;
 
-    /** @var array<class-string, T> */
+    /** @var array<class-string, string> */
     protected array $groups = [
         PageContract::class     => 'pages',
         ResourceContract::class => 'resources',
@@ -32,9 +29,6 @@ final class OptimizerCollection implements OptimizerCollectionContract
         protected ConfiguratorContract $config,
     ) {}
 
-    /**
-     * @return array<T, mixed>
-     */
     public function getSources(?string $namespace = null, bool $withCache = true): array
     {
         return $this->sources ??= $this->getDetected($namespace, $withCache);
@@ -70,7 +64,7 @@ final class OptimizerCollection implements OptimizerCollectionContract
      * @param  list<class-string<PageContract>>  $pages
      * @param  array<string, mixed>  $autoload
      *
-     * @return array<T, mixed>
+     * @return array
      */
     protected function getMerged(array $pages, array $autoload): array
     {
@@ -85,9 +79,6 @@ final class OptimizerCollection implements OptimizerCollectionContract
         return $autoload;
     }
 
-    /**
-     * @return array<T, mixed>
-     */
     protected function getPrepared(array $items): array
     {
         foreach ($items as &$values) {
