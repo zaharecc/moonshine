@@ -51,7 +51,7 @@ abstract class Core implements CoreContract, StatefulContract
         protected RouterContract $router,
         protected ConfiguratorContract $config,
         protected TranslatorContract $translator,
-        protected OptimizerCollectionContract $autoload,
+        protected OptimizerCollectionContract $optimizer,
     ) {
         static::setInstance(
             fn (): mixed => $this->getContainer(CoreContract::class)
@@ -248,8 +248,8 @@ abstract class Core implements CoreContract, StatefulContract
      *
      * @return OptimizerCollectionContract
      */
-    public function getAutoload(): OptimizerCollectionContract
+    public function getOptimizer(): OptimizerCollectionContract
     {
-        return $this->autoload;
+        return $this->optimizer;
     }
 }

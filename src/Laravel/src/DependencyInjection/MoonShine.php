@@ -73,8 +73,8 @@ final class MoonShine extends Core
     {
         $namespace ??= $this->getConfig()->getNamespace();
 
-        $pages     = $this->getAutoload()->getSource(PageContract::class, $namespace);
-        $resources = $this->getAutoload()->getSource(ResourceContract::class, $namespace);
+        $pages     = $this->getOptimizer()->getSource(PageContract::class, $namespace);
+        $resources = $this->getOptimizer()->getSource(ResourceContract::class, $namespace);
 
         return $this
             ->pages($pages)
