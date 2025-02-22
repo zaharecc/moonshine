@@ -73,7 +73,7 @@ interface CoreContract
     /**
      * Get an autoload instance
      *
-     * @return AutoloadCollectionContract
+     * @return OptimizerCollectionContract
      */
-    public function getAutoload(): AutoloadCollectionContract;
+    public function getAutoload(): OptimizerCollectionContract;
 }

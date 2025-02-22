@@ -17,7 +17,7 @@ use MoonShine\Contracts\AssetManager\AssetManagerContract;
 use MoonShine\Contracts\AssetManager\AssetResolverContract;
 use MoonShine\Contracts\ColorManager\ColorManagerContract;
 use MoonShine\Contracts\Core\DependencyInjection\AppliesRegisterContract;
-use MoonShine\Contracts\Core\DependencyInjection\AutoloadCollectionContract;
+use MoonShine\Contracts\Core\DependencyInjection\OptimizerCollectionContract;
 use MoonShine\Contracts\Core\DependencyInjection\ConfiguratorContract;
 use MoonShine\Contracts\Core\DependencyInjection\CoreContract;
 use MoonShine\Contracts\Core\DependencyInjection\FieldsContract;
@@ -27,7 +27,7 @@ use MoonShine\Contracts\Core\DependencyInjection\StorageContract;
 use MoonShine\Contracts\Core\DependencyInjection\TranslatorContract;
 use MoonShine\Contracts\Core\DependencyInjection\ViewRendererContract;
 use MoonShine\Contracts\MenuManager\MenuManagerContract;
-use MoonShine\Core\Collections\AutoloadCollection;
+use MoonShine\Core\Collections\OptimizerCollection;
 use MoonShine\Core\Core;
 use MoonShine\Laravel\Applies\Fields\FileModelApply;
 use MoonShine\Laravel\Applies\Filters\BelongsToManyModelApply;
@@ -155,7 +155,7 @@ final class MoonShineServiceProvider extends ServiceProvider
             MoonShineNotificationContract::class,
             moonshineConfig()->isUseDatabaseNotifications() ? MoonShineNotification::class : MoonShineMemoryNotification::class
         );
-        $this->app->singleton(AutoloadCollectionContract::class, fn () => new AutoloadCollection(
+        $this->app->singleton(OptimizerCollectionContract::class, fn () => new OptimizerCollection(
             cachePath: $this->app->basePath('bootstrap/cache/moonshine.php'),
             config   : $this->app->make(ConfiguratorContract::class)
         ));

@@ -8,17 +8,18 @@ use Composer\Autoload\ClassLoader;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use MoonShine\Contracts\Core\DependencyInjection\AutoloadCollectionContract;
 use MoonShine\Contracts\Core\DependencyInjection\ConfiguratorContract;
+use MoonShine\Contracts\Core\DependencyInjection\OptimizerCollectionContract;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Contracts\Core\ResourceContract;
 use ReflectionClass;
 
-final class AutoloadCollection implements AutoloadCollectionContract
+final class OptimizerCollection implements OptimizerCollectionContract
 {
-    /** @var array<string, list<class-string<PageContract|ResourceContract>>>|null */
+    /** @var list<class-string>|null */
     protected ?array $sources = null;
 
+    /** @var array<class-string, string> */
     protected array $groups = [
         PageContract::class     => 'pages',
         ResourceContract::class => 'resources',
@@ -30,14 +31,28 @@ final class AutoloadCollection implements AutoloadCollectionContract
     ) {}
 
     /**
-     * @param  string  $namespace
+     * @param  string|null  $namespace
      * @param  bool  $withCache
      *
-     * @return array<string, list<class-string<PageContract|ResourceContract>>>
+     * @return array<list<class-string>>
      */
-    public function getSources(string $namespace, bool $withCache = true): array
+    public function getSources(?string $namespace = null, bool $withCache = true): array
     {
         return $this->sources ??= $this->getDetected($namespace, $withCache);
+    }
+
+    /**
+     * @param  class-string  $contract
+     * @param  string|null  $namespace
+     * @param  bool  $withCache
+     *
+     * @return list<class-string>
+     */
+    public function getSource(string $contract, ?string $namespace = null, bool $withCache = true): array
+    {
+        $group = $this->getGroupNameByContract($contract);
+
+        return $this->getSources($namespace, $withCache)[$group] ?? [];
     }
 
     public function getCachePath(): string
@@ -46,26 +61,12 @@ final class AutoloadCollection implements AutoloadCollectionContract
     }
 
     /**
-     * @param  class-string<PageContract|ResourceContract>  $contract
-     * @param  string  $namespace
+     * @param  string|null  $namespace
      * @param  bool  $withCache
      *
-     * @return list<class-string<PageContract|ResourceContract>>
+     * @return array<list<class-string>>
      */
-    public function getSource(string $contract, string $namespace, bool $withCache = true): array
-    {
-        $group = $this->getGroupNameByContract($contract);
-
-        return $this->getSources($namespace, $withCache)[$group] ?? [];
-    }
-
-    /**
-     * @param  string  $namespace
-     * @param  bool  $withCache
-     *
-     * @return array<string, list<class-string<PageContract|ResourceContract>>>
-     */
-    protected function getDetected(string $namespace, bool $withCache): array
+    protected function getDetected(?string $namespace, bool $withCache): array
     {
         if ($withCache && file_exists($path = $this->getCachePath())) {
             return require $path;
@@ -81,9 +82,9 @@ final class AutoloadCollection implements AutoloadCollectionContract
 
     /**
      * @param  list<class-string<PageContract>>  $pages
-     * @param  array<string, list<class-string<PageContract|ResourceContract>>>  $autoload
+     * @param  array<string, list<class-string>>  $autoload
      *
-     * @return array<string, list<class-string<PageContract|ResourceContract>>>
+     * @return array<string, list<class-string>>
      */
     protected function getMerged(array $pages, array $autoload): array
     {
@@ -99,9 +100,9 @@ final class AutoloadCollection implements AutoloadCollectionContract
     }
 
     /**
-     * @param  array<string, list<class-string<PageContract|ResourceContract>>>  $items
+     * @param  array<string, list<class-string>>  $items
      *
-     * @return array<string, list<class-string<PageContract|ResourceContract>>>
+     * @return array<string, list<class-string>>
      */
     protected function getPrepared(array $items): array
     {
@@ -123,16 +124,18 @@ final class AutoloadCollection implements AutoloadCollectionContract
     }
 
     /**
-     * @param  string  $namespace
+     * @param  string|null  $namespace
      *
-     * @return array<string, list<class-string<PageContract|ResourceContract>>>
+     * @return array<string, list<class-string>>
      */
-    protected function getFiltered(string $namespace): array
+    protected function getFiltered(?string $namespace): array
     {
         return Collection::make(ClassLoader::getRegisteredLoaders())
             ->map(
                 fn (ClassLoader $loader) => Collection::make($loader->getClassMap())
-                    ->filter(static fn (string $path, string $class) => str_starts_with($class, $namespace))
+                    ->when($namespace, static fn (Collection $items) => $items->filter(
+                        static fn (string $path, string $class) => str_starts_with($class, $namespace)
+                    ))
                     ->flip()
                     ->values()
                     ->filter(function (string $class) {
@@ -146,7 +149,7 @@ final class AutoloadCollection implements AutoloadCollectionContract
     }
 
     /**
-     * @param  class-string<PageContract|ResourceContract>  $class
+     * @param  class-string  $class
      *
      * @return string
      */
@@ -162,7 +165,7 @@ final class AutoloadCollection implements AutoloadCollectionContract
     }
 
     /**
-     * @param  class-string<PageContract|ResourceContract>  $contract
+     * @param  class-string  $contract
      *
      * @return string
      */
@@ -189,7 +192,7 @@ final class AutoloadCollection implements AutoloadCollectionContract
     }
 
     /**
-     * @param  class-string<PageContract|ResourceContract>  $class
+     * @param  class-string  $class
      *
      * @throws \ReflectionException
      * @return bool

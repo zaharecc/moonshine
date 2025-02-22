@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MoonShine\Tests\Feature\Commands;
 
-use MoonShine\Contracts\Core\DependencyInjection\AutoloadCollectionContract;
+use MoonShine\Contracts\Core\DependencyInjection\OptimizerCollectionContract;
 use MoonShine\Laravel\Commands\OptimizeCommand;
 use MoonShine\Tests\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -20,7 +20,7 @@ final class OptimizeCommandTest extends TestCase
     #[TestDox('it successfully make the cache file')]
     public function successfulMakeCache(): void
     {
-        $path = $this->app->make(AutoloadCollectionContract::class)->getCachePath();
+        $path = $this->app->make(OptimizerCollectionContract::class)->getCachePath();
 
         if (file_exists($path)) {
             @unlink($path);

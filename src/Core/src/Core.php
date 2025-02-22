@@ -7,7 +7,7 @@ namespace MoonShine\Core;
 use Closure;
 use Illuminate\Support\Traits\Conditionable;
 use MoonShine\Contracts\AssetManager\AssetManagerContract;
-use MoonShine\Contracts\Core\DependencyInjection\AutoloadCollectionContract;
+use MoonShine\Contracts\Core\DependencyInjection\OptimizerCollectionContract;
 use MoonShine\Contracts\Core\DependencyInjection\ConfiguratorContract;
 use MoonShine\Contracts\Core\DependencyInjection\CoreContract;
 use MoonShine\Contracts\Core\DependencyInjection\FieldsContract;
@@ -51,7 +51,7 @@ abstract class Core implements CoreContract, StatefulContract
         protected RouterContract $router,
         protected ConfiguratorContract $config,
         protected TranslatorContract $translator,
-        protected AutoloadCollectionContract $autoload,
+        protected OptimizerCollectionContract $autoload,
     ) {
         static::setInstance(
             fn (): mixed => $this->getContainer(CoreContract::class)
@@ -246,9 +246,9 @@ abstract class Core implements CoreContract, StatefulContract
     /**
      * Get an autoload instance
      *
-     * @return AutoloadCollectionContract
+     * @return OptimizerCollectionContract
      */
-    public function getAutoload(): AutoloadCollectionContract
+    public function getAutoload(): OptimizerCollectionContract
     {
         return $this->autoload;
     }
