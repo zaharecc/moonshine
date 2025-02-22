@@ -14,12 +14,14 @@ use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Contracts\Core\ResourceContract;
 use ReflectionClass;
 
+/**
+ * @template T of string
+ */
 final class OptimizerCollection implements OptimizerCollectionContract
 {
-    /** @var list<class-string>|null */
     protected ?array $sources = null;
 
-    /** @var array<class-string, string> */
+    /** @var array<class-string, T> */
     protected array $groups = [
         PageContract::class     => 'pages',
         ResourceContract::class => 'resources',
@@ -31,23 +33,13 @@ final class OptimizerCollection implements OptimizerCollectionContract
     ) {}
 
     /**
-     * @param  string|null  $namespace
-     * @param  bool  $withCache
-     *
-     * @return array<list<class-string>>
+     * @return array<T, mixed>
      */
     public function getSources(?string $namespace = null, bool $withCache = true): array
     {
         return $this->sources ??= $this->getDetected($namespace, $withCache);
     }
 
-    /**
-     * @param  class-string  $contract
-     * @param  string|null  $namespace
-     * @param  bool  $withCache
-     *
-     * @return list<class-string>
-     */
     public function getSource(string $contract, ?string $namespace = null, bool $withCache = true): array
     {
         $group = $this->getGroupNameByContract($contract);
@@ -60,12 +52,6 @@ final class OptimizerCollection implements OptimizerCollectionContract
         return $this->cachePath;
     }
 
-    /**
-     * @param  string|null  $namespace
-     * @param  bool  $withCache
-     *
-     * @return array<list<class-string>>
-     */
     protected function getDetected(?string $namespace, bool $withCache): array
     {
         if ($withCache && file_exists($path = $this->getCachePath())) {
@@ -82,9 +68,9 @@ final class OptimizerCollection implements OptimizerCollectionContract
 
     /**
      * @param  list<class-string<PageContract>>  $pages
-     * @param  array<string, list<class-string>>  $autoload
+     * @param  array<string, mixed>  $autoload
      *
-     * @return array<string, list<class-string>>
+     * @return array<T, mixed>
      */
     protected function getMerged(array $pages, array $autoload): array
     {
@@ -100,9 +86,7 @@ final class OptimizerCollection implements OptimizerCollectionContract
     }
 
     /**
-     * @param  array<string, list<class-string>>  $items
-     *
-     * @return array<string, list<class-string>>
+     * @return array<T, mixed>
      */
     protected function getPrepared(array $items): array
     {
@@ -123,11 +107,6 @@ final class OptimizerCollection implements OptimizerCollectionContract
         return $this->config->getPages();
     }
 
-    /**
-     * @param  string|null  $namespace
-     *
-     * @return array<string, list<class-string>>
-     */
     protected function getFiltered(?string $namespace): array
     {
         return Collection::make(ClassLoader::getRegisteredLoaders())
@@ -148,11 +127,6 @@ final class OptimizerCollection implements OptimizerCollectionContract
             ->toArray();
     }
 
-    /**
-     * @param  class-string  $class
-     *
-     * @return string
-     */
     protected function getGroupName(string $class): string
     {
         foreach ($this->groups as $contract => $name) {
@@ -164,11 +138,6 @@ final class OptimizerCollection implements OptimizerCollectionContract
         return $class;
     }
 
-    /**
-     * @param  class-string  $contract
-     *
-     * @return string
-     */
     protected function getGroupNameByContract(string $contract): string
     {
         return $this->groups[$contract] ?? $contract;
