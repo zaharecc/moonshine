@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace MoonShine\Laravel\DependencyInjection;
 
 use MoonShine\Contracts\Core\DependencyInjection\StorageContract;
+use MoonShine\Contracts\Core\PageContract;
+use MoonShine\Contracts\Core\ResourceContract;
 use MoonShine\Core\Core;
 use MoonShine\Core\Storage\FileStorage;
 use MoonShine\Laravel\Fields\Relationships\ModelRelationField;
@@ -65,5 +67,17 @@ final class MoonShine extends Core
         parent::flushState();
 
         ModelRelationField::$excludeInstancing = [];
+    }
+
+    public function autoload(?string $namespace = null): static
+    {
+        $namespace ??= $this->getConfig()->getNamespace();
+
+        $pages     = $this->getOptimizer()->getType(PageContract::class, $namespace);
+        $resources = $this->getOptimizer()->getType(ResourceContract::class, $namespace);
+
+        return $this
+            ->pages($pages)
+            ->resources($resources);
     }
 }

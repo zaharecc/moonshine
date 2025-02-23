@@ -17,6 +17,7 @@ use MoonShine\Contracts\AssetManager\AssetManagerContract;
 use MoonShine\Contracts\AssetManager\AssetResolverContract;
 use MoonShine\Contracts\ColorManager\ColorManagerContract;
 use MoonShine\Contracts\Core\DependencyInjection\AppliesRegisterContract;
+use MoonShine\Contracts\Core\DependencyInjection\OptimizerCollectionContract;
 use MoonShine\Contracts\Core\DependencyInjection\ConfiguratorContract;
 use MoonShine\Contracts\Core\DependencyInjection\CoreContract;
 use MoonShine\Contracts\Core\DependencyInjection\FieldsContract;
@@ -26,6 +27,7 @@ use MoonShine\Contracts\Core\DependencyInjection\StorageContract;
 use MoonShine\Contracts\Core\DependencyInjection\TranslatorContract;
 use MoonShine\Contracts\Core\DependencyInjection\ViewRendererContract;
 use MoonShine\Contracts\MenuManager\MenuManagerContract;
+use MoonShine\Core\Collections\OptimizerCollection;
 use MoonShine\Core\Core;
 use MoonShine\Laravel\Applies\Fields\FileModelApply;
 use MoonShine\Laravel\Applies\Filters\BelongsToManyModelApply;
@@ -50,6 +52,8 @@ use MoonShine\Laravel\Commands\MakePolicyCommand;
 use MoonShine\Laravel\Commands\MakeResourceCommand;
 use MoonShine\Laravel\Commands\MakeTypeCastCommand;
 use MoonShine\Laravel\Commands\MakeUserCommand;
+use MoonShine\Laravel\Commands\OptimizeClearCommand;
+use MoonShine\Laravel\Commands\OptimizeCommand;
 use MoonShine\Laravel\Commands\PublishCommand;
 use MoonShine\Laravel\Contracts\Notifications\MoonShineNotificationContract;
 use MoonShine\Laravel\DependencyInjection\AssetResolver;
@@ -95,6 +99,8 @@ final class MoonShineServiceProvider extends ServiceProvider
         MakeTypeCastCommand::class,
         PublishCommand::class,
         MakePolicyCommand::class,
+        OptimizeCommand::class,
+        OptimizeClearCommand::class,
     ];
 
     /**
@@ -149,6 +155,10 @@ final class MoonShineServiceProvider extends ServiceProvider
             MoonShineNotificationContract::class,
             moonshineConfig()->isUseDatabaseNotifications() ? MoonShineNotification::class : MoonShineMemoryNotification::class
         );
+        $this->app->singleton(OptimizerCollectionContract::class, fn () => new OptimizerCollection(
+            cachePath: $this->app->basePath('bootstrap/cache/moonshine.php'),
+            config   : $this->app->make(ConfiguratorContract::class)
+        ));
 
         $this->app->bind(TranslatorContract::class, Translator::class);
         $this->app->bind(FieldsContract::class, Fields::class);
@@ -282,6 +292,14 @@ final class MoonShineServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->commands($this->commands);
+
+            if (method_exists($this, 'optimizes')) {
+                $this->optimizes(
+                    optimize: 'moonshine:optimize',
+                    clear   : 'moonshine:optimize-clear',
+                    key     : 'moonshine'
+                );
+            }
         }
 
         Blade::componentNamespace('MoonShine\UI\Components', 'moonshine');
