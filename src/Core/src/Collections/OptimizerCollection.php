@@ -7,7 +7,6 @@ namespace MoonShine\Core\Collections;
 use Composer\Autoload\ClassLoader;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 use MoonShine\Contracts\Core\DependencyInjection\ConfiguratorContract;
 use MoonShine\Contracts\Core\DependencyInjection\OptimizerCollectionContract;
 use MoonShine\Contracts\Core\PageContract;
@@ -16,12 +15,10 @@ use ReflectionClass;
 
 final class OptimizerCollection implements OptimizerCollectionContract
 {
-    protected ?array $types = null;
-
-    /** @var array<class-string, string> */
-    protected array $groups = [
-        PageContract::class     => 'pages',
-        ResourceContract::class => 'resources',
+    /** @var array<class-string, array> */
+    protected array $types = [
+        PageContract::class     => [],
+        ResourceContract::class => [],
     ];
 
     public function __construct(
@@ -36,9 +33,12 @@ final class OptimizerCollection implements OptimizerCollectionContract
 
     public function getType(string $contract, ?string $namespace = null, bool $withCache = true): array
     {
-        $type = $this->getTypeByContract($contract);
+        return $this->getTypes($namespace, $withCache)[$contract] ?? [];
+    }
 
-        return $this->getTypes($namespace, $withCache)[$type] ?? [];
+    public function hasType(string $contract): bool
+    {
+        return ! empty($this->getType($contract));
     }
 
     public function getCachePath(): string
@@ -52,50 +52,33 @@ final class OptimizerCollection implements OptimizerCollectionContract
             return require $path;
         }
 
-        return $this->getPrepared(
-            $this->getMerged(
-                $this->getPages(),
-                $this->getFiltered($namespace)
-            )
+        return $this->getMerged(
+            $this->getPages(),
+            $this->getFiltered($namespace)
         );
     }
 
     /**
-     * @param  list<class-string<PageContract>>  $pages
-     * @param  array<string, mixed>  $autoload
+     * @param  array<array<string, mixed>>  ...$items
      *
      * @return array
      */
-    protected function getMerged(array $pages, array $autoload): array
+    protected function getMerged(array ...$items): array
     {
-        if (! $pages) {
-            return $autoload;
+        $autoload = [];
+
+        foreach (array_keys($this->types) as $type) {
+            foreach ($items as $value) {
+                $autoload[$type] = array_unique(array_merge($autoload[$type], $value[$type] ?? []));
+            }
         }
-
-        $pagesName = $this->getTypeByContract(PageContract::class);
-
-        $autoload[$pagesName] = array_unique(array_merge($pages, $autoload[$pagesName] ?? []));
 
         return $autoload;
     }
 
-    protected function getPrepared(array $items): array
-    {
-        foreach ($items as &$values) {
-            $values = Collection::make($values)->map(
-                static fn (string $class) => Str::start($class, '\\')
-            )->all();
-        }
-
-        return $items;
-    }
-
-    /**
-     * @return array<class-string<PageContract>>
-     */
     protected function getPages(): array
     {
-        return $this->config->getPages();
+        return [PageContract::class => $this->config->getPages()];
     }
 
     protected function getFiltered(?string $namespace): array
@@ -120,18 +103,13 @@ final class OptimizerCollection implements OptimizerCollectionContract
 
     protected function getGroupName(string $class): string
     {
-        foreach ($this->groups as $contract => $name) {
+        foreach (array_keys($this->types) as $contract) {
             if ($this->isInstanceOf($class, $contract)) {
-                return $name;
+                return $contract;
             }
         }
 
-        return $class;
-    }
-
-    protected function getTypeByContract(string $contract): string
-    {
-        return $this->groups[$contract] ?? $contract;
+        return '';
     }
 
     /**
