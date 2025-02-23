@@ -34,7 +34,7 @@ Route::moonshine(static function (Router $router): void {
         });
     }
 
-    if($profileEnabled) {
+    if ($profileEnabled) {
         Route::post('/profile', [ProfileController::class, 'store'])
             ->middleware($authMiddleware)
             ->name('profile.store');

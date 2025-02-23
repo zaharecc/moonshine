@@ -18,7 +18,7 @@ use MoonShine\UI\Components\{
     Layout\Html,
     Layout\Layout,
     Layout\Wrapper
-    };
+};
 
 class AppLayout extends BaseLayout
 {

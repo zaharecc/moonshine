@@ -76,7 +76,7 @@ final class Profile extends MoonShineComponent
             'route' => $this->route ?? toPage(
                 moonshineConfig()->getPage('profile', ProfilePage::class)
             ),
-            'logOutRoute' => rescue(fn(): string => $this->logOutRoute ?? moonshineRouter()->to('logout'), fn(): string => ''),
+            'logOutRoute' => rescue(fn (): string => $this->logOutRoute ?? moonshineRouter()->to('logout'), fn (): string => ''),
             'avatar' => $avatar,
             'nameOfUser' => $nameOfUser,
             'username' => $username,
