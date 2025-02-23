@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace MoonShine\Laravel\Commands;
 
 use Illuminate\Filesystem\Filesystem;
-use MoonShine\Contracts\Core\DependencyInjection\OptimizerCollectionContract;
-use Symfony\Component\Console\Attribute\AsCommand;
 
 use function Laravel\Prompts\info;
+
+use MoonShine\Contracts\Core\DependencyInjection\OptimizerCollectionContract;
+use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'moonshine:optimize-clear')]
 class OptimizeClearCommand extends MoonShineCommand

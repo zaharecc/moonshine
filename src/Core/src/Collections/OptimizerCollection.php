@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MoonShine\Core\Collections;
 
-use ReflectionException;
 use Composer\Autoload\ClassLoader;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -13,6 +12,7 @@ use MoonShine\Contracts\Core\DependencyInjection\OptimizerCollectionContract;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Contracts\Core\ResourceContract;
 use ReflectionClass;
+use ReflectionException;
 
 final class OptimizerCollection implements OptimizerCollectionContract
 {
@@ -36,7 +36,8 @@ final class OptimizerCollection implements OptimizerCollectionContract
     public function __construct(
         protected string $cachePath,
         protected ConfiguratorContract $config,
-    ) {}
+    ) {
+    }
 
     public function getTypes(?string $namespace = null, bool $withCache = true): array
     {
@@ -103,7 +104,7 @@ final class OptimizerCollection implements OptimizerCollectionContract
                     ))
                     ->flip()
                     ->values()
-                    ->filter(fn(string $class): bool => $this->isInstanceOf($class, $this->groups)
+                    ->filter(fn (string $class): bool => $this->isInstanceOf($class, $this->groups)
                         && $this->isNotAbstract($class))
             )
             ->collapse()

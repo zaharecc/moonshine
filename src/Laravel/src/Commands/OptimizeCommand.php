@@ -63,8 +63,7 @@ class OptimizeCommand extends MoonShineCommand
     {
         try {
             require $filename;
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $files->delete($filename);
 
             throw new LogicException('Your MoonShine file are not serializable.', 0, $e);
