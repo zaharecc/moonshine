@@ -26,6 +26,7 @@ use MoonShine\Contracts\Core\DependencyInjection\RouterContract;
 use MoonShine\Contracts\Core\DependencyInjection\StorageContract;
 use MoonShine\Contracts\Core\DependencyInjection\TranslatorContract;
 use MoonShine\Contracts\Core\DependencyInjection\ViewRendererContract;
+use MoonShine\Contracts\MenuManager\MenuAutoloaderContract;
 use MoonShine\Contracts\MenuManager\MenuManagerContract;
 use MoonShine\Core\Collections\OptimizerCollection;
 use MoonShine\Core\Core;
@@ -71,6 +72,7 @@ use MoonShine\Laravel\Notifications\MoonShineMemoryNotification;
 use MoonShine\Laravel\Notifications\MoonShineNotification;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Laravel\Storage\LaravelStorage;
+use MoonShine\Laravel\Support\MenuAutoloader;
 use MoonShine\MenuManager\MenuManager;
 use MoonShine\UI\Applies\AppliesRegister;
 use MoonShine\UI\Fields\Checkbox;
@@ -151,6 +153,7 @@ final class MoonShineServiceProvider extends ServiceProvider
         $this->app->singleton(AssetResolverContract::class, AssetResolver::class);
         $this->app->{app()->runningUnitTests() ? 'bind' : 'singleton'}(ConfiguratorContract::class, MoonShineConfigurator::class);
         $this->app->singleton(AppliesRegisterContract::class, AppliesRegister::class);
+        $this->app->singleton(MenuAutoloaderContract::class, MenuAutoloader::class);
         $this->app->singleton(
             MoonShineNotificationContract::class,
             moonshineConfig()->isUseDatabaseNotifications() ? MoonShineNotification::class : MoonShineMemoryNotification::class

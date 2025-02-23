@@ -12,6 +12,7 @@ use MoonShine\Laravel\Http\Controllers\ProfileController;
 use MoonShine\Laravel\MoonShineAuth;
 use MoonShine\Laravel\Traits\WithComponentsPusher;
 use MoonShine\Laravel\TypeCasts\ModelCaster;
+use MoonShine\MenuManager\Attributes\SkipMenu;
 use MoonShine\UI\Components\FormBuilder;
 use MoonShine\UI\Components\Heading;
 use MoonShine\UI\Components\Layout\Box;
@@ -23,6 +24,7 @@ use MoonShine\UI\Fields\Password;
 use MoonShine\UI\Fields\PasswordRepeat;
 use MoonShine\UI\Fields\Text;
 
+#[SkipMenu]
 /**
  * @extends Page<null>
  */

@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace MoonShine\Laravel\Pages;
 
 use MoonShine\Contracts\UI\ComponentContract;
+use MoonShine\MenuManager\Attributes\SkipMenu;
 
+#[SkipMenu]
 /**
  * @extends Page<null>
  */

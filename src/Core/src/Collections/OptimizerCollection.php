@@ -11,6 +11,7 @@ use MoonShine\Contracts\Core\DependencyInjection\ConfiguratorContract;
 use MoonShine\Contracts\Core\DependencyInjection\OptimizerCollectionContract;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Contracts\Core\ResourceContract;
+use MoonShine\Contracts\MenuManager\MenuElementContract;
 use ReflectionClass;
 use ReflectionException;
 
@@ -24,6 +25,7 @@ final class OptimizerCollection implements OptimizerCollectionContract
     protected array $groups = [
         PageContract::class,
         ResourceContract::class,
+        MenuElementContract::class,
     ];
 
     /**

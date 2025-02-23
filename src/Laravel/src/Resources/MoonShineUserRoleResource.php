@@ -6,6 +6,7 @@ namespace MoonShine\Laravel\Resources;
 
 use MoonShine\Laravel\Enums\Action;
 use MoonShine\Laravel\Models\MoonshineUserRole;
+use MoonShine\MenuManager\Attributes\Group;
 use MoonShine\Support\Attributes\Icon;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Components\Layout\Box;
@@ -13,6 +14,7 @@ use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
 
 #[Icon('bookmark')]
+#[Group('moonshine::ui.resource.system', 'users', translatable: true)]
 /**
  * @extends ModelResource<MoonshineUserRole>
  */

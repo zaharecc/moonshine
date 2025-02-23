@@ -7,7 +7,9 @@ namespace MoonShine\Laravel\Pages;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Laravel\Forms\LoginForm;
 use MoonShine\Laravel\Layouts\LoginLayout;
+use MoonShine\MenuManager\Attributes\SkipMenu;
 
+#[SkipMenu]
 /**
  * @extends Page<null>
  */

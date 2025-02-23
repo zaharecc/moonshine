@@ -63,6 +63,30 @@
             <stopCompletion />
         </classMethod>
 
+        <classConstructor
+            class="\MoonShine\Support\Attributes\Icon"
+            argument="0"
+        >
+            <files extension="blade.php" xpath="$project/vendor/moonshine/moonshine/src/UI/resources/views/icons"/>
+            <stopCompletion />
+        </classConstructor>
+
+        <classConstructor
+            class="\MoonShine\MenuManager\Attributes\Group"
+            argument="1"
+        >
+            <files extension="blade.php" xpath="$project/vendor/moonshine/moonshine/src/UI/resources/views/icons"/>
+            <stopCompletion />
+        </classConstructor>
+
+        <classConstructor
+            class="\MoonShine\MenuManager\Attributes\CanSee"
+            argument="0"
+        >
+            <methods xpath="$containingClass" private="false" protected="false" static="false" />
+            <stopCompletion />
+        </classConstructor>
+
         <classMethod
             class="\MoonShine\AssetManager\InlineJs"
             method="make"
