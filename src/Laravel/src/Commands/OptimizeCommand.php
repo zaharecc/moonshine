@@ -19,13 +19,13 @@ class OptimizeCommand extends MoonShineCommand
 
     protected $description = 'Cache MoonShine pages and resources to increase performance';
 
-    public function handle(OptimizerCollectionContract $autoload, Filesystem $files): int
+    public function handle(OptimizerCollectionContract $optimizer, Filesystem $files): int
     {
         $this->components->info('Caching MoonShine pages and resources.');
 
-        $filename = $autoload->getCachePath();
+        $filename = $optimizer->getCachePath();
 
-        $this->store($files, $filename, $this->getFreshSources($autoload));
+        $this->store($files, $filename, $this->getFreshSources($optimizer));
 
         $this->validateCache($files, $filename);
 
@@ -35,13 +35,13 @@ class OptimizeCommand extends MoonShineCommand
     }
 
     /**
-     * @param  OptimizerCollectionContract  $autoload
+     * @param  OptimizerCollectionContract  $optimizer
      *
      * @return array<string, list<class-string<PageContract|ResourceContract>>>
      */
-    protected function getFreshSources(OptimizerCollectionContract $autoload): array
+    protected function getFreshSources(OptimizerCollectionContract $optimizer): array
     {
-        return $autoload->getTypes($this->getNamespace(), false);
+        return $optimizer->getTypes($this->getNamespace(), false);
     }
 
     /**

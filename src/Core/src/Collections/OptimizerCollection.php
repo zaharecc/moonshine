@@ -15,11 +15,22 @@ use ReflectionClass;
 
 final class OptimizerCollection implements OptimizerCollectionContract
 {
-    /** @var array<class-string, array> */
-    protected array $types = [
-        PageContract::class     => [],
-        ResourceContract::class => [],
+    /**
+     * Contains links to interfaces for searching and grouping elements.
+     *
+     * @var array<class-string>
+     */
+    protected array $groups = [
+        PageContract::class,
+        ResourceContract::class,
     ];
+
+    /**
+     * Contains the processed result of the found groups of elements.
+     *
+     * @var array<class-string>|null
+     */
+    protected ?array $types = null;
 
     public function __construct(
         protected string $cachePath,
@@ -67,13 +78,13 @@ final class OptimizerCollection implements OptimizerCollectionContract
     {
         $autoload = [];
 
-        foreach (array_keys($this->types) as $type) {
+        foreach ($this->groups as $type) {
             foreach ($items as $value) {
-                $autoload[$type] = array_unique(array_merge($autoload[$type], $value[$type] ?? []));
+                $autoload[$type] = array_unique(array_merge($autoload[$type] ?? [], $value[$type] ?? []));
             }
         }
 
-        return $autoload;
+        return array_filter($autoload);
     }
 
     protected function getPages(): array
@@ -92,7 +103,7 @@ final class OptimizerCollection implements OptimizerCollectionContract
                     ->flip()
                     ->values()
                     ->filter(function (string $class) {
-                        return $this->isInstanceOf($class, [PageContract::class, ResourceContract::class])
+                        return $this->isInstanceOf($class, $this->groups)
                             && $this->isNotAbstract($class);
                     })
             )
@@ -103,7 +114,7 @@ final class OptimizerCollection implements OptimizerCollectionContract
 
     protected function getGroupName(string $class): string
     {
-        foreach (array_keys($this->types) as $contract) {
+        foreach ($this->groups as $contract) {
             if ($this->isInstanceOf($class, $contract)) {
                 return $contract;
             }

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace MoonShine\Tests\Feature\Commands;
 
 use MoonShine\Contracts\Core\DependencyInjection\OptimizerCollectionContract;
+use MoonShine\Contracts\Core\PageContract;
+use MoonShine\Contracts\Core\ResourceContract;
 use MoonShine\Laravel\Commands\OptimizeCommand;
 use MoonShine\Tests\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -23,7 +25,7 @@ final class OptimizeCommandTest extends TestCase
         $path = $this->app->make(OptimizerCollectionContract::class)->getCachePath();
 
         if (file_exists($path)) {
-            @unlink($path);
+            unlink($path);
         }
 
         $this->assertFileDoesNotExist($path);
@@ -38,7 +40,7 @@ final class OptimizeCommandTest extends TestCase
         $content = require $path;
 
         $this->assertIsArray($content);
-        $this->assertArrayHasKey('pages', $content);
-        $this->assertArrayNotHasKey('resources', $content);
+        $this->assertArrayHasKey(PageContract::class, $content);
+        $this->assertArrayNotHasKey(ResourceContract::class, $content);
     }
 }
