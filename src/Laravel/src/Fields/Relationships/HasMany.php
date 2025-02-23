@@ -640,15 +640,15 @@ class HasMany extends ModelRelationField implements HasFieldsContract, FieldWith
         $components = new Components();
         $flexComponents = new Components();
 
-        if($this->isCreatable()) {
+        if ($this->isCreatable()) {
             $flexComponents->add($this->getCreateButton());
         }
 
-        if(! \is_null($this->buttons)) {
+        if (! \is_null($this->buttons)) {
             $flexComponents->add($this->getButtons());
         }
 
-        if($flexComponents->isNotEmpty()) {
+        if ($flexComponents->isNotEmpty()) {
             $components->add(Flex::make($flexComponents)->justifyAlign('between'));
         }
 
@@ -656,7 +656,9 @@ class HasMany extends ModelRelationField implements HasFieldsContract, FieldWith
 
         return [
             'component' => $this->getModalButton(
-                $components, $this->getLabel(), $this->getRelationName()
+                $components,
+                $this->getLabel(),
+                $this->getRelationName()
             ),
         ];
     }

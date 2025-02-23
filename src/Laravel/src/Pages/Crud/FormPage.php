@@ -153,6 +153,7 @@ class FormPage extends CrudPage
 
         if ($outsideFields->isEmpty()) {
             $components = array_merge($components, $this->getEmptyModals());
+
             return array_merge($components, $this->getResource()->getFormPageComponents());
         }
 
@@ -180,17 +181,18 @@ class FormPage extends CrudPage
                     ),
                 ])->name($field->getRelationName());
 
-            if($field instanceof HasTabModeContract && $field->isTabMode()) {
+            if ($field instanceof HasTabModeContract && $field->isTabMode()) {
                 $tabs[] = Tab::make($field->getLabel(), [
-                    $fieldComponent
+                    $fieldComponent,
                 ]);
+
                 continue;
             }
 
             $components[] = $fieldComponent;
         }
 
-        if($tabs !== []) {
+        if ($tabs !== []) {
             $components[] = Tabs::make($tabs);
         }
 

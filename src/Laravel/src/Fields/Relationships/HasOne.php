@@ -357,7 +357,9 @@ class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithC
         return [
             'component' => $this->isModalMode()
                 ? $this->getModalButton(
-                    Components::make([$this->getComponent()]), $this->getLabel(), $this->getRelationName()
+                    Components::make([$this->getComponent()]),
+                    $this->getLabel(),
+                    $this->getRelationName()
                 )
                 : $this->getComponent(),
         ];

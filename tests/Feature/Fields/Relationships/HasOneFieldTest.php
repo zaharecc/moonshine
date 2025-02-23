@@ -26,7 +26,7 @@ it('modal mode in edit form', function () {
     ]);
 
     /** @var HasOne $field */
-    $field = $resource->getOutsideFields()->filter(fn($field) => $field->getColumn() === 'itemFile')->first();
+    $field = $resource->getOutsideFields()->filter(fn ($field) => $field->getColumn() === 'itemFile')->first();
 
     expect($field)
         ->not()->toBeNull()
@@ -34,7 +34,8 @@ it('modal mode in edit form', function () {
         ->toBeTrue()
     ;
 
-    fakeRequest($this->moonshineCore->getRouter()->getEndpoints()
+    fakeRequest(
+        $this->moonshineCore->getRouter()->getEndpoints()
         ->toPage(
             page: FormPage::class,
             resource: $resource,
@@ -60,24 +61,27 @@ it('modalMode in edit form with callbacks', function () {
             ->modalMode(
                 modifyButton: function (ActionButtonContract $button, HasOne $ctx) {
                     $button->customAttributes([
-                        'data-button-html' => $ctx->getRelationName() . 'TestRelation'
+                        'data-button-html' => $ctx->getRelationName() . 'TestRelation',
                     ]);
+
                     return $button;
                 },
                 modifyModal: function (Modal $modal, ActionButtonContract $button) {
                     $button->customAttributes([
-                        'data-button-html-for-modal' => 'true'
+                        'data-button-html-for-modal' => 'true',
                     ]);
                     $modal->customAttributes([
-                        'data-modal-html' => 'true'
+                        'data-modal-html' => 'true',
                     ]);
+
                     return $modal;
                 }
-            )
+            ),
     ]);
 
     asAdmin()
-        ->get($this->moonshineCore->getRouter()->getEndpoints()
+        ->get(
+            $this->moonshineCore->getRouter()->getEndpoints()
             ->toPage(
                 page: FormPage::class,
                 resource: $resource,
@@ -103,13 +107,14 @@ it('modal mode in add form', function () {
     ]);
 
     /** @var HasOne $field */
-    $field = $resource->getOutsideFields()->filter(fn($field) => $field->getColumn() === 'itemFile')->first();
+    $field = $resource->getOutsideFields()->filter(fn ($field) => $field->getColumn() === 'itemFile')->first();
 
     expect($field)
         ->not()->toBeNull()
     ;
 
-    fakeRequest($this->moonshineCore->getRouter()->getEndpoints()
+    fakeRequest(
+        $this->moonshineCore->getRouter()->getEndpoints()
         ->toPage(
             page: FormPage::class,
             resource: $resource,
@@ -135,7 +140,7 @@ it('disableOutside with modalMode', function () {
         ->toBeTrue();
 
     /** @var HasOne $field */
-    $field = $resource->getFormFields()->filter(fn($field) => $field->getColumn() === 'itemFile')->first();
+    $field = $resource->getFormFields()->filter(fn ($field) => $field->getColumn() === 'itemFile')->first();
 
     expect($field)
         ->not()->toBeNull()
@@ -155,7 +160,8 @@ it('tabMode in edit form', function () {
     ]);
 
     asAdmin()
-        ->get($this->moonshineCore->getRouter()->getEndpoints()
+        ->get(
+            $this->moonshineCore->getRouter()->getEndpoints()
             ->toPage(
                 page: FormPage::class,
                 resource: $resource,
