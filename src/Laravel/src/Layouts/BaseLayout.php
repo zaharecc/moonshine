@@ -202,7 +202,7 @@ abstract class BaseLayout extends AbstractLayout
             ),
         ];
 
-        if($this->withTitle()) {
+        if ($this->withTitle()) {
             return [
                 Title::make($this->getPage()->getTitle())->class('mb-6'),
                 ...$components,
