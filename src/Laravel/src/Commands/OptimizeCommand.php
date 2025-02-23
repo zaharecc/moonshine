@@ -41,7 +41,7 @@ class OptimizeCommand extends MoonShineCommand
      */
     protected function getFreshSources(OptimizerCollectionContract $autoload): array
     {
-        return $autoload->getSources($this->getNamespace(), false);
+        return $autoload->getTypes($this->getNamespace(), false);
     }
 
     /**

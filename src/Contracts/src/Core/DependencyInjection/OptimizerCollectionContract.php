@@ -8,7 +8,7 @@ interface OptimizerCollectionContract
 {
     public function getCachePath(): string;
 
-    public function getSource(string $contract, ?string $namespace = null, bool $withCache = true): array;
+    public function getType(string $contract, ?string $namespace = null, bool $withCache = true): array;
 
-    public function getSources(?string $namespace = null, bool $withCache = true): array;
+    public function getTypes(?string $namespace = null, bool $withCache = true): array;
 }

@@ -16,7 +16,7 @@ use ReflectionClass;
 
 final class OptimizerCollection implements OptimizerCollectionContract
 {
-    protected ?array $sources = null;
+    protected ?array $types = null;
 
     /** @var array<class-string, string> */
     protected array $groups = [
@@ -29,16 +29,16 @@ final class OptimizerCollection implements OptimizerCollectionContract
         protected ConfiguratorContract $config,
     ) {}
 
-    public function getSources(?string $namespace = null, bool $withCache = true): array
+    public function getTypes(?string $namespace = null, bool $withCache = true): array
     {
-        return $this->sources ??= $this->getDetected($namespace, $withCache);
+        return $this->types ??= $this->getDetected($namespace, $withCache);
     }
 
-    public function getSource(string $contract, ?string $namespace = null, bool $withCache = true): array
+    public function getType(string $contract, ?string $namespace = null, bool $withCache = true): array
     {
-        $group = $this->getGroupNameByContract($contract);
+        $type = $this->getTypeByContract($contract);
 
-        return $this->getSources($namespace, $withCache)[$group] ?? [];
+        return $this->getTypes($namespace, $withCache)[$type] ?? [];
     }
 
     public function getCachePath(): string
@@ -72,7 +72,7 @@ final class OptimizerCollection implements OptimizerCollectionContract
             return $autoload;
         }
 
-        $pagesName = $this->getGroupNameByContract(PageContract::class);
+        $pagesName = $this->getTypeByContract(PageContract::class);
 
         $autoload[$pagesName] = array_unique(array_merge($pages, $autoload[$pagesName] ?? []));
 
@@ -129,7 +129,7 @@ final class OptimizerCollection implements OptimizerCollectionContract
         return $class;
     }
 
-    protected function getGroupNameByContract(string $contract): string
+    protected function getTypeByContract(string $contract): string
     {
         return $this->groups[$contract] ?? $contract;
     }
