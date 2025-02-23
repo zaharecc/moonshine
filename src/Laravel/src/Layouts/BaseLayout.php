@@ -138,13 +138,18 @@ abstract class BaseLayout extends AbstractLayout
     {
         return Header::make([
             Breadcrumbs::make($this->getPage()->getBreadcrumbs())->prepend($this->getHomeUrl(), icon: 'home'),
-            Search::make(),
+            $this->getSearchComponent(),
             When::make(
                 fn (): bool => $this->isUseNotifications(),
                 static fn (): array => [Notifications::make()],
             ),
             Locales::make(),
         ]);
+    }
+
+    protected function getSearchComponent(): ComponentContract
+    {
+        return Search::make();
     }
 
     protected function getFooterMenu(): array
