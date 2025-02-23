@@ -45,7 +45,7 @@ class OptimizeCommand extends MoonShineCommand
     }
 
     /**
-     * @param  \Illuminate\Filesystem\Filesystem  $storage
+     * @param Filesystem $storage
      * @param  string  $cachePath
      * @param  array<string, list<class-string<PageContract|ResourceContract>>>  $sources
      *

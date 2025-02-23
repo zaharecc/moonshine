@@ -155,7 +155,7 @@ final class MoonShineServiceProvider extends ServiceProvider
             MoonShineNotificationContract::class,
             moonshineConfig()->isUseDatabaseNotifications() ? MoonShineNotification::class : MoonShineMemoryNotification::class
         );
-        $this->app->singleton(OptimizerCollectionContract::class, fn () => new OptimizerCollection(
+        $this->app->singleton(OptimizerCollectionContract::class, fn (): OptimizerCollection => new OptimizerCollection(
             cachePath: $this->app->basePath('bootstrap/cache/moonshine.php'),
             config   : $this->app->make(ConfiguratorContract::class)
         ));

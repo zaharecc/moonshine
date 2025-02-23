@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MoonShine\Core\Collections;
 
+use ReflectionException;
 use Composer\Autoload\ClassLoader;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -49,7 +50,7 @@ final class OptimizerCollection implements OptimizerCollectionContract
 
     public function hasType(string $contract): bool
     {
-        return ! empty($this->getType($contract));
+        return $this->getType($contract) !== [];
     }
 
     public function getCachePath(): string
@@ -98,17 +99,15 @@ final class OptimizerCollection implements OptimizerCollectionContract
             ->map(
                 fn (ClassLoader $loader) => Collection::make($loader->getClassMap())
                     ->when($namespace, static fn (Collection $items) => $items->filter(
-                        static fn (string $path, string $class) => str_starts_with($class, $namespace)
+                        static fn (string $path, string $class): bool => str_starts_with($class, (string) $namespace)
                     ))
                     ->flip()
                     ->values()
-                    ->filter(function (string $class) {
-                        return $this->isInstanceOf($class, $this->groups)
-                            && $this->isNotAbstract($class);
-                    })
+                    ->filter(fn(string $class): bool => $this->isInstanceOf($class, $this->groups)
+                        && $this->isNotAbstract($class))
             )
             ->collapse()
-            ->groupBy(fn (string $class) => $this->getGroupName($class))
+            ->groupBy(fn (string $class): string => $this->getGroupName($class))
             ->toArray();
     }
 
@@ -143,7 +142,7 @@ final class OptimizerCollection implements OptimizerCollectionContract
     /**
      * @param  class-string  $class
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      * @return bool
      */
     protected function isNotAbstract(string $class): bool
