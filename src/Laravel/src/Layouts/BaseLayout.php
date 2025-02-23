@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MoonShine\Laravel\Layouts;
 
+use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Laravel\Components\Layout\Locales;
 use MoonShine\Laravel\Components\Layout\Notifications;
 use MoonShine\Laravel\Components\Layout\Profile;
@@ -135,13 +136,18 @@ abstract class BaseLayout extends AbstractLayout
     {
         return Header::make([
             Breadcrumbs::make($this->getPage()->getBreadcrumbs())->prepend($this->getHomeUrl(), icon: 'home'),
-            Search::make(),
+            $this->getSearchComponent(),
             When::make(
                 fn (): bool => $this->isUseNotifications(),
                 static fn (): array => [Notifications::make()],
             ),
             Locales::make(),
         ]);
+    }
+
+    protected function getSearchComponent(): ComponentContract
+    {
+        return Search::make();
     }
 
     protected function getFooterMenu(): array
