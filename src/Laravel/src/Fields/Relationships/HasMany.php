@@ -25,9 +25,9 @@ use MoonShine\Contracts\UI\TableBuilderContract;
 use MoonShine\Core\Collections\Components;
 use MoonShine\Laravel\Buttons\HasManyButton;
 use MoonShine\Laravel\Collections\Fields;
-use MoonShine\Laravel\Enums\Action;
 use MoonShine\Laravel\Contracts\Fields\HasModalModeContract;
 use MoonShine\Laravel\Contracts\Fields\HasTabModeContract;
+use MoonShine\Laravel\Enums\Action;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Laravel\Traits\Fields\HasModalModeConcern;
 use MoonShine\Laravel\Traits\Fields\WithRelatedLink;
@@ -509,7 +509,7 @@ class HasMany extends ModelRelationField implements HasFieldsContract, FieldWith
 
     protected function hasAction(Action ...$actions): bool
     {
-        if(!$this->activeActions instanceof ListOf) {
+        if (! $this->activeActions instanceof ListOf) {
             return true;
         }
 
