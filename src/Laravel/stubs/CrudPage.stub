@@ -8,6 +8,7 @@ use MoonShine\Laravel\Pages\Crud\{extendShort};
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FieldContract;
 use Throwable;
+{uses}
 
 class DummyClass extends {extendShort}
 {

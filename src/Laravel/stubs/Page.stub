@@ -6,6 +6,7 @@ namespace {namespace};
 
 use MoonShine\Laravel\Pages\Page;
 use MoonShine\Contracts\UI\ComponentContract;
+{uses}
 
 class DummyClass extends Page
 {

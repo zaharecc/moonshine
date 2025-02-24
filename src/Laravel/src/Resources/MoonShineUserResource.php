@@ -11,6 +11,7 @@ use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use MoonShine\Laravel\Models\MoonshineUser;
 use MoonShine\Laravel\Models\MoonshineUserRole;
 use MoonShine\MenuManager\Attributes\Group;
+use MoonShine\MenuManager\Attributes\Order;
 use MoonShine\Support\Attributes\Icon;
 use MoonShine\Support\Enums\Color;
 use MoonShine\Support\ListOf;
@@ -29,6 +30,7 @@ use MoonShine\UI\Fields\Text;
 
 #[Icon('users')]
 #[Group('moonshine::ui.resource.system', 'users', translatable: true)]
+#[Order(1)]
 /**
  * @extends ModelResource<MoonshineUser>
  */

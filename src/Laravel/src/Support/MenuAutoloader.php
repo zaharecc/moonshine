@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MoonShine\Laravel\Support;
 
 use Closure;
+use Illuminate\Support\Collection;
 use Leeto\FastAttributes\Attributes;
 use MoonShine\Contracts\Core\CrudPageContract;
 use MoonShine\Contracts\Core\DependencyInjection\CoreContract;
@@ -16,6 +17,7 @@ use MoonShine\Contracts\MenuManager\MenuFillerContract;
 use MoonShine\Laravel\DependencyInjection\MoonShine;
 use MoonShine\MenuManager\Attributes\CanSee;
 use MoonShine\MenuManager\Attributes\Group;
+use MoonShine\MenuManager\Attributes\Order;
 use MoonShine\MenuManager\Attributes\SkipMenu;
 use MoonShine\MenuManager\MenuGroup;
 use MoonShine\MenuManager\MenuItem;
@@ -24,6 +26,7 @@ use MoonShine\MenuManager\MenuItem;
  * @phpstan-type PSMenuItem array{
  *      filler: class-string<MenuFillerContract>,
  *      canSee: null|string,
+ *      position: null|int,
  *  }
  *
  * @phpstan-type PSMenuGroup array{
@@ -39,6 +42,7 @@ use MoonShine\MenuManager\MenuItem;
  *      PSMenuItem|array{
  *           group: PSMenuGroup,
  *           items: list<PSMenuItem>,
+ *           position: null|int,
  *      }
  *  }
  */
@@ -68,23 +72,28 @@ final readonly class MenuAutoloader implements MenuAutoloaderContract
 
             $group = Attributes::for($item, Group::class)->class()->first();
             $canSee = Attributes::for($item, CanSee::class)->class()->first();
+            $order = Attributes::for($item, Order::class)->class()->first();
 
             $label = $group?->label;
             $icon = $group?->icon;
+            $position = $order?->value;
 
             $namespace = get_class($item);
-            $data = ['filler' => $namespace, 'canSee' => $canSee?->method];
+            $data = ['filler' => $namespace, 'canSee' => $canSee?->method, 'position' => $position];
 
             if ($label !== null) {
-                $existsGroup = $items[$label] ?? null;
+                $existingGroup = $items[$label] ?? null;
+
+                $existingItems = collect($existingGroup['items'] ?? []);
+
+                if (!$existingItems->pluck('filler')->contains($data['filler'])) {
+                    $existingItems->push($data);
+                }
+
                 $items[$label] = [
+                    'position' => $position,
                     'group' => ['class' => $namespace, 'label' => $label, 'icon' => $icon, 'canSee' => $canSee?->method, 'translatable' => $group?->translatable],
-                    'items' => \is_null($existsGroup)
-                        ? [$data]
-                        : [
-                            ...$existsGroup['items'],
-                            $data,
-                        ],
+                    'items' => $existingItems->all(),
                 ];
 
                 return;
@@ -103,7 +112,19 @@ final readonly class MenuAutoloader implements MenuAutoloaderContract
             $resolveItems($item, $items);
         }
 
-        return $items;
+        $sort = static fn($items) => (new Collection($items))->values()
+            ->sortBy(fn($item) => $item['position'] ?? INF)
+            ->values();
+
+        $result = $sort($items)->map(function ($item) use($sort) {
+            if (isset($item['group'])) {
+                $item['items'] = $sort($item['items'])->all();
+            }
+
+            return $item;
+        });
+
+        return $result->all();
     }
 
     /**
@@ -136,21 +157,21 @@ final readonly class MenuAutoloader implements MenuAutoloaderContract
                 continue;
             }
 
-            $menu[] = $this->toMenuItem(...$item);
+            $menu[] = $this->toMenuItem($item['filler'], $item['canSee']);
         }
 
         return $menu;
     }
 
     /**
-     * @param  class-string<MenuFillerContract&(PageContract|ResourceContract)>  $filler
+     * @param  class-string<MenuFillerContract>  $filler
      */
-    private function toMenuItem(string $filler, ?string $icon = null, ?string $canSee = null): MenuItem
+    private function toMenuItem(string $filler, ?string $canSee = null): MenuItem
     {
         $resolved = app($filler);
         $label = $resolved->getTitle();
 
-        return MenuItem::make($label, $filler, $icon)
+        return MenuItem::make($label, $filler)
             ->when($canSee, fn(MenuItem $item) => $item->canSee($this->canSee($resolved, $canSee)));
     }
 

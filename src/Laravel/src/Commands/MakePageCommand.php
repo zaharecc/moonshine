@@ -14,7 +14,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 #[AsCommand(name: 'moonshine:page')]
 class MakePageCommand extends MoonShineCommand
 {
-    protected $signature = 'moonshine:page {className?} {--force} {--without-register} {--crud} {--dir=} {--extends=} {--base-dir=} {--base-namespace=}';
+    protected $signature = 'moonshine:page {className?} {--force} {--without-register} {--skip-menu} {--crud} {--dir=} {--extends=} {--base-dir=} {--base-namespace=}';
 
     protected $description = 'Create page';
 
@@ -92,11 +92,18 @@ class MakePageCommand extends MoonShineCommand
 
         $this->makeDir($stubsPath->dir);
 
+        $uses = '';
+
+        if($this->option('skip-menu')) {
+            $uses = '#[\MoonShine\MenuManager\Attributes\SkipMenu]';
+        }
+
         $this->copyStub($stub, $stubsPath->getPath(), [
             '{namespace}' => $stubsPath->namespace,
             'DummyClass' => $stubsPath->name,
             'DummyTitle' => $stubsPath->name,
             '{extendShort}' => $extends,
+            '{uses}' => $uses,
         ]);
 
         $this->wasCreatedInfo($stubsPath);
