@@ -13,5 +13,6 @@ final readonly class Group
         public string $label,
         public ?string $icon = null,
         public bool $translatable = false,
-    ) {}
+    ) {
+    }
 }

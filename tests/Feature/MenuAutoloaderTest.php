@@ -63,7 +63,7 @@ it('to array', function () {
                 'canSee' => null,
                 'position' => 1,
             ],
-        ]
+        ],
     ];
 
     $group = $items[0];
