@@ -23,6 +23,7 @@ Route::moonshine(static function (Router $router): void {
     $pagePrefix = moonshineConfig()->getPagePrefix();
     $resourcePrefix = moonshineConfig()->getResourcePrefix();
     $authEnabled = moonshineConfig()->isAuthEnabled();
+    $profileEnabled = moonshineConfig()->isUseProfile();
     $authMiddleware = moonshineConfig()->getAuthMiddleware();
 
     if ($authEnabled) {
@@ -31,7 +32,9 @@ Route::moonshine(static function (Router $router): void {
             Route::post('/authenticate', 'authenticate')->name('authenticate');
             Route::get('/logout', 'logout')->name('logout');
         });
+    }
 
+    if ($profileEnabled) {
         Route::post('/profile', [ProfileController::class, 'store'])
             ->middleware($authMiddleware)
             ->name('profile.store');

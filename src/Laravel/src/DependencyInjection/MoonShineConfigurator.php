@@ -197,6 +197,16 @@ final class MoonShineConfigurator implements ConfiguratorContract
         return $this->set('use_migrations', true);
     }
 
+    public function isUseProfile(): bool
+    {
+        return $this->get('use_profile', true);
+    }
+
+    public function useProfile(): self
+    {
+        return $this->set('use_profile', true);
+    }
+
     public function isUseNotifications(): bool
     {
         return $this->get('use_notifications', false);

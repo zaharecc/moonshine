@@ -22,16 +22,22 @@ use MoonShine\Contracts\UI\FieldWithComponentContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
 use MoonShine\Contracts\UI\HasFieldsContract;
 use MoonShine\Contracts\UI\TableBuilderContract;
+use MoonShine\Core\Collections\Components;
 use MoonShine\Laravel\Buttons\HasManyButton;
 use MoonShine\Laravel\Collections\Fields;
 use MoonShine\Laravel\Enums\Action;
+use MoonShine\Laravel\Contracts\Fields\HasModalModeContract;
+use MoonShine\Laravel\Contracts\Fields\HasTabModeContract;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Laravel\Traits\Fields\HasModalModeConcern;
 use MoonShine\Laravel\Traits\Fields\WithRelatedLink;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Components\ActionGroup;
+use MoonShine\UI\Components\Layout\Flex;
 use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\UI\Contracts\HasUpdateOnPreviewContract;
 use MoonShine\UI\Fields\Field;
+use MoonShine\UI\Traits\Fields\HasTabModeConcern;
 use MoonShine\UI\Traits\WithFields;
 use Throwable;
 
@@ -41,10 +47,12 @@ use Throwable;
  * @implements HasFieldsContract<Fields|FieldsContract>
  * @implements FieldWithComponentContract<TableBuilderContract|FormBuilderContract|ActionButtonContract>
  */
-class HasMany extends ModelRelationField implements HasFieldsContract, FieldWithComponentContract
+class HasMany extends ModelRelationField implements HasFieldsContract, FieldWithComponentContract, HasModalModeContract, HasTabModeContract
 {
     use WithFields;
     use WithRelatedLink;
+    use HasModalModeConcern;
+    use HasTabModeConcern;
 
     protected string $view = 'moonshine::fields.relationships.has-many';
 
@@ -656,6 +664,50 @@ class HasMany extends ModelRelationField implements HasFieldsContract, FieldWith
      * @throws Throwable
      */
     protected function viewData(): array
+    {
+        return $this->isModalMode()
+            ? $this->modalViewData()
+            : $this->defaultViewData()
+        ;
+    }
+
+    /**
+     * @return array<string, mixed>
+     * @throws Throwable
+     */
+    protected function modalViewData(): array
+    {
+        $components = new Components();
+        $flexComponents = new Components();
+
+        if ($this->isCreatable()) {
+            $flexComponents->add($this->getCreateButton());
+        }
+
+        if (! \is_null($this->buttons)) {
+            $flexComponents->add($this->getButtons());
+        }
+
+        if ($flexComponents->isNotEmpty()) {
+            $components->add(Flex::make($flexComponents)->justifyAlign('between'));
+        }
+
+        $components->add($this->getComponent());
+
+        return [
+            'component' => $this->getModalButton(
+                $components,
+                $this->getLabel(),
+                $this->getRelationName()
+            ),
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     * @throws Throwable
+     */
+    public function defaultViewData(): array
     {
         return [
             'component' => $this->getComponent(),

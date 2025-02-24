@@ -10,6 +10,7 @@ use MoonShine\Contracts\AssetManager\AssetManagerContract;
 use MoonShine\Contracts\Core\DependencyInjection\ConfiguratorContract;
 use MoonShine\Contracts\Core\DependencyInjection\CoreContract;
 use MoonShine\Contracts\Core\DependencyInjection\FieldsContract;
+use MoonShine\Contracts\Core\DependencyInjection\OptimizerCollectionContract;
 use MoonShine\Contracts\Core\DependencyInjection\RequestContract;
 use MoonShine\Contracts\Core\DependencyInjection\RouterContract;
 use MoonShine\Contracts\Core\DependencyInjection\StorageContract;
@@ -50,6 +51,7 @@ abstract class Core implements CoreContract, StatefulContract
         protected RouterContract $router,
         protected ConfiguratorContract $config,
         protected TranslatorContract $translator,
+        protected OptimizerCollectionContract $optimizer,
     ) {
         static::setInstance(
             fn (): mixed => $this->getContainer(CoreContract::class)
@@ -239,5 +241,13 @@ abstract class Core implements CoreContract, StatefulContract
                 collect($this->pages)->except('error')
             )
         );
+    }
+
+    /**
+     * Get an autoload instance
+     */
+    public function getOptimizer(): OptimizerCollectionContract
+    {
+        return $this->optimizer;
     }
 }

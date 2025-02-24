@@ -10,15 +10,15 @@ use MoonShine\Laravel\Resources\MoonShineUserResource;
 use MoonShine\Laravel\Resources\MoonShineUserRoleResource;
 use MoonShine\MenuManager\MenuGroup;
 use MoonShine\MenuManager\MenuItem;
-use MoonShine\UI\Components\{Components,
+use MoonShine\UI\Components\{
     Layout\Body,
     Layout\Content,
     Layout\Div,
     Layout\Flash,
     Layout\Html,
     Layout\Layout,
-    Layout\Wrapper,
-    Title};
+    Layout\Wrapper
+};
 
 class AppLayout extends BaseLayout
 {
@@ -57,12 +57,7 @@ class AppLayout extends BaseLayout
 
                                 $this->getHeaderComponent(),
 
-                                Content::make([
-                                    Title::make($this->getPage()->getTitle())->class('mb-6'),
-                                    Components::make(
-                                        $this->getPage()->getComponents()
-                                    ),
-                                ]),
+                                Content::make($this->getContentComponents()),
 
                                 $this->getFooterComponent(),
                             ])->class('layout-page')->name(self::CONTENT_FRAGMENT_NAME),

@@ -10,6 +10,8 @@ use MoonShine\Contracts\UI\FormBuilderContract;
 use MoonShine\Core\Exceptions\ResourceException;
 use MoonShine\Laravel\Collections\Fields;
 use MoonShine\Laravel\Components\Fragment;
+use MoonShine\Laravel\Contracts\Fields\HasModalModeContract;
+use MoonShine\Laravel\Contracts\Fields\HasTabModeContract;
 use MoonShine\Laravel\Enums\Ability;
 use MoonShine\Laravel\Enums\Action;
 use MoonShine\Laravel\Fields\Relationships\ModelRelationField;
@@ -23,6 +25,8 @@ use MoonShine\UI\Components\Heading;
 use MoonShine\UI\Components\Layout\Divider;
 use MoonShine\UI\Components\Layout\LineBreak;
 use MoonShine\UI\Components\MoonShineComponent;
+use MoonShine\UI\Components\Tabs;
+use MoonShine\UI\Components\Tabs\Tab;
 use MoonShine\UI\Fields\Hidden;
 use Throwable;
 
@@ -147,14 +151,28 @@ class FormPage extends CrudPage
 
         $outsideFields = $this->getResource()->getOutsideFields()->formFields();
 
-        if ($outsideFields->isNotEmpty()) {
-            $components[] = Divider::make();
+        if ($outsideFields->isEmpty()) {
+            $components = array_merge($components, $this->getEmptyModals());
 
-            /** @var ModelRelationField $field */
-            foreach ($outsideFields as $field) {
-                $components[] = LineBreak::make();
+            return array_merge($components, $this->getResource()->getFormPageComponents());
+        }
 
-                $components[] = Fragment::make([
+        $tabs = [];
+
+        $components[] = Divider::make();
+
+        /** @var ModelRelationField $field */
+        foreach ($outsideFields as $field) {
+
+            $components[] = LineBreak::make();
+
+            $fieldComponent = $field instanceof HasModalModeContract && $field->isModalMode()
+                // With the modalMode, the field is already inside the fragment
+                ? $field->fillCast(
+                    $item,
+                    $field->getResource()?->getCaster()
+                )
+                : Fragment::make([
                     Heading::make($field->getLabel()),
 
                     $field->fillCast(
@@ -162,7 +180,20 @@ class FormPage extends CrudPage
                         $field->getResource()?->getCaster()
                     ),
                 ])->name($field->getRelationName());
+
+            if ($field instanceof HasTabModeContract && $field->isTabMode()) {
+                $tabs[] = Tab::make($field->getLabel(), [
+                    $fieldComponent,
+                ]);
+
+                continue;
             }
+
+            $components[] = $fieldComponent;
+        }
+
+        if ($tabs !== []) {
+            $components[] = Tabs::make($tabs);
         }
 
         $components = array_merge($components, $this->getEmptyModals());

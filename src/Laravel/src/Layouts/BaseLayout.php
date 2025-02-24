@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MoonShine\Laravel\Layouts;
 
+use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Laravel\Components\Layout\Locales;
 use MoonShine\Laravel\Components\Layout\Notifications;
 use MoonShine\Laravel\Components\Layout\Profile;
@@ -11,6 +12,7 @@ use MoonShine\Laravel\Components\Layout\Search;
 use MoonShine\Laravel\DependencyInjection\MoonShine;
 use MoonShine\UI\AbstractLayout;
 use MoonShine\UI\Components\Breadcrumbs;
+use MoonShine\UI\Components\Components;
 use MoonShine\UI\Components\Layout\Assets;
 use MoonShine\UI\Components\Layout\Burger;
 use MoonShine\UI\Components\Layout\Div;
@@ -24,6 +26,7 @@ use MoonShine\UI\Components\Layout\Meta;
 use MoonShine\UI\Components\Layout\Sidebar;
 use MoonShine\UI\Components\Layout\ThemeSwitcher;
 use MoonShine\UI\Components\Layout\TopBar;
+use MoonShine\UI\Components\Title;
 use MoonShine\UI\Components\When;
 
 /**
@@ -88,7 +91,7 @@ abstract class BaseLayout extends AbstractLayout
             Div::make([
                 Menu::make(),
                 When::make(
-                    fn (): bool => $this->isAuthEnabled(),
+                    fn (): bool => $this->isProfileEnabled(),
                     fn (): array => [
                         $this->getProfileComponent(sidebar: true),
                     ],
@@ -113,7 +116,7 @@ abstract class BaseLayout extends AbstractLayout
 
             Div::make([
                 When::make(
-                    fn (): bool => $this->isAuthEnabled(),
+                    fn (): bool => $this->isProfileEnabled(),
                     fn (): array => [
                         $this->getProfileComponent(),
                     ],
@@ -135,13 +138,18 @@ abstract class BaseLayout extends AbstractLayout
     {
         return Header::make([
             Breadcrumbs::make($this->getPage()->getBreadcrumbs())->prepend($this->getHomeUrl(), icon: 'home'),
-            Search::make(),
+            $this->getSearchComponent(),
             When::make(
                 fn (): bool => $this->isUseNotifications(),
                 static fn (): array => [Notifications::make()],
             ),
             Locales::make(),
         ]);
+    }
+
+    protected function getSearchComponent(): ComponentContract
+    {
+        return Search::make();
     }
 
     protected function getFooterMenu(): array
@@ -188,14 +196,45 @@ abstract class BaseLayout extends AbstractLayout
         );
     }
 
+    /**
+     * @return list<ComponentContract>
+     */
+    protected function getContentComponents(): array
+    {
+        $components = [
+            Components::make(
+                $this->getPage()->getComponents()
+            ),
+        ];
+
+        if ($this->withTitle()) {
+            return [
+                Title::make($this->getPage()->getTitle())->class('mb-6'),
+                ...$components,
+            ];
+        }
+
+        return $components;
+    }
+
     protected function getHomeUrl(): string
     {
         return $this->getCore()->getRouter()->getEndpoints()->home();
     }
 
+    protected function withTitle(): bool
+    {
+        return true;
+    }
+
     protected function isAuthEnabled(): bool
     {
         return $this->getCore()->getConfig()->isAuthEnabled();
+    }
+
+    protected function isProfileEnabled(): bool
+    {
+        return $this->getCore()->getConfig()->isUseProfile();
     }
 
     protected function isUseNotifications(): bool

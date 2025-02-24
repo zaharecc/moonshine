@@ -18,15 +18,20 @@ use MoonShine\Contracts\UI\FieldWithComponentContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
 use MoonShine\Contracts\UI\HasFieldsContract;
 use MoonShine\Contracts\UI\TableBuilderContract;
+use MoonShine\Core\Collections\Components;
 use MoonShine\Laravel\Collections\Fields;
+use MoonShine\Laravel\Contracts\Fields\HasModalModeContract;
+use MoonShine\Laravel\Contracts\Fields\HasTabModeContract;
 use MoonShine\Laravel\Exceptions\ModelRelationFieldException;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Laravel\Traits\Fields\HasModalModeConcern;
 use MoonShine\UI\Components\FormBuilder;
 use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\UI\Contracts\HasUpdateOnPreviewContract;
 use MoonShine\UI\Exceptions\FieldException;
 use MoonShine\UI\Fields\Field;
 use MoonShine\UI\Fields\Hidden;
+use MoonShine\UI\Traits\Fields\HasTabModeConcern;
 use MoonShine\UI\Traits\WithFields;
 use Throwable;
 
@@ -36,9 +41,11 @@ use Throwable;
  * @implements HasFieldsContract<Fields|FieldsContract>
  * @implements FieldWithComponentContract<FormBuilderContract>
  */
-class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithComponentContract
+class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithComponentContract, HasModalModeContract, HasTabModeContract
 {
     use WithFields;
+    use HasModalModeConcern;
+    use HasTabModeConcern;
 
     protected string $view = 'moonshine::fields.relationships.has-one';
 
@@ -61,6 +68,15 @@ class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithC
     protected ?Closure $modifyTable = null;
 
     protected ?FormBuilderContract $resolvedComponent = null;
+
+    public function disableOutside(): static
+    {
+        $this->modalMode();
+
+        $this->outsideComponent = false;
+
+        return $this;
+    }
 
     public function hasWrapper(): bool
     {
@@ -334,8 +350,18 @@ class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithC
      */
     protected function viewData(): array
     {
+        if (\is_null($this->getRelatedModel()?->getKey())) {
+            return ['component' => ''];
+        }
+
         return [
-            'component' => $this->getComponent(),
+            'component' => $this->isModalMode()
+                ? $this->getModalButton(
+                    Components::make([$this->getComponent()]),
+                    $this->getLabel(),
+                    $this->getRelationName()
+                )
+                : $this->getComponent(),
         ];
     }
 }
