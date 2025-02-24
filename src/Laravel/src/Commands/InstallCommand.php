@@ -279,6 +279,7 @@ class InstallCommand extends MoonShineCommand
             'className' => 'Dashboard',
             '--force' => true,
             '--without-register' => true,
+            '--skip-menu' => true,
         ]);
 
         $this->replaceInConfig(

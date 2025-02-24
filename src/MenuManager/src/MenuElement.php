@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MoonShine\MenuManager;
 
 use Closure;
+use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use MoonShine\Contracts\Core\HasViewRendererContract;
 use MoonShine\Contracts\MenuManager\MenuElementContract;
@@ -27,6 +28,7 @@ abstract class MenuElement implements MenuElementContract, HasViewRendererContra
     use HasCanSee;
     use WithLabel;
     use WithViewRenderer;
+    use Conditionable;
 
     private bool $topMode = false;
 

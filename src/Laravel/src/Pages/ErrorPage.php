@@ -6,8 +6,10 @@ namespace MoonShine\Laravel\Pages;
 
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Laravel\Layouts\BlankLayout;
+use MoonShine\MenuManager\Attributes\SkipMenu;
 use MoonShine\UI\Components\FlexibleRender;
 
+#[SkipMenu]
 /**
  * @method static static make(int $code, string $message)
  * @extends Page<null>

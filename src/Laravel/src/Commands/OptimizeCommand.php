@@ -7,8 +7,8 @@ namespace MoonShine\Laravel\Commands;
 use Illuminate\Filesystem\Filesystem;
 use LogicException;
 use MoonShine\Contracts\Core\DependencyInjection\OptimizerCollectionContract;
-use MoonShine\Contracts\Core\PageContract;
-use MoonShine\Contracts\Core\ResourceContract;
+use MoonShine\Contracts\MenuManager\MenuElementContract;
+use MoonShine\Laravel\Support\MenuAutoloader;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Throwable;
 
@@ -19,13 +19,13 @@ class OptimizeCommand extends MoonShineCommand
 
     protected $description = 'Cache MoonShine pages and resources to increase performance';
 
-    public function handle(OptimizerCollectionContract $optimizer, Filesystem $files): int
+    public function handle(OptimizerCollectionContract $optimizer, Filesystem $files, MenuAutoloader $menuAutoloader): int
     {
         $this->components->info('Caching MoonShine pages and resources.');
 
         $filename = $optimizer->getCachePath();
 
-        $this->store($files, $filename, $this->getFreshSources($optimizer));
+        $this->store($files, $filename, $this->getFreshSources($optimizer, $menuAutoloader));
 
         $this->validateCache($files, $filename);
 
@@ -36,18 +36,22 @@ class OptimizeCommand extends MoonShineCommand
 
     /**
      * @param  OptimizerCollectionContract  $optimizer
+     * @param  MenuAutoloader  $menuAutoloader
      *
-     * @return array<string, list<class-string<PageContract|ResourceContract>>>
+     * @return array<class-string, array>
      */
-    protected function getFreshSources(OptimizerCollectionContract $optimizer): array
+    protected function getFreshSources(OptimizerCollectionContract $optimizer, MenuAutoloader $menuAutoloader): array
     {
-        return $optimizer->getTypes($this->getNamespace(), false);
+        return [
+            ...$optimizer->getTypes($this->getNamespace(), false),
+            MenuElementContract::class => $menuAutoloader->toArray(),
+        ];
     }
 
     /**
      * @param Filesystem $storage
      * @param  string  $cachePath
-     * @param  array<string, list<class-string<PageContract|ResourceContract>>>  $sources
+     * @param  array<class-string, array>  $sources
      *
      * @return void
      */
