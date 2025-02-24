@@ -100,7 +100,7 @@ abstract class MoonShineCommand extends Command
 
         $content = str(file_get_contents($to));
 
-        if($content->contains('->autoload(') || $content->contains('->autoloadMenu(')) {
+        if ($content->contains('->autoload(') || $content->contains('->autoloadMenu(')) {
             return;
         }
 
