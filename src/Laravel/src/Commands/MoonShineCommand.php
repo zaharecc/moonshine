@@ -100,6 +100,10 @@ abstract class MoonShineCommand extends Command
 
         $content = str(file_get_contents($to));
 
+        if($content->contains('->autoload(') || $content->contains('->autoloadMenu(')) {
+            return;
+        }
+
         if ($content->contains(['\\' . $basename . ';', '\\' . $basename . ','])) {
             return;
         }
