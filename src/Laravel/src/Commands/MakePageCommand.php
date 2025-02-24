@@ -94,7 +94,7 @@ class MakePageCommand extends MoonShineCommand
 
         $uses = '';
 
-        if($this->option('skip-menu')) {
+        if ($this->option('skip-menu')) {
             $uses = '#[\MoonShine\MenuManager\Attributes\SkipMenu]';
         }
 

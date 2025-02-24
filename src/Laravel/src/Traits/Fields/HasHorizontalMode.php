@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace MoonShine\Laravel\Traits\Fields;
 
-
-use Illuminate\Support\Collection;
 use Closure;
+use Illuminate\Support\Collection;
 use MoonShine\UI\Fields\Checkbox;
 use Throwable;
 
@@ -63,7 +62,7 @@ trait HasHorizontalMode
                 ->setNameAttribute($this->getNameAttribute((string) $item->getKey()))
                 ->setValue($item->getKey());
 
-            $this->listHtml .= str((string) $element)->wrap("<li>","</li>");
+            $this->listHtml .= str((string) $element)->wrap("<li>", "</li>");
         }
 
         return str($this->listHtml)->wrap(

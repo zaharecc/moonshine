@@ -11,5 +11,6 @@ final readonly class Order
 {
     public function __construct(
         public int $value
-    ) {}
+    ) {
+    }
 }

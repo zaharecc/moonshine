@@ -11,5 +11,6 @@ final readonly class CanSee
 {
     public function __construct(
         public string $method,
-    ) {}
+    ) {
+    }
 }
