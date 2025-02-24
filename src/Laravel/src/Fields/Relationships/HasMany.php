@@ -509,7 +509,7 @@ class HasMany extends ModelRelationField implements HasFieldsContract, FieldWith
 
     protected function hasAction(Action ...$actions): bool
     {
-        if($this->activeActions === null) {
+        if(!$this->activeActions instanceof ListOf) {
             return true;
         }
 
