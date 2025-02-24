@@ -25,11 +25,13 @@ use MoonShine\Contracts\UI\TableBuilderContract;
 use MoonShine\Core\Collections\Components;
 use MoonShine\Laravel\Buttons\HasManyButton;
 use MoonShine\Laravel\Collections\Fields;
+use MoonShine\Laravel\Enums\Action;
 use MoonShine\Laravel\Contracts\Fields\HasModalModeContract;
 use MoonShine\Laravel\Contracts\Fields\HasTabModeContract;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Laravel\Traits\Fields\HasModalModeConcern;
 use MoonShine\Laravel\Traits\Fields\WithRelatedLink;
+use MoonShine\Support\ListOf;
 use MoonShine\UI\Components\ActionGroup;
 use MoonShine\UI\Components\Layout\Flex;
 use MoonShine\UI\Components\Table\TableBuilder;
@@ -96,6 +98,11 @@ class HasMany extends ModelRelationField implements HasFieldsContract, FieldWith
     protected bool $withoutModals = false;
 
     protected null|TableBuilderContract|FormBuilderContract|ActionButtonContract $resolvedComponent = null;
+
+    /**
+     * @var null|ListOf<Action>
+     */
+    protected ?ListOf $activeActions = null;
 
     public function disableOutside(): static
     {
@@ -480,6 +487,39 @@ class HasMany extends ModelRelationField implements HasFieldsContract, FieldWith
             );
     }
 
+    public function activeActions(Action ...$actions): static
+    {
+        $this->activeActions = new ListOf(Action::class, $actions);
+
+        return $this;
+    }
+
+    public function withoutActions(Action ...$actions): static
+    {
+        $this->activeActions = (new ListOf(Action::class, [
+            Action::CREATE,
+            Action::VIEW,
+            Action::UPDATE,
+            Action::DELETE,
+            Action::MASS_DELETE,
+        ]))->except(...$actions);
+
+        return $this;
+    }
+
+    protected function hasAction(Action ...$actions): bool
+    {
+        if($this->activeActions === null) {
+            return true;
+        }
+
+        return collect($actions)->every(fn (Action $action): bool => \in_array(
+            $action,
+            $this->activeActions->toArray(),
+            true
+        ));
+    }
+
     /**
      * @throws Throwable
      */
@@ -527,13 +567,13 @@ class HasMany extends ModelRelationField implements HasFieldsContract, FieldWith
             );
         }
 
-        return [
+        return array_filter([
             ...$this->getIndexButtons(),
-            $detailButton,
-            $editButton,
-            $deleteButton,
-            $massDeleteButton,
-        ];
+            $this->hasAction(Action::VIEW) ? $detailButton : null,
+            $this->hasAction(Action::UPDATE) ? $editButton : null,
+            $this->hasAction(Action::DELETE) ? $deleteButton : null,
+            $this->hasAction(Action::MASS_DELETE) ? $massDeleteButton : null,
+        ]);
     }
 
     protected function prepareFill(array $raw = [], ?DataWrapperContract $casted = null): mixed
