@@ -22,6 +22,7 @@ use MoonShine\Laravel\Contracts\Fields\HasAsyncSearchContract;
 use MoonShine\Laravel\Contracts\Fields\HasPivotContract;
 use MoonShine\Laravel\Contracts\Fields\HasRelatedValuesContact;
 use MoonShine\Laravel\Traits\Fields\BelongsToOrManyCreatable;
+use MoonShine\Laravel\Traits\Fields\HasHorizontalMode;
 use MoonShine\Laravel\Traits\Fields\HasTreeMode;
 use MoonShine\Laravel\Traits\Fields\WithAsyncSearch;
 use MoonShine\Laravel\Traits\Fields\WithRelatedLink;
@@ -65,6 +66,7 @@ class BelongsToMany extends ModelRelationField implements
     use HasPlaceholder;
     use WithRelatedLink;
     use BelongsToOrManyCreatable;
+    use HasHorizontalMode;
 
     protected string $view = 'moonshine::fields.relationships.belongs-to-many';
 
@@ -282,7 +284,7 @@ class BelongsToMany extends ModelRelationField implements
             return $this->getValues()->toArray();
         }
 
-        if ($this->isTree()) {
+        if ($this->isTree() || $this->isHorizontalMode()) {
             return $this->getKeys();
         }
 
@@ -479,7 +481,7 @@ class BelongsToMany extends ModelRelationField implements
     {
         $requestValues = collect($this->getRequestValue() ?: []);
 
-        if ($this->isSelectMode() || $this->isTree()) {
+        if ($this->isSelectMode() || $this->isTree() || $this->isHorizontalMode()) {
             return $requestValues;
         }
 
@@ -515,7 +517,7 @@ class BelongsToMany extends ModelRelationField implements
 
         $checkedKeys = $this->getCheckedKeys();
 
-        if ($this->isSelectMode() || $this->isTree() || $this->getFields()->isEmpty()) {
+        if ($this->isSelectMode() || $this->isTree() || $this->isHorizontalMode() || $this->getFields()->isEmpty()) {
             $item->{$this->getRelationName()}()->sync($checkedKeys);
 
             return $data;
@@ -620,6 +622,7 @@ class BelongsToMany extends ModelRelationField implements
     {
         $viewData = [
             'isTreeMode' => $this->isTree(),
+            'isHorizontalMode' => $this->isHorizontalMode(),
             'isSelectMode' => $this->isSelectMode(),
             'isAsyncSearch' => $this->isAsyncSearch(),
             'asyncSearchUrl' => $this->isAsyncSearch() ? $this->getAsyncSearchUrl() : '',
@@ -646,6 +649,14 @@ class BelongsToMany extends ModelRelationField implements
             return [
                 ...$viewData,
                 'treeHtml' => $this->toTreeHtml(),
+            ];
+        }
+
+
+        if ($this->isHorizontalMode()) {
+            return [
+                ...$viewData,
+                'listHtml' => $this->toListHtml(),
             ];
         }
 
