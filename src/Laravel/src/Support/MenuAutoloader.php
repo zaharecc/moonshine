@@ -10,7 +10,6 @@ use Leeto\FastAttributes\Attributes;
 use MoonShine\Contracts\Core\CrudPageContract;
 use MoonShine\Contracts\Core\DependencyInjection\CoreContract;
 use MoonShine\Contracts\Core\PageContract;
-use MoonShine\Contracts\Core\ResourceContract;
 use MoonShine\Contracts\MenuManager\MenuAutoloaderContract;
 use MoonShine\Contracts\MenuManager\MenuElementContract;
 use MoonShine\Contracts\MenuManager\MenuFillerContract;
@@ -78,7 +77,7 @@ final readonly class MenuAutoloader implements MenuAutoloaderContract
             $icon = $group?->icon;
             $position = $order?->value;
 
-            $namespace = get_class($item);
+            $namespace = $item::class;
             $data = ['filler' => $namespace, 'canSee' => $canSee?->method, 'position' => $position];
 
             if ($label !== null) {
@@ -106,14 +105,14 @@ final readonly class MenuAutoloader implements MenuAutoloaderContract
             $resolveItems($item, $items);
         }
 
-        $excludePages = static fn(PageContract $page) => ! $page instanceof CrudPageContract;
+        $excludePages = static fn(PageContract $page): bool => ! $page instanceof CrudPageContract;
 
         foreach ($this->core->getPages()->filter($excludePages)->toArray() as $item) {
             $resolveItems($item, $items);
         }
 
         $sort = static fn($items) => (new Collection($items))->values()
-            ->sortBy(fn($item) => $item['position'] ?? INF)
+            ->sortBy(fn($item): mixed => $item['position'] ?? INF)
             ->values();
 
         $result = $sort($items)->map(function ($item) use($sort) {
@@ -153,7 +152,7 @@ final readonly class MenuAutoloader implements MenuAutoloaderContract
                     $group['translatable'] ? __($group['label']) : $group['label'],
                     $this->generateMenu($item['items']),
                     $group['icon'],
-                )->when($group['canSee'], fn(MenuGroup $ctx) => $ctx->canSee($this->canSee($group['class'], $group['canSee'])));
+                )->when($group['canSee'], fn(MenuGroup $ctx): MenuGroup => $ctx->canSee($this->canSee($group['class'], $group['canSee'])));
                 continue;
             }
 
@@ -172,7 +171,7 @@ final readonly class MenuAutoloader implements MenuAutoloaderContract
         $label = $resolved->getTitle();
 
         return MenuItem::make($label, $filler)
-            ->when($canSee, fn(MenuItem $item) => $item->canSee($this->canSee($resolved, $canSee)));
+            ->when($canSee, fn(MenuItem $item): MenuItem => $item->canSee($this->canSee($resolved, $canSee)));
     }
 
     /**
