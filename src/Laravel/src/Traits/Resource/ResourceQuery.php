@@ -218,7 +218,7 @@ trait ResourceQuery
 
         $callback = $field?->getSortableCallback();
 
-        if(\is_string($callback)) {
+        if (\is_string($callback)) {
             $column = $callback;
             $callback = null;
         }
