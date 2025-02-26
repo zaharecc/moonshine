@@ -216,14 +216,11 @@ trait ResourceQuery
 
         $field = $this->getIndexFields()->findByColumn($column);
 
-        if (\is_null($field)) {
-            $column = $this->getSortColumn();
-        }
-
         $callback = $field?->getSortableCallback();
 
-        if ($callback instanceof Closure) {
-            $column = value($callback);
+        if(\is_string($callback)) {
+            $column = $callback;
+            $callback = null;
         }
 
         return [$column, $direction, $callback];
