@@ -6,7 +6,6 @@
             property="column"
         >
             <arrayValues xpath="$containingClass.$model.$fillable"/>
-            <stopCompletion />
         </classProperty>
 
         <classProperty
@@ -15,7 +14,6 @@
             targetInArray="value"
         >
             <methods xpath="$containingClass.$model"/>
-            <stopCompletion />
         </classProperty>
 
         <classMethod
@@ -24,7 +22,6 @@
             argument="0"
         >
             <files extension="blade.php" xpath="$project/vendor/moonshine/moonshine/src/UI/resources/views/icons"/>
-            <stopCompletion />
         </classMethod>
 
         <classMethod
@@ -33,7 +30,6 @@
             argument="0"
         >
             <files extension="blade.php" xpath="$project/vendor/moonshine/moonshine/src/UI/resources/views/icons"/>
-            <stopCompletion />
         </classMethod>
 
         <classMethod
@@ -42,7 +38,6 @@
             argument="4"
         >
             <files extension="blade.php" xpath="$project/vendor/moonshine/moonshine/src/UI/resources/views/icons"/>
-            <stopCompletion />
         </classMethod>
 
         <classMethod
@@ -51,7 +46,6 @@
             argument="0"
         >
             <methods xpath="$containingClass" private="false" protected="false" static="false" />
-            <stopCompletion />
         </classMethod>
 
         <classMethod
@@ -60,7 +54,6 @@
             argument="0"
         >
             <methods xpath="$containingClass" private="false" protected="false" static="false" />
-            <stopCompletion />
         </classMethod>
 
         <classConstructor
@@ -68,7 +61,6 @@
             argument="0"
         >
             <files extension="blade.php" xpath="$project/vendor/moonshine/moonshine/src/UI/resources/views/icons"/>
-            <stopCompletion />
         </classConstructor>
 
         <classConstructor
@@ -76,7 +68,6 @@
             argument="1"
         >
             <files extension="blade.php" xpath="$project/vendor/moonshine/moonshine/src/UI/resources/views/icons"/>
-            <stopCompletion />
         </classConstructor>
 
         <classConstructor
@@ -84,7 +75,6 @@
             argument="0"
         >
             <methods xpath="$containingClass" private="false" protected="false" static="false" />
-            <stopCompletion />
         </classConstructor>
 
         <classMethod
@@ -93,7 +83,6 @@
             argument="0"
         >
             <languageInjection language="JavaScript"/>
-            <stopCompletion />
         </classMethod>
 
         <classConstructor
@@ -101,7 +90,6 @@
             argument="0"
         >
             <languageInjection language="JavaScript"/>
-            <stopCompletion />
         </classConstructor>
 
         <classMethod
@@ -110,7 +98,6 @@
             argument="0"
         >
             <languageInjection language="CSS"/>
-            <stopCompletion />
         </classMethod>
 
         <classConstructor
@@ -118,7 +105,6 @@
             argument="0"
         >
             <languageInjection language="CSS"/>
-            <stopCompletion />
         </classConstructor>
 
         <classMethod
@@ -127,7 +113,6 @@
             argument="1"
         >
             <collection name="onclick-modifiers" argument="1" />
-            <stopCompletion />
         </classMethod>
 
         <classMethod
@@ -136,7 +121,6 @@
             argument="0"
         >
             <methods xpath="$containingClass" private="false" protected="false" static="false" />
-            <stopCompletion />
         </classMethod>
 
         <classMethod
@@ -145,7 +129,6 @@
             argument="1"
         >
             <methods xpath="$containingClass.$model" />
-            <stopCompletion />
         </classMethod>
 
         <classMethod
@@ -154,7 +137,6 @@
             argument="1"
         >
             <arrayValues xpath="$containingClass.$model.$fillable" />
-            <stopCompletion />
         </classMethod>
 
         <classMethod
@@ -163,7 +145,6 @@
             argument="0"
         >
             <collection name="items-align" argument="0" />
-            <stopCompletion />
         </classMethod>
 
         <classMethod
@@ -172,7 +153,6 @@
             argument="0"
         >
             <collection name="justify-align" argument="0" />
-            <stopCompletion />
         </classMethod>
 
         <classMethod
@@ -181,7 +161,6 @@
             argument="1"
         >
             <collection name="size" argument="1" />
-            <stopCompletion />
         </classMethod>
 
         <classMethod
@@ -190,7 +169,6 @@
             argument="0"
         >
             <collection name="size" argument="0" />
-            <stopCompletion />
         </classMethod>
 
         <classMethod
@@ -199,7 +177,6 @@
             argument="2"
         >
             <collection name="placement" argument="2" />
-            <stopCompletion />
         </classMethod>
 
         <classMethod
@@ -208,7 +185,6 @@
             argument="0"
         >
             <collection name="placement" argument="0" />
-            <stopCompletion />
         </classMethod>
 
         <classMethod
@@ -217,7 +193,6 @@
             argument="0"
         >
             <collection name="strategy" argument="0" />
-            <stopCompletion />
         </classMethod>
     </definitions>
     <collections>
