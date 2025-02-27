@@ -342,6 +342,11 @@ abstract class CrudResource extends Resource implements CrudResourceContract
         );
     }
 
+    public function getListComponentNameWithRow(null|int|string $id = null): string
+    {
+        return $this->getListComponentName() . ($id ? "-$id" : "-{row-id}");
+    }
+
     public function getListEventType(): JsEvent
     {
         return JsEvent::TABLE_UPDATED;
