@@ -13,6 +13,7 @@ use MoonShine\Contracts\UI\TableRowContract;
 use MoonShine\Laravel\Contracts\Notifications\MoonShineNotificationContract;
 use MoonShine\Laravel\Http\Responses\MoonShineJsonResponse;
 use MoonShine\Laravel\Pages\QuickPage;
+use MoonShine\Laravel\Resources\CrudResource;
 use MoonShine\Laravel\Traits\Controller\InteractsWithAuth;
 use MoonShine\Laravel\Traits\Controller\InteractsWithUI;
 use MoonShine\Laravel\TypeCasts\ModelCaster;
@@ -100,6 +101,8 @@ abstract class MoonShineController extends BaseController
             return $table;
         }
 
+        $key = request()->getScalar('_key');
+
         /** @var ModelCaster $cast */
         $cast = $table->getCast();
 
@@ -109,13 +112,22 @@ abstract class MoonShineController extends BaseController
 
         if (! $class instanceof Model) {
             return $table->getRows()->first(
-                static fn (TableRowContract $row): bool => $row->getKey() === request()->getScalar('_key'),
+                static fn (TableRowContract $row): bool => $row->getKey() === $key,
             );
         }
 
-        $item = $class::query()->find(
-            request()->getScalar('_key')
-        );
+        /** @var null|CrudResource $resource */
+        $resource = moonshineRequest()->getResource();
+
+        if($resource === null) {
+            $item = $class::query()->find($key);
+        }
+
+        if($resource !== null) {
+            $resource->setItemID($key);
+
+            $item = $resource->findItem();
+        }
 
         if (blank($item)) {
             return '';
