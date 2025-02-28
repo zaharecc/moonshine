@@ -9,14 +9,15 @@ use Closure;
 interface CacheAttributesContract
 {
     /**
-     * @param  Closure  $default
+     * @template T of mixed
+     * @param  Closure(): T  $default
      * @param  class-string  $target
      * @param  class-string  $attribute
      * @param  int|null  $type
      * @param  string|null  $concrete
      * @param  array<int, string>|null  $column
      *
-     * @return mixed
+     * @return T
      */
     public function get(
         Closure $default,

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MoonShine\Laravel\Traits\Resource;
 
+use Attribute;
 use Closure;
 use Illuminate\Support\Collection;
 use Leeto\FastAttributes\Attributes;
@@ -173,14 +174,13 @@ trait ResourceQuery
     {
         if ($this->hasSearch() && filled($this->getQueryParams()->get($queryKey))) {
             $fullTextColumns = $this->getCore()->getAttributes()->get(
-                default: fn() => Attributes::for($this)
+                default: fn(): mixed => Attributes::for($this)
                     ->attribute(SearchUsingFullText::class)
                     ->method('search')
                     ->first('columns'),
                 target: $this::class,
                 attribute: SearchUsingFullText::class,
-                type: \Attribute::TARGET_METHOD,
-                concrete: 'search',
+                type: Attribute::TARGET_METHOD,
                 column: [0 => 'columns']
             );
 

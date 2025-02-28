@@ -11,8 +11,6 @@ use MoonShine\Contracts\Core\DependencyInjection\CacheAttributesContract;
 use MoonShine\Contracts\Core\DependencyInjection\OptimizerCollectionContract;
 use MoonShine\Contracts\MenuManager\MenuAutoloaderContract;
 use MoonShine\Contracts\MenuManager\MenuElementContract;
-use MoonShine\Laravel\Support\CacheAttributes;
-use MoonShine\Laravel\Support\MenuAutoloader;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Throwable;
 

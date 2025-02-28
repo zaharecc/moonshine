@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MoonShine\Laravel\Support;
 
+use Closure;
 use Attribute;
 use Illuminate\Support\Str;
 use Leeto\FastAttributes\Attributes;
@@ -24,7 +25,7 @@ final readonly class CacheAttributes implements CacheAttributesContract
     public function __construct(private CoreContract $core) {}
 
     public function get(
-        \Closure $default,
+        Closure $default,
         string $target,
         string $attribute,
         ?int $type = null,
@@ -34,7 +35,7 @@ final readonly class CacheAttributes implements CacheAttributesContract
         $optimizer = $this->core->getOptimizer();
 
         if ($this->core->getOptimizer()->hasType(Attribute::class)) {
-            $type = $type ?? Attribute::TARGET_CLASS;
+            $type ??= Attribute::TARGET_CLASS;
             $attributes = $optimizer->getType(Attribute::class);
             $str = Str::of("$target.$type.$attribute")
                 ->when(
@@ -62,12 +63,15 @@ final readonly class CacheAttributes implements CacheAttributesContract
         return $default();
     }
 
+    /**
+     * @return array<class-string, array<int, array<string, array>>>
+     */
     public function resolve(): array
     {
         $data = [];
 
         foreach ($this->core->getResources() as $resource) {
-            $classAttributes = Attributes::for($resource)->class()->get();
+            $classAttributes = Attributes::for($resource)->get();
 
             foreach ($classAttributes as $attribute) {
                 $data[$resource::class][Attribute::TARGET_CLASS][$attribute->getName()] = $attribute->getArguments();
@@ -76,7 +80,7 @@ final readonly class CacheAttributes implements CacheAttributesContract
             $search = Attributes::for($resource, SearchUsingFullText::class)->method('search')->first();
 
             if ($search !== null) {
-                $data[$resource::class][Attribute::TARGET_METHOD][$search::class]['search'] = [
+                $data[$resource::class][Attribute::TARGET_METHOD][$search::class] = [
                     'columns' => $search->columns,
                     'options' => $search->options,
                 ];
@@ -84,7 +88,7 @@ final readonly class CacheAttributes implements CacheAttributesContract
         }
 
         foreach ($this->core->getPages() as $page) {
-            $classAttributes = Attributes::for($page)->class()->get();
+            $classAttributes = Attributes::for($page)->get();
 
             foreach ($classAttributes as $attribute) {
                 $data[$page::class][Attribute::TARGET_CLASS][$attribute->getName()] = $attribute->getArguments();
