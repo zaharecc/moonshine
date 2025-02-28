@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MoonShine\Core\Pages;
 
+use Leeto\FastAttributes\Attributes;
 use MoonShine\Contracts\AssetManager\AssetManagerContract;
 use MoonShine\Contracts\Core\DependencyInjection\CoreContract;
 use MoonShine\Contracts\Core\DependencyInjection\RouterContract;
@@ -11,6 +12,7 @@ use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Contracts\Core\ResourceContract;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\LayoutContract;
+use MoonShine\Core\Attributes\Layout;
 use MoonShine\Core\Collections\Components;
 use MoonShine\Core\Core;
 use MoonShine\Core\Traits\HasResource;
@@ -256,6 +258,17 @@ abstract class Page implements PageContract
 
     public function getLayout(): LayoutContract
     {
+        $layout = $this->getCore()->getAttributes()->get(
+            default: fn() => Attributes::for($this, Layout::class)->class()->first('name'),
+            target: $this::class,
+            attribute: Layout::class,
+            column: [0 => 'name']
+        );
+
+        if(!\is_null($layout)) {
+            $this->setLayout($layout);
+        }
+
         if (\is_null($this->layout)) {
             $this->setLayout(
                 $this->getCore()->getConfig()->getLayout()

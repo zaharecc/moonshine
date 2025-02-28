@@ -22,6 +22,7 @@ use MoonShine\MenuManager\MenuGroup;
 use MoonShine\MenuManager\MenuItem;
 
 /**
+ * @internal
  * @phpstan-type PSMenuItem array{
  *      filler: class-string<MenuFillerContract>,
  *      canSee: null|string,
