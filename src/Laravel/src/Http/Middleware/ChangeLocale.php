@@ -14,9 +14,11 @@ final class ChangeLocale
 
     public function handle(Request $request, Closure $next): Response
     {
+        $key = moonshineConfig()->getLocaleKey();
+
         $locale = $request->input(
-            self::KEY,
-            session(self::KEY, moonshineConfig()->getLocale())
+            $key,
+            session($key, moonshineConfig()->getLocale())
         );
 
         $locale = strtolower((string) $locale);
@@ -30,8 +32,8 @@ final class ChangeLocale
             moonshineConfig()->locale($locale);
         }
 
-        if ($request->has(self::KEY)) {
-            session()->put(self::KEY, $locale);
+        if ($request->has($key)) {
+            session()->put($key, $locale);
         }
 
         return $next($request);
