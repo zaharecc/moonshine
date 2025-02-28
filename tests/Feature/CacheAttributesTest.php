@@ -20,4 +20,16 @@ it('resolve', function () {
     ;
 });
 
+it('get attribute', function () {
+    $attributes = app(CacheAttributesContract::class);
+    $icon = $attributes->get(
+        default: fn() => Attributes::for(MoonShineUserResource::class, Icon::class)->first('icon'),
+        target: MoonShineUserResource::class,
+        attribute: Icon::class,
+        column: [0 => 'icon']
+    );
 
+    expect($icon)
+        ->toBe('users')
+    ;
+});
