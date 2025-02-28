@@ -155,6 +155,11 @@ final class MoonShineConfigurator implements ConfiguratorContract
         return $this->get('locale', 'en');
     }
 
+    public function localeKey(string $name): self
+    {
+        return $this->set('locale_key', $name);
+    }
+
     public function getLocaleKey(): string
     {
         return $this->get('locale_key', ChangeLocale::KEY);
