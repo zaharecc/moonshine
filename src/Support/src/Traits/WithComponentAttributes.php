@@ -37,6 +37,17 @@ trait WithComponentAttributes
         return $this;
     }
 
+    public function removeClass(string $pattern): static
+    {
+        $before = $this->attributes->get('class', '');
+
+        $this->attributes = $this->attributes->class(
+            trim(preg_replace("/\b$pattern\b/", '', $before))
+        );
+
+        return $this;
+    }
+
     public function class(string|array $classes): static
     {
         $this->attributes = $this->attributes->class($classes);
