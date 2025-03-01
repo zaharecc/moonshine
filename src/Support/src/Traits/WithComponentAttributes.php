@@ -41,7 +41,7 @@ trait WithComponentAttributes
     {
         $before = $this->attributes->get('class', '');
 
-        $this->attributes->remove('class');
+        $this->getAttributes()->remove('class');
 
         $this->attributes = $this->attributes->class(
             trim(preg_replace("/(?<=\s|^)$pattern(?=\s|$)/", '', $before))
