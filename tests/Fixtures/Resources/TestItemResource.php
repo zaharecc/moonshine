@@ -108,8 +108,8 @@ class TestItemResource extends AbstractTestingResource
             Box::make([
                 Text::make('Name'),
                 BelongsTo::make('Category', resource: TestCategoryResource::class)->nullable(),
-                DateRange::make('Created at')
-            ])
+                DateRange::make('Created at'),
+            ]),
         ];
     }
 
