@@ -10,6 +10,7 @@ use Leeto\FastAttributes\Attributes;
 use MoonShine\Laravel\Collections\Fields;
 use MoonShine\Support\Attributes\SearchUsingFullText;
 use MoonShine\Support\Enums\SortDirection;
+use MoonShine\UI\Contracts\RangeFieldContract;
 use Traversable;
 
 /**
@@ -384,6 +385,12 @@ trait ResourceQuery
         }
 
         $filters = $this->getFilters()->onlyFields();
+
+        foreach ($filters as $filter) {
+            if ($filter instanceof RangeFieldContract) {
+                data_forget($params, $filter->getColumn());
+            }
+        }
 
         $filters->fill(
             $params,
