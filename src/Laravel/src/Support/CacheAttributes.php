@@ -34,9 +34,8 @@ final readonly class CacheAttributes implements CacheAttributesContract
     ): mixed {
         $optimizer = $this->core->getOptimizer();
 
-        if ($this->core->getOptimizer()->hasType(Attribute::class)) {
+        if ($this->core->getOptimizer()->hasCache() && $attributes = $optimizer->getType(Attribute::class)) {
             $type ??= Attribute::TARGET_CLASS;
-            $attributes = $optimizer->getType(Attribute::class);
             $str = Str::of("$target.$type.$attribute")
                 ->when(
                     $concrete !== null,
