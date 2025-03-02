@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Leeto\FastAttributes\Attributes;
 use MoonShine\Contracts\Core\DependencyInjection\CacheAttributesContract;
-use MoonShine\Contracts\Core\DependencyInjection\OptimizerCollectionContract;
 use MoonShine\Laravel\Resources\MoonShineUserResource;
 use MoonShine\Support\Attributes\Icon;
 
@@ -22,20 +21,7 @@ it('resolve', function () {
 });
 
 it('get attribute', function () {
-    $path = $this->app->make(OptimizerCollectionContract::class)->getCachePath();
-
-    if (file_exists($path)) {
-        @unlink($path);
-    }
-
-    dump($this->app->make(OptimizerCollectionContract::class)->getTypes());
-    $attributes = app(CacheAttributesContract::class);
-    $icon = $attributes->get(
-        default: fn() => Attributes::for(MoonShineUserResource::class, Icon::class)->first('icon'),
-        target: MoonShineUserResource::class,
-        attribute: Icon::class,
-        column: [0 => 'icon']
-    );
+    $icon = Attributes::for(MoonShineUserResource::class, Icon::class)->first('icon');
 
     expect($icon)
         ->toBe('users')
