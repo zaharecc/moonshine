@@ -106,7 +106,7 @@ final class OptimizerCollection implements OptimizerCollectionContract
                     ))
                     ->flip()
                     ->values()
-                    ->filter(fn (string $class): bool => !str_contains($class, 'Doctrine') && $this->isInstanceOf($class, $this->groups)
+                    ->filter(fn (string $class): bool => $this->isInstanceOf($class, $this->groups)
                         && $this->isNotAbstract($class))
             )
             ->collapse()
