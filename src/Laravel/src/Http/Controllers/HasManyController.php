@@ -12,6 +12,7 @@ use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
 use MoonShine\Contracts\UI\TableBuilderContract;
 use MoonShine\Laravel\Collections\Fields;
+use MoonShine\Laravel\Exceptions\ModelRelationFieldException;
 use MoonShine\Laravel\Fields\Relationships\HasMany;
 use MoonShine\Laravel\Fields\Relationships\ModelRelationField;
 use MoonShine\Laravel\Fields\Relationships\MorphMany;
@@ -32,8 +33,12 @@ final class HasManyController extends MoonShineController
     {
         $parent = $request->getResource()?->getItemOrInstance();
 
-        /** @var HasMany|MorphMany $field */
-        $field = $request->getField();
+        /** @var null|HasMany|MorphMany $field */
+        $field = $request->getPageField();
+
+        if($field === null) {
+            throw ModelRelationFieldException::notFound();
+        }
 
         /** @var ModelResource $resource */
         $resource = $field->getResource();
@@ -145,14 +150,18 @@ final class HasManyController extends MoonShineController
         /**
          * @var ?HasMany $field
          */
-        $field = $request->getField();
+        $field = $request->getPageField();
 
-        $field?->fillCast(
+        if($field === null) {
+            throw ModelRelationFieldException::notFound();
+        }
+
+        $field->fillCast(
             $parentItem,
             $parentResource->getCaster()
         );
 
-        $value = $field?->getComponent();
+        $value = $field->getComponent();
 
         if ($value instanceof TableBuilderContract && $request->filled('_key')) {
             return (string) $this->responseWithTable($value);
