@@ -8,6 +8,11 @@ use MoonShine\Core\Exceptions\MoonShineException;
 
 final class ModelRelationFieldException extends MoonShineException
 {
+    public static function notFound(): self
+    {
+        return new self('Field not found on page');
+    }
+
     public static function relationRequired(): self
     {
         return new self('Relation is required');
