@@ -36,7 +36,7 @@ final class HasManyController extends MoonShineController
         /** @var null|HasMany|MorphMany $field */
         $field = $request->getPageField();
 
-        if($field === null) {
+        if ($field === null) {
             throw ModelRelationFieldException::notFound();
         }
 
@@ -152,7 +152,7 @@ final class HasManyController extends MoonShineController
          */
         $field = $request->getPageField();
 
-        if($field === null) {
+        if ($field === null) {
             throw ModelRelationFieldException::notFound();
         }
 
