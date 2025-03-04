@@ -13,6 +13,7 @@ use MoonShine\Laravel\DependencyInjection\MoonShine;
 use MoonShine\UI\AbstractLayout;
 use MoonShine\UI\Components\Breadcrumbs;
 use MoonShine\UI\Components\Components;
+use MoonShine\UI\Components\Heading;
 use MoonShine\UI\Components\Layout\Assets;
 use MoonShine\UI\Components\Layout\Burger;
 use MoonShine\UI\Components\Layout\Div;
@@ -208,8 +209,11 @@ abstract class BaseLayout extends AbstractLayout
         ];
 
         if ($this->withTitle()) {
+            $hasSubtitle = $this->withSubTitle() && $this->getPage()->getSubtitle() !== '';
+
             return [
-                Title::make($this->getPage()->getTitle())->class('mb-6'),
+                Title::make($this->getPage()->getTitle())->class($hasSubtitle ? '' : 'mb-6'),
+                $hasSubtitle ? Heading::make($this->getPage()->getSubtitle())->class('mb-6') : null,
                 ...$components,
             ];
         }
@@ -223,6 +227,11 @@ abstract class BaseLayout extends AbstractLayout
     }
 
     protected function withTitle(): bool
+    {
+        return true;
+    }
+
+    protected function withSubTitle(): bool
     {
         return true;
     }

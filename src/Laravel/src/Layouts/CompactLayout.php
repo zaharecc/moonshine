@@ -80,7 +80,13 @@ class CompactLayout extends AppLayout
             ->infoBg('38, 93, 205', dark: true)
             ->infoText('179, 220, 255', dark: true);
     }
+
     protected function withTitle(): bool
+    {
+        return false;
+    }
+
+    protected function withSubTitle(): bool
     {
         return false;
     }
