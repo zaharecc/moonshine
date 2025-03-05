@@ -44,6 +44,10 @@ final class CrudController extends MoonShineController
             request()->only($resource->getQueryParamsKeys())
         );
 
+        $resource->setActivePage(
+            $resource->getIndexPage()
+        );
+
         return $resource->modifyCollectionResponse(
             $resource->getItems()
         );
@@ -58,6 +62,10 @@ final class CrudController extends MoonShineController
         if (\is_null($resource)) {
             abort(404, 'Resource not found');
         }
+
+        $resource->setActivePage(
+            $resource->getDetailPage()
+        );
 
         return $resource->modifyResponse(
             $resource->getItem()
@@ -89,12 +97,19 @@ final class CrudController extends MoonShineController
         /* @var \MoonShine\Laravel\Resources\CrudResource $resource */
         $resource = $request->getResource();
 
+        $resource->setActivePage(
+            $resource->getIndexPage()
+        );
+
         $redirectRoute = $request->input('_redirect', $resource->getRedirectAfterDelete());
 
         try {
             $resource->delete($resource->getItemOrFail());
         } catch (Throwable $e) {
-            return $this->reportAndResponse($request->ajax(), $e, $redirectRoute);
+            return $resource->modifyErrorResponse(
+                $this->reportAndResponse($request->ajax(), $e, $redirectRoute),
+                $e
+            );
         }
 
         if ($request->ajax() || $request->wantsJson()) {
@@ -119,12 +134,19 @@ final class CrudController extends MoonShineController
         /* @var \MoonShine\Laravel\Resources\CrudResource $resource */
         $resource = $request->getResource();
 
+        $resource->setActivePage(
+            $resource->getIndexPage()
+        );
+
         $redirectRoute = $request->input('_redirect', $resource->getRedirectAfterDelete());
 
         try {
             $resource->massDelete($request->input('ids', []));
         } catch (Throwable $e) {
-            return $this->reportAndResponse($request->ajax(), $e, $redirectRoute);
+            return $resource->modifyErrorResponse(
+                $this->reportAndResponse($request->ajax(), $e, $redirectRoute),
+                $e
+            );
         }
 
         if ($request->ajax() || $request->wantsJson()) {
@@ -154,6 +176,10 @@ final class CrudController extends MoonShineController
         $resource = $request->getResource();
         $item = $resource->getItemOrInstance();
 
+        $resource->setActivePage(
+            $resource->getFormPage()
+        );
+
         $redirectRoute = static function (CrudResource $resource) use ($request): ?string {
             if ($request->boolean('_without-redirect')) {
                 return null;
@@ -171,7 +197,10 @@ final class CrudController extends MoonShineController
         try {
             $item = $resource->save($item);
         } catch (Throwable $e) {
-            return $this->reportAndResponse($request->ajax(), $e, $redirectRoute($resource));
+            return $resource->modifyErrorResponse(
+                $this->reportAndResponse($request->ajax(), $e, $redirectRoute($resource)),
+                $e
+            );
         }
 
         $resource->setItem($item);
