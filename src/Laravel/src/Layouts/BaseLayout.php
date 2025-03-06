@@ -55,7 +55,7 @@ abstract class BaseLayout extends AbstractLayout
             Assets::make(),
         ])
             ->bodyColor($this->getColorManager()->get('body'))
-            ->title($this->getPage()->getTitle());
+            ->title($this->getPage()->getTitle() ?: moonshineConfig()->getTitle());
     }
 
     protected function getLogoComponent(): Logo
