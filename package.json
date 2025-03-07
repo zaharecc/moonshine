@@ -4,6 +4,7 @@
         "build": "cd src/UI && npm run build",
         "dev": "cd src/UI && npm run dev",
         "ci": "cd src/UI && npm ci",
-        "prettier": "cd src/UI && npm run prettier"
+        "prettier": "cd src/UI && npm run prettier",
+        "test": "cd src/UI && npm run test"
     }
 }
