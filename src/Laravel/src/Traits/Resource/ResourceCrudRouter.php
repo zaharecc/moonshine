@@ -112,7 +112,7 @@ trait ResourceCrudRouter
             $method,
             $message,
             $params,
-            page: $page,
+            page: $page ?? $this->getActivePage(),
         );
     }
 
