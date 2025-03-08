@@ -9,14 +9,14 @@ use Illuminate\Contracts\Support\Arrayable;
 final readonly class OptionImage implements Arrayable
 {
     public function __construct(
-        private ?string $src = null,
+        private string $src,
         private int $width = 10,
         private int $height = 10,
         private string $objectFit = 'cover',
     ) {
     }
 
-    public function getSrc(): ?string
+    public function getSrc(): string
     {
         return $this->src;
     }
