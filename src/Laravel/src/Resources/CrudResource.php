@@ -34,8 +34,8 @@ use MoonShine\Support\AlpineJs;
 use MoonShine\Support\Enums\ClickAction;
 use MoonShine\Support\Enums\JsEvent;
 use MoonShine\UI\Components\Metrics\Wrapped\Metric;
-use Throwable;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 use Traversable;
 
 /**
