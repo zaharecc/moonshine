@@ -15,5 +15,6 @@ final readonly class Layout
          * @var class-string<LayoutContract> $name
          */
         public string $name
-    ) {}
+    ) {
+    }
 }

@@ -135,7 +135,7 @@ trait ResourceQuery
         }
 
         return $this->itemOr(
-            fn() => $this->findItem(),
+            fn () => $this->findItem(),
         );
     }
 
@@ -153,7 +153,7 @@ trait ResourceQuery
         }
 
         return $this->itemOr(
-            fn() => $this->findItem() ?? $this->getDataInstance(),
+            fn () => $this->findItem() ?? $this->getDataInstance(),
         );
     }
 
@@ -167,7 +167,7 @@ trait ResourceQuery
         }
 
         return $this->itemOr(
-            fn() => $this->findItem(orFail: true),
+            fn () => $this->findItem(orFail: true),
         );
     }
 
@@ -175,7 +175,7 @@ trait ResourceQuery
     {
         if ($this->hasSearch() && filled($this->getQueryParams()->get($queryKey))) {
             $fullTextColumns = $this->getCore()->getAttributes()->get(
-                default: fn(): mixed => Attributes::for($this)
+                default: fn (): mixed => Attributes::for($this)
                     ->attribute(SearchUsingFullText::class)
                     ->method('search')
                     ->first('columns'),
@@ -356,7 +356,7 @@ trait ResourceQuery
             $this->setQueryParams(
                 $this->getQueryParams()->merge(
                     collect(moonshineCache()->get($this->getQueryCacheKey(), []))->filter(
-                        fn($value, $key): bool => ! $this->getQueryParams()->has($key),
+                        fn ($value, $key): bool => ! $this->getQueryParams()->has($key),
                     )->toArray(),
                 ),
             );

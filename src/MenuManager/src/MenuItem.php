@@ -77,7 +77,7 @@ class MenuItem extends MenuElement
         $this->setUrl(static fn (): string => $filler->getUrl());
 
         $icon = $this->getCore()->getAttributes()->get(
-            default: fn(): ?string => Attributes::for($filler, Icon::class)->first('icon'),
+            default: fn (): ?string => Attributes::for($filler, Icon::class)->first('icon'),
             target: $filler::class,
             attribute: Icon::class,
             column: [0 => 'icon']

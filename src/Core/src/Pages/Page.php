@@ -259,13 +259,13 @@ abstract class Page implements PageContract
     public function getLayout(): LayoutContract
     {
         $layout = $this->getCore()->getAttributes()->get(
-            default: fn(): mixed => Attributes::for($this, Layout::class)->first('name'),
+            default: fn (): mixed => Attributes::for($this, Layout::class)->first('name'),
             target: static::class,
             attribute: Layout::class,
             column: [0 => 'name']
         );
 
-        if(!\is_null($layout)) {
+        if (! \is_null($layout)) {
             $this->setLayout($layout);
         }
 

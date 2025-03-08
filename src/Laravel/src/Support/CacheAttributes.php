@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace MoonShine\Laravel\Support;
 
-use Closure;
 use Attribute;
+use Closure;
 use Illuminate\Support\Str;
 use Leeto\FastAttributes\Attributes;
 use MoonShine\Contracts\Core\DependencyInjection\CacheAttributesContract;
@@ -22,7 +22,9 @@ final readonly class CacheAttributes implements CacheAttributesContract
     /**
      * @param  MoonShine  $core
      */
-    public function __construct(private CoreContract $core) {}
+    public function __construct(private CoreContract $core)
+    {
+    }
 
     public function get(
         Closure $default,
@@ -39,14 +41,14 @@ final readonly class CacheAttributes implements CacheAttributesContract
             $str = Str::of("$target.$type.$attribute")
                 ->when(
                     $concrete !== null,
-                    fn(Stringable $str) => $str->append(".$concrete"),
+                    fn (Stringable $str) => $str->append(".$concrete"),
                 );
 
-            $find = static fn(?string $suffix = null, bool $withDefault = true) => data_get(
+            $find = static fn (?string $suffix = null, bool $withDefault = true) => data_get(
                 $attributes,
                 (string) $str->when(
                     $suffix !== null,
-                    fn(Stringable $str) => $str->append(".$suffix"),
+                    fn (Stringable $str) => $str->append(".$suffix"),
                 ),
                 $withDefault ? $default : null,
             );
