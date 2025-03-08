@@ -166,7 +166,7 @@ final readonly class Options implements Arrayable
                     : null
             ),
             is_string($imageData) => new OptionImage($imageData),
-            default => throw new InvalidArgumentException('Invalid image type'),
+            default => throw new \InvalidArgumentException('Invalid image type'),
         };
     }
 }
