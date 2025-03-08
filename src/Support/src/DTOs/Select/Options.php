@@ -8,6 +8,7 @@ use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
 use JsonException;
+use MoonShine\Support\Enums\ObjectFit;
 use UnitEnum;
 
 final readonly class Options implements Arrayable
@@ -73,9 +74,7 @@ final readonly class Options implements Arrayable
             return $properties;
         }
 
-	    if (isset($properties['image']) && ! $properties['image'] instanceof OptionImage) {
-		    $properties['image'] = new OptionImage($properties['image']);
-	    }
+        $this->normalizeProperties($properties);
 
         return new OptionProperty(...$properties ?? []);
     }
@@ -147,5 +146,27 @@ final readonly class Options implements Arrayable
             'options' => $options,
             'properties' => $properties,
         ];
+    }
+
+    private function normalizeProperties(mixed &$properties): void
+    {
+        if (! isset($properties['image']) || $properties['image'] instanceof OptionImage) {
+            return;
+        }
+
+        $imageData = $properties['image'];
+
+        $properties['image'] = match (true) {
+            is_array($imageData) => new OptionImage(
+                src: $imageData['src'] ?? '',
+                width: $imageData['width'] ?? null,
+                height: $imageData['height'] ?? null,
+                objectFit: isset($imageData['objectFit'])
+                    ? ObjectFit::from($imageData['objectFit'])
+                    : null
+            ),
+            is_string($imageData) => new OptionImage($imageData),
+            default => throw new InvalidArgumentException('Invalid image type'),
+        };
     }
 }
