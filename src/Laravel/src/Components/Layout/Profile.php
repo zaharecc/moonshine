@@ -120,7 +120,7 @@ final class Profile extends MoonShineComponent
 
     protected function getMenu(): ?ActionButtonsContract
     {
-        if(\is_null($this->menu)) {
+        if (\is_null($this->menu)) {
             return null;
         }
 
@@ -147,8 +147,8 @@ final class Profile extends MoonShineComponent
 
         return [
             'route' => $this->route ?? toPage(
-                    moonshineConfig()->getPage('profile', ProfilePage::class),
-                ),
+                moonshineConfig()->getPage('profile', ProfilePage::class),
+            ),
             'logOutRoute' => $this->logOutRoute ?? moonshineRouter()->to('logout'),
             'avatar' => $avatar,
             'nameOfUser' => $nameOfUser,
