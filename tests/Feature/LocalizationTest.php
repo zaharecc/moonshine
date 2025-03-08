@@ -13,7 +13,7 @@ beforeEach(function () {
     app('translator')->setLoaded([
         'moonshine' => [
             'ui' => [
-                'en'  => ['404' => 'Houston we have a problem page not found'],
+                'en' => ['404' => 'Houston we have a problem page not found'],
                 'foo' => ['404' => 'Something message'],
             ],
         ],

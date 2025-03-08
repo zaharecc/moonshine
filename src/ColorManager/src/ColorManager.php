@@ -17,6 +17,7 @@ use MoonShine\Contracts\ColorManager\ColorManagerContract;
  * @method self successText(string $value, ?int $shade = null, bool $dark = false)
  * @method self warningBg(string $value, ?int $shade = null, bool $dark = false)
  * @method self warningText(string $value, ?int $shade = null, bool $dark = false)
+ * @method self error(string $value, ?int $shade = null, bool $dark = false)
  * @method self errorBg(string $value, ?int $shade = null, bool $dark = false)
  * @method self errorText(string $value, ?int $shade = null, bool $dark = false)
  * @method self infoBg(string $value, ?int $shade = null, bool $dark = false)
@@ -52,6 +53,7 @@ final class ColorManager implements ColorManagerContract
         'success-text' => self::TEXT,
         'warning-bg' => '255, 220, 42',
         'warning-text' => '139, 116, 0',
+        'error' => '224, 45, 45',
         'error-bg' => '224, 45, 45',
         'error-text' => self::TEXT,
         'info-bg' => '0, 121, 255',
@@ -64,6 +66,7 @@ final class ColorManager implements ColorManagerContract
         'success-text' => '178, 255, 178',
         'warning-bg' => '225, 169, 0',
         'warning-text' => '255, 255, 199',
+        'error' => '185, 28, 28',
         'error-bg' => '190, 10, 10',
         'error-text' => '255, 197, 197',
         'info-bg' => '38, 93, 205',

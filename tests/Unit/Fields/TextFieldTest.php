@@ -81,3 +81,47 @@ it('visual states', function () {
         ->toContain('input', 'type="text"')
     ;
 });
+
+it('add/remove classes', function () {
+    $field = Text::make('Field name');
+    $field->class('btn-success');
+
+    expect($field->getAttributes()->get('class'))
+        ->toContain('btn-success')
+    ;
+
+    $field->class('btn-primary');
+
+    expect($field->getAttributes()->get('class'))
+        ->toContain('btn-success', 'btn-primary')
+    ;
+
+    $field->removeClass('btn-primary');
+
+    expect($field->getAttributes()->get('class'))
+        ->toContain('btn-success')
+        ->not->toContain('btn-primary')
+    ;
+
+    $field->class('btn-primary');
+    $field->removeClass('btn-(success|primary)');
+
+    expect($field->getAttributes()->get('class'))
+        ->toBe('')
+    ;
+
+    $field->class('btn-primary-lg');
+    $field->removeClass('btn-primary');
+
+    expect($field->getAttributes()->get('class'))
+        ->toBe('btn-primary-lg')
+    ;
+
+    $field->class(['test', 'form-control', 'btn-primary', 'btn-primaries', 'primary']);
+    $field->removeClass('primary|test');
+
+    expect(str($field->getAttributes()->get('class'))->explode(' '))
+        ->toContainEqual('form-control', 'btn-primary', 'btn-primaries', 'btn-primary-lg')
+        ->not->toContainEqual('primary')
+    ;
+});

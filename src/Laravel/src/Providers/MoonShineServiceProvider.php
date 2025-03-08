@@ -17,6 +17,7 @@ use MoonShine\Contracts\AssetManager\AssetManagerContract;
 use MoonShine\Contracts\AssetManager\AssetResolverContract;
 use MoonShine\Contracts\ColorManager\ColorManagerContract;
 use MoonShine\Contracts\Core\DependencyInjection\AppliesRegisterContract;
+use MoonShine\Contracts\Core\DependencyInjection\CacheAttributesContract;
 use MoonShine\Contracts\Core\DependencyInjection\ConfiguratorContract;
 use MoonShine\Contracts\Core\DependencyInjection\CoreContract;
 use MoonShine\Contracts\Core\DependencyInjection\FieldsContract;
@@ -72,6 +73,7 @@ use MoonShine\Laravel\Notifications\MoonShineMemoryNotification;
 use MoonShine\Laravel\Notifications\MoonShineNotification;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Laravel\Storage\LaravelStorage;
+use MoonShine\Laravel\Support\CacheAttributes;
 use MoonShine\Laravel\Support\MenuAutoloader;
 use MoonShine\MenuManager\MenuManager;
 use MoonShine\UI\Applies\AppliesRegister;
@@ -154,6 +156,7 @@ final class MoonShineServiceProvider extends ServiceProvider
         $this->app->{app()->runningUnitTests() ? 'bind' : 'singleton'}(ConfiguratorContract::class, MoonShineConfigurator::class);
         $this->app->singleton(AppliesRegisterContract::class, AppliesRegister::class);
         $this->app->singleton(MenuAutoloaderContract::class, MenuAutoloader::class);
+        $this->app->singleton(CacheAttributesContract::class, CacheAttributes::class);
         $this->app->singleton(
             MoonShineNotificationContract::class,
             moonshineConfig()->isUseDatabaseNotifications() ? MoonShineNotification::class : MoonShineMemoryNotification::class

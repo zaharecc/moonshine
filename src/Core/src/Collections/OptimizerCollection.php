@@ -56,6 +56,11 @@ final class OptimizerCollection implements OptimizerCollectionContract
         return $this->getType($contract) !== [];
     }
 
+    public function hasCache(): bool
+    {
+        return file_exists($this->getCachePath());
+    }
+
     public function getCachePath(): string
     {
         return $this->cachePath;

@@ -42,6 +42,8 @@ interface CrudResourceContract extends ResourceContract
      */
     public function getDataInstance(): mixed;
 
+    public function setActivePage(?PageContract $page): void;
+
     /**
      * @return ?PageContract<TIndexPage>
      */

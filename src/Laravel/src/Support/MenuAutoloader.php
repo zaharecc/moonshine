@@ -22,6 +22,7 @@ use MoonShine\MenuManager\MenuGroup;
 use MoonShine\MenuManager\MenuItem;
 
 /**
+ * @internal
  * @phpstan-type PSMenuItem array{
  *      filler: class-string<MenuFillerContract>,
  *      canSee: null|string,
@@ -65,15 +66,15 @@ final readonly class MenuAutoloader implements MenuAutoloaderContract
             MenuFillerContract $item,
             &$items,
         ): void {
-            $skip = Attributes::for($item, SkipMenu::class)->class();
+            $skip = Attributes::for($item, SkipMenu::class);
 
             if (! \is_null($skip->first())) {
                 return;
             }
 
-            $group = Attributes::for($item, Group::class)->class()->first();
-            $canSee = Attributes::for($item, CanSee::class)->class()->first();
-            $order = Attributes::for($item, Order::class)->class()->first();
+            $group = Attributes::for($item, Group::class)->first();
+            $canSee = Attributes::for($item, CanSee::class)->first();
+            $order = Attributes::for($item, Order::class)->first();
 
             $label = $group?->label;
             $icon = $group?->icon;
