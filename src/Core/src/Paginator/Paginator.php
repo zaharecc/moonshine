@@ -44,7 +44,7 @@ final class Paginator implements PaginatorContract, HasCoreContract, HasViewRend
     public function getLinks(): PaginatorLinksContract
     {
         return PaginatorLinks::make($this->links)
-            ->reject(static fn (array $link): bool => $link['url'] === '' || str($link['label'])->contains(['prev', 'next'], true));
+            ->reject(static fn (array $link): bool => $link['url'] === '' || str($link['label'])->contains(['&laquo;', '&raquo;'], true));
     }
 
     public function getData(): Collection

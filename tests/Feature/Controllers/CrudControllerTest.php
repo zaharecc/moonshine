@@ -8,6 +8,7 @@ use MoonShine\Tests\Fixtures\Factories\CategoryFactory;
 use MoonShine\Tests\Fixtures\Factories\CoverFactory;
 use MoonShine\Tests\Fixtures\Models\Category;
 use MoonShine\Tests\Fixtures\Models\Item;
+use MoonShine\Tests\Fixtures\Resources\TestItemResource;
 use MoonShine\Tests\Fixtures\Resources\TestResource;
 use MoonShine\Tests\Fixtures\Resources\TestResourceBuilder;
 use MoonShine\UI\Components\When;
@@ -154,6 +155,16 @@ describe('without special fields', function () {
 
         expect($items)->toBeEmpty();
     });
+});
+
+it('crud index with filters date range', function () {
+    createItem(3);
+
+    $dates = ['from' => now()->toImmutable()->subDay()->format('Y-m-d'), 'to' => now()->toImmutable()->addDay()->format('Y-m-d')];
+
+    asAdmin()->get(
+        app(TestItemResource::class)->getIndexPageUrl(['filter' => ['created_at' => $dates]])
+    )->assertOk();
 });
 
 

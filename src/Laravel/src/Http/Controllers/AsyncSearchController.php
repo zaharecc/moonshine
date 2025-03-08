@@ -79,7 +79,7 @@ final class AsyncSearchController extends MoonShineController
                 "%$term%"
             )
         )
-            ->whereNotIn($model->getKeyName(), $except)
+            ->whereNotIn($model->getQualifiedKeyName(), $except)
             ->offset($offset)
             ->limit($field->getAsyncSearchCount());
 

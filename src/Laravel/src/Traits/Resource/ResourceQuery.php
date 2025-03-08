@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace MoonShine\Laravel\Traits\Resource;
 
+use Attribute;
 use Closure;
 use Illuminate\Support\Collection;
 use Leeto\FastAttributes\Attributes;
 use MoonShine\Laravel\Collections\Fields;
 use MoonShine\Support\Attributes\SearchUsingFullText;
 use MoonShine\Support\Enums\SortDirection;
+use MoonShine\UI\Contracts\RangeFieldContract;
 use Traversable;
 
 /**
@@ -172,10 +174,16 @@ trait ResourceQuery
     protected function withSearch($queryKey = 'search'): static
     {
         if ($this->hasSearch() && filled($this->getQueryParams()->get($queryKey))) {
-            $fullTextColumns = Attributes::for($this)
-                ->attribute(SearchUsingFullText::class)
-                ->method('search')
-                ->first('columns');
+            $fullTextColumns = $this->getCore()->getAttributes()->get(
+                default: fn (): mixed => Attributes::for($this)
+                    ->attribute(SearchUsingFullText::class)
+                    ->method('search')
+                    ->first('columns'),
+                target: $this::class,
+                attribute: SearchUsingFullText::class,
+                type: Attribute::TARGET_METHOD,
+                column: [0 => 'columns']
+            );
 
             $terms = str($this->getQueryParams()->get($queryKey))
                 ->squish()
@@ -187,7 +195,7 @@ trait ResourceQuery
         return $this;
     }
 
-    protected function resolveSearch(string $terms, array $fullTextColumns = []): static
+    protected function resolveSearch(string $terms, ?iterable $fullTextColumns = null): static
     {
         //
 
@@ -384,6 +392,12 @@ trait ResourceQuery
         }
 
         $filters = $this->getFilters()->onlyFields();
+
+        foreach ($filters as $filter) {
+            if ($filter instanceof RangeFieldContract) {
+                data_forget($params, $filter->getColumn());
+            }
+        }
 
         $filters->fill(
             $params,

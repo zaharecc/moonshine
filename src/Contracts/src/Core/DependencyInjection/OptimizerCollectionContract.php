@@ -13,4 +13,6 @@ interface OptimizerCollectionContract
     public function getTypes(?string $namespace = null, bool $withCache = true): array;
 
     public function hasType(string $contract): bool;
+
+    public function hasCache(): bool;
 }

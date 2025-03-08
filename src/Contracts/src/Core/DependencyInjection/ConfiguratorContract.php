@@ -49,6 +49,8 @@ interface ConfiguratorContract extends ArrayAccess
 
     public function getLocale(): string;
 
+    public function getLocaleKey(): string;
+
     public function getDisk(): string;
 
     /**

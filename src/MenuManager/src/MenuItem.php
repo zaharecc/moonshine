@@ -76,7 +76,12 @@ class MenuItem extends MenuElement
     {
         $this->setUrl(static fn (): string => $filler->getUrl());
 
-        $icon = Attributes::for($filler, Icon::class)->class()->first('icon');
+        $icon = $this->getCore()->getAttributes()->get(
+            default: fn (): ?string => Attributes::for($filler, Icon::class)->first('icon'),
+            target: $filler::class,
+            attribute: Icon::class,
+            column: [0 => 'icon']
+        );
 
         if (method_exists($filler, 'getBadge')) {
             $this->badge(static fn () => $filler->getBadge());

@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace MoonShine\Laravel\Commands;
 
+use Attribute;
 use Illuminate\Filesystem\Filesystem;
 use LogicException;
+use MoonShine\Contracts\Core\DependencyInjection\CacheAttributesContract;
 use MoonShine\Contracts\Core\DependencyInjection\OptimizerCollectionContract;
+use MoonShine\Contracts\MenuManager\MenuAutoloaderContract;
 use MoonShine\Contracts\MenuManager\MenuElementContract;
-use MoonShine\Laravel\Support\MenuAutoloader;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Throwable;
 
@@ -19,13 +21,17 @@ class OptimizeCommand extends MoonShineCommand
 
     protected $description = 'Cache MoonShine pages and resources to increase performance';
 
-    public function handle(OptimizerCollectionContract $optimizer, Filesystem $files, MenuAutoloader $menuAutoloader): int
-    {
+    public function handle(
+        OptimizerCollectionContract $optimizer,
+        Filesystem $files,
+        MenuAutoloaderContract $menuAutoloader,
+        CacheAttributesContract $cacheAttributes,
+    ): int {
         $this->components->info('Caching MoonShine pages and resources.');
 
         $filename = $optimizer->getCachePath();
 
-        $this->store($files, $filename, $this->getFreshSources($optimizer, $menuAutoloader));
+        $this->store($files, $filename, $this->getFreshSources($optimizer, $menuAutoloader, $cacheAttributes));
 
         $this->validateCache($files, $filename);
 
@@ -35,21 +41,19 @@ class OptimizeCommand extends MoonShineCommand
     }
 
     /**
-     * @param  OptimizerCollectionContract  $optimizer
-     * @param  MenuAutoloader  $menuAutoloader
-     *
      * @return array<class-string, array>
      */
-    protected function getFreshSources(OptimizerCollectionContract $optimizer, MenuAutoloader $menuAutoloader): array
+    protected function getFreshSources(OptimizerCollectionContract $optimizer, MenuAutoloaderContract $menuAutoloader, CacheAttributesContract $cacheAttributes): array
     {
         return [
             ...$optimizer->getTypes($this->getNamespace(), false),
             MenuElementContract::class => $menuAutoloader->toArray(),
+            Attribute::class => $cacheAttributes->resolve(),
         ];
     }
 
     /**
-     * @param Filesystem $storage
+     * @param  Filesystem  $storage
      * @param  string  $cachePath
      * @param  array<class-string, array>  $sources
      *
@@ -59,7 +63,7 @@ class OptimizeCommand extends MoonShineCommand
     {
         $storage->put(
             $cachePath,
-            '<?php return ' . var_export($sources, true) . ';' . PHP_EOL
+            '<?php return ' . var_export($sources, true) . ';' . PHP_EOL,
         );
     }
 

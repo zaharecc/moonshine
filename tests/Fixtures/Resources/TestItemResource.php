@@ -14,6 +14,7 @@ use MoonShine\Tests\Fixtures\Models\Category;
 use MoonShine\Tests\Fixtures\Models\Item;
 use MoonShine\UI\Components\Layout\Box;
 use MoonShine\UI\Fields\Date;
+use MoonShine\UI\Fields\DateRange;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Image;
 use MoonShine\UI\Fields\Switcher;
@@ -104,8 +105,11 @@ class TestItemResource extends AbstractTestingResource
     protected function filters(): iterable
     {
         return [
-            Text::make('Name'),
-            BelongsTo::make('Category', resource: TestCategoryResource::class)->nullable(),
+            Box::make([
+                Text::make('Name'),
+                BelongsTo::make('Category', resource: TestCategoryResource::class)->nullable(),
+                DateRange::make('Created at'),
+            ]),
         ];
     }
 
