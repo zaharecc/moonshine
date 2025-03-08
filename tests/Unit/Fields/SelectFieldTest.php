@@ -3,7 +3,11 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Eloquent\Model;
+use MoonShine\Support\DTOs\Select\Option;
+use MoonShine\Support\DTOs\Select\OptionImage;
+use MoonShine\Support\DTOs\Select\OptionProperty;
 use MoonShine\Support\DTOs\Select\Options;
+use MoonShine\Support\Enums\ObjectFit;
 use MoonShine\Tests\Fixtures\Resources\TestResourceBuilder;
 use MoonShine\UI\Fields\Select;
 
@@ -178,5 +182,67 @@ describe('basic methods', function () {
             ->select
             ->toBe($data['select'])
         ;
+    });
+});
+
+describe('select field with images', function () {
+    beforeEach(function (): void {
+        $optionsWithImages = new Options([
+            new Option(
+                'Image 1',
+                '1',
+                properties: new OptionProperty(
+                    new OptionImage(
+                        src: 'image1.jpg',
+                        width: 5,
+                        height: 5,
+                        objectFit: ObjectFit::COVER
+                    )
+                )
+            ),
+            new Option(
+                'Image 2',
+                '2',
+                properties: new OptionProperty(
+                    new OptionImage(
+                        src: 'image2.png',
+                        width: 8,
+                        objectFit: ObjectFit::CONTAIN
+                    )
+                )
+            )
+        ]);
+
+        $this->fieldWithImages = Select::make('Select field with images')
+            ->options($optionsWithImages)
+            ->default('2')
+            ->multiple();
+    });
+
+    it('renders images in options', function () {
+        $result = $this->fieldWithImages->toArray();
+
+        expect($result['values'][1]['properties']['image'])->toBe([
+            'src' => 'image1.jpg',
+            'width' => 5,
+            'height' => 5,
+            'objectFit' => 'cover'
+        ])->and($result['values'][2]['properties']['image'])->toBe([
+            'src' => 'image2.png',
+            'width' => 8,
+            'height' => 10,
+            'objectFit' => 'contain'
+        ]);
+    });
+
+    it('handles invalid image types', function () {
+        $field = Select::make('Invalid images')
+            ->options([
+                1 => 'invalid_string_image',
+                new \stdClass()
+            ]);
+
+        expect(fn() => $field->previewMode())
+            ->not()->toThrow(Exception::class);
     });
 });
