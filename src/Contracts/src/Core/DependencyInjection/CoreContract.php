@@ -70,8 +70,7 @@ interface CoreContract
 
     public function autoload(?string $namespace = null): static;
 
-    /**
-     * Get an autoload instance
-     */
     public function getOptimizer(): OptimizerCollectionContract;
+
+    public function getAttributes(): CacheAttributesContract;
 }

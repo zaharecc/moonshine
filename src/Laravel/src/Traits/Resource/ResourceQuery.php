@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MoonShine\Laravel\Traits\Resource;
 
+use Attribute;
 use Closure;
 use Illuminate\Support\Collection;
 use Leeto\FastAttributes\Attributes;
@@ -134,7 +135,7 @@ trait ResourceQuery
         }
 
         return $this->itemOr(
-            fn () => $this->findItem(),
+            fn() => $this->findItem(),
         );
     }
 
@@ -152,7 +153,7 @@ trait ResourceQuery
         }
 
         return $this->itemOr(
-            fn () => $this->findItem() ?? $this->getDataInstance(),
+            fn() => $this->findItem() ?? $this->getDataInstance(),
         );
     }
 
@@ -166,17 +167,23 @@ trait ResourceQuery
         }
 
         return $this->itemOr(
-            fn () => $this->findItem(orFail: true),
+            fn() => $this->findItem(orFail: true),
         );
     }
 
     protected function withSearch($queryKey = 'search'): static
     {
         if ($this->hasSearch() && filled($this->getQueryParams()->get($queryKey))) {
-            $fullTextColumns = Attributes::for($this)
-                ->attribute(SearchUsingFullText::class)
-                ->method('search')
-                ->first('columns');
+            $fullTextColumns = $this->getCore()->getAttributes()->get(
+                default: fn(): mixed => Attributes::for($this)
+                    ->attribute(SearchUsingFullText::class)
+                    ->method('search')
+                    ->first('columns'),
+                target: $this::class,
+                attribute: SearchUsingFullText::class,
+                type: Attribute::TARGET_METHOD,
+                column: [0 => 'columns']
+            );
 
             $terms = str($this->getQueryParams()->get($queryKey))
                 ->squish()
@@ -188,7 +195,7 @@ trait ResourceQuery
         return $this;
     }
 
-    protected function resolveSearch(string $terms, array $fullTextColumns = []): static
+    protected function resolveSearch(string $terms, ?iterable $fullTextColumns = null): static
     {
         //
 
@@ -349,7 +356,7 @@ trait ResourceQuery
             $this->setQueryParams(
                 $this->getQueryParams()->merge(
                     collect(moonshineCache()->get($this->getQueryCacheKey(), []))->filter(
-                        fn ($value, $key): bool => ! $this->getQueryParams()->has($key),
+                        fn($value, $key): bool => ! $this->getQueryParams()->has($key),
                     )->toArray(),
                 ),
             );
