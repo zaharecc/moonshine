@@ -121,7 +121,7 @@ it('add/remove classes', function () {
     $field->removeClass('primary|test');
 
     expect(str($field->getAttributes()->get('class'))->explode(' '))
-        ->toContainEqual('form-control', 'btn-primary','btn-primaries', 'btn-primary-lg')
+        ->toContainEqual('form-control', 'btn-primary', 'btn-primaries', 'btn-primary-lg')
         ->not->toContainEqual('primary')
     ;
 });
