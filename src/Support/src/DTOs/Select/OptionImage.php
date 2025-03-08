@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MoonShine\Support\DTOs\Select;
 
 use Illuminate\Contracts\Support\Arrayable;
+use MoonShine\Support\Enums\ObjectFit;
 
 final readonly class OptionImage implements Arrayable
 {
@@ -12,7 +13,7 @@ final readonly class OptionImage implements Arrayable
         private string $src,
         private int $width = 10,
         private int $height = 10,
-        private string $objectFit = 'cover',
+        private ObjectFit $objectFit = ObjectFit::COVER,
     ) {
     }
 
@@ -33,7 +34,7 @@ final readonly class OptionImage implements Arrayable
 
     public function getObjectFit(): string
     {
-        return $this->objectFit;
+        return $this->objectFit->value;
     }
 
     public function toArray(): array
