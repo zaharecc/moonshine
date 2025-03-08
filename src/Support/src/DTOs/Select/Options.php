@@ -73,6 +73,10 @@ final readonly class Options implements Arrayable
             return $properties;
         }
 
+	    if (isset($properties['image']) && ! $properties['image'] instanceof OptionImage) {
+		    $properties['image'] = new OptionImage($properties['image']);
+	    }
+
         return new OptionProperty(...$properties ?? []);
     }
 
