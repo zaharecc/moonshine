@@ -3,7 +3,11 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Eloquent\Model;
+use MoonShine\Support\DTOs\Select\Option;
+use MoonShine\Support\DTOs\Select\OptionImage;
+use MoonShine\Support\DTOs\Select\OptionProperty;
 use MoonShine\Support\DTOs\Select\Options;
+use MoonShine\Support\Enums\ObjectFit;
 use MoonShine\Tests\Fixtures\Resources\TestResourceBuilder;
 use MoonShine\UI\Fields\Select;
 
@@ -178,5 +182,158 @@ describe('basic methods', function () {
             ->select
             ->toBe($data['select'])
         ;
+    });
+});
+
+describe('select field with images (passed via arrays)', function () {
+    it('renders images passed as strings', function () {
+        $field = Select::make('Select field with images')
+            ->options([
+                1 => 'Option 1',
+                2 => 'Option 2',
+            ])
+            ->optionProperties(fn() => [
+                1 => ['image' => 'image1.jpg'],
+                2 => ['image' => 'image2.png'],
+            ]);
+
+        $result = $field->toArray();
+
+        expect($result['values'][1]['properties']['image'])->toBe([
+            'src' => 'image1.jpg',
+            'width' => 10,
+            'height' => 10,
+            'objectFit' => ObjectFit::COVER->value
+        ])->and($result['values'][2]['properties']['image'])->toBe([
+            'src' => 'image2.png',
+            'width' => 10,
+            'height' => 10,
+            'objectFit' => ObjectFit::COVER->value
+        ]);
+    });
+
+    it('renders images passed via OptionImage object', function () {
+        $field = Select::make('Select field with images')
+            ->options([
+                1 => 'Option 1',
+                2 => 'Option 2',
+            ])
+            ->optionProperties(fn() => [
+                1 => ['image' => new OptionImage('image1.jpg', 6, 6, ObjectFit::FILL)],
+                2 => ['image' => new OptionImage('image2.png')],
+            ]);
+
+        $result = $field->toArray();
+
+        expect($result['values'][1]['properties']['image'])->toBe([
+            'src' => 'image1.jpg',
+            'width' => 6,
+            'height' => 6,
+            'objectFit' => ObjectFit::FILL->value
+        ])->and($result['values'][2]['properties']['image'])->toBe([
+            'src' => 'image2.png',
+            'width' => 10,
+            'height' => 10,
+            'objectFit' => ObjectFit::COVER->value
+        ]);
+    });
+});
+
+describe('select field with images (passed via Options object)', function () {
+    it('renders images passed as strings', function () {
+        $options = new Options([
+            new Option(
+                'Option 1',
+                '1',
+                properties: new OptionProperty('image1.jpg')
+            ),
+            new Option(
+                'Option 2',
+                '2',
+                true,
+                properties: new OptionProperty('image2.png')
+            )
+        ]);
+
+        $field = Select::make('Select field with images')
+            ->options($options);
+
+        $result = $field->toArray();
+
+        expect($result['values'][1]['properties']['image'])->toBe([
+            'src' => 'image1.jpg',
+            'width' => 10,
+            'height' => 10,
+            'objectFit' => ObjectFit::COVER->value
+        ])->and($result['values'][2]['properties']['image'])->toBe([
+            'src' => 'image2.png',
+            'width' => 10,
+            'height' => 10,
+            'objectFit' => ObjectFit::COVER->value
+        ]);
+    });
+
+    it('renders images passed via OptionImage', function () {
+        $options = new Options([
+            new Option(
+                'Option 1',
+                '1',
+                properties: new OptionProperty(
+                    new OptionImage(
+                        src: 'image1.jpg',
+                        width: 5,
+                        height: 5,
+                        objectFit: ObjectFit::COVER
+                    )
+                )
+            ),
+            new Option(
+                'Option 2',
+                '2',
+                properties: new OptionProperty(
+                    new OptionImage(
+                        src: 'image2.png',
+                        width: 8,
+                        objectFit: ObjectFit::CONTAIN
+                    )
+                )
+            )
+        ]);
+
+        $field = Select::make('Select field with images')
+            ->options($options)
+            ->default('2')
+            ->multiple();
+
+        $result = $field->toArray();
+
+        expect($result['values'][1]['properties']['image'])->toBe([
+            'src' => 'image1.jpg',
+            'width' => 5,
+            'height' => 5,
+            'objectFit' => ObjectFit::COVER->value
+        ])->and($result['values'][2]['properties']['image'])->toBe([
+            'src' => 'image2.png',
+            'width' => 8,
+            'height' => 10,
+            'objectFit' => ObjectFit::CONTAIN->value
+        ]);
+    });
+
+    it('handles empty images', function () {
+        $options = new Options([
+            new Option(
+                'Option 1',
+                '1',
+                properties: new OptionProperty()
+            )
+        ]);
+
+        $field = Select::make('Select field with images')
+            ->options($options);
+
+        $result = $field->toArray();
+
+        expect($result['values'][1]['properties']['image'])->toBeNull();
     });
 });
