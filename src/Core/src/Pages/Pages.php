@@ -64,7 +64,7 @@ final class Pages extends Collection implements PagesContract
         ?PageContract $default = null
     ): ?PageContract {
         return $this->first(
-            static fn (PageContract $page) => $page->getUriKey() === $uri,
+            static fn (PageContract $page): bool => $page->getUriKey() === $uri,
             $default
         );
     }

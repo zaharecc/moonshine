@@ -145,7 +145,7 @@ final readonly class MoonShineEndpoints implements EndpointsContract
             if(!$targetPage instanceof PageContract) {
                 $pageType = PageType::getTypeFromUri($pageUri);
 
-                $targetPage = $pageType !== null
+                $targetPage = $pageType instanceof PageType
                     ? $targetResource?->getPages()->findByType($pageType)
                     : null;
             }
