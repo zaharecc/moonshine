@@ -74,7 +74,7 @@ final readonly class Options implements Arrayable
             return $properties;
         }
 
-        $this->normalizeProperties($properties);
+        $properties = $this->normalizeProperties($properties);
 
         return new OptionProperty(...$properties ?? []);
     }
@@ -148,25 +148,27 @@ final readonly class Options implements Arrayable
         ];
     }
 
-    private function normalizeProperties(mixed &$properties): void
+    private function normalizeProperties(array $properties): array
     {
         if (! isset($properties['image']) || $properties['image'] instanceof OptionImage) {
-            return;
+            return $properties;
         }
 
         $imageData = $properties['image'];
 
-        $properties['image'] = match (true) {
-            is_array($imageData) => new OptionImage(
-                src: $imageData['src'] ?? '',
-                width: $imageData['width'] ?? null,
-                height: $imageData['height'] ?? null,
-                objectFit: isset($imageData['objectFit'])
-                    ? ObjectFit::from($imageData['objectFit'])
-                    : null
-            ),
-            is_string($imageData) => new OptionImage($imageData),
-            default => throw new \InvalidArgumentException('Invalid image type'),
-        };
+        if (is_string($imageData)) {
+            $properties['image'] = new OptionImage($imageData);
+
+            return $properties;
+        }
+
+        $properties['image'] = new OptionImage(
+            $imageData['src'] ?? '',
+            $imageData['width'] ?? null,
+            $imageData['height'] ?? null,
+            isset($imageData['objectFit']) ? ObjectFit::from($imageData['objectFit']) : null
+        );
+
+        return $properties;
     }
 }

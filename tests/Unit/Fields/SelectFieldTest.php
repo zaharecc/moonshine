@@ -211,6 +211,32 @@ describe('select field with images (passed via arrays)', function () {
             'objectFit' => ObjectFit::COVER->value
         ]);
     });
+
+    it('renders images passed via OptionImage object', function () {
+        $field = Select::make('Select field with images')
+            ->options([
+                1 => 'Option 1',
+                2 => 'Option 2',
+            ])
+            ->optionProperties(fn() => [
+                1 => ['image' => new OptionImage('image1.jpg', 6, 6, ObjectFit::FILL)],
+                2 => ['image' => new OptionImage('image2.png')],
+            ]);
+
+        $result = $field->toArray();
+
+        expect($result['values'][1]['properties']['image'])->toBe([
+            'src' => 'image1.jpg',
+            'width' => 6,
+            'height' => 6,
+            'objectFit' => ObjectFit::FILL->value
+        ])->and($result['values'][2]['properties']['image'])->toBe([
+            'src' => 'image2.png',
+            'width' => 10,
+            'height' => 10,
+            'objectFit' => ObjectFit::COVER->value
+        ]);
+    });
 });
 
 describe('select field with images (passed via Options object)', function () {
