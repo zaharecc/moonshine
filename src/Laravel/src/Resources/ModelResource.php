@@ -45,12 +45,19 @@ abstract class ModelResource extends CrudResource implements
 
     protected string $model;
 
+    protected string $column = '';
+
     public function flushState(): void
     {
         parent::flushState();
 
         $this->queryBuilder = null;
         $this->customQueryBuilder = null;
+    }
+
+    public function getColumn(): string
+    {
+        return $this->column ?: $this->getModel()->getQualifiedKeyName();
     }
 
     /**
@@ -250,7 +257,7 @@ abstract class ModelResource extends CrudResource implements
     protected function search(): array
     {
         return [
-            $this->getModel()->getKeyName(),
+            $this->getModel()->getQualifiedKeyName(),
         ];
     }
 }
