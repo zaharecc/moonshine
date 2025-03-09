@@ -257,7 +257,7 @@ abstract class ModelResource extends CrudResource implements
     protected function search(): array
     {
         return [
-            $this->getModel()->getQualifiedKeyName(),
+            $this->getModel()->getKeyName(),
         ];
     }
 }
