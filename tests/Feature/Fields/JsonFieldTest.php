@@ -186,7 +186,7 @@ it('apply as object', function () {
             Json::make('Inner data')->fields([
                 Text::make('Inner Title'),
                 Json::make('Only value')->onlyValue(),
-            ])->object()
+            ])->object(),
         ])->object()
     );
 
@@ -198,7 +198,7 @@ it('apply as object', function () {
                 ['value' => 'value1'],
                 ['value' => 'value2'],
             ],
-        ]
+        ],
     ];
 
     testJsonValue($resource, $this->item, $data, [
@@ -209,7 +209,7 @@ it('apply as object', function () {
                 'value2',
             ],
             'inner_title' => 'Inner Value',
-        ]
+        ],
     ]);
 })->todo('Changed sort of inner_title');
 

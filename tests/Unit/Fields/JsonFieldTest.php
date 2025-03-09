@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Eloquent\Model;
-use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Contracts\UI\HasFieldsContract;
 use MoonShine\UI\Contracts\DefaultValueTypes\CanBeArray;
 use MoonShine\UI\Contracts\HasDefaultValueContract;
@@ -71,7 +70,7 @@ beforeEach(function (): void {
             'inner' => [
                 'inner_field1' => 'inner_field1_value',
                 'inner_field2' => 'inner_field2_value',
-            ]
+            ],
         ];
 
         public array $tableWithObject = [
@@ -86,10 +85,10 @@ beforeEach(function (): void {
                         'only_value' => [
                             'value1',
                             'value2',
-                        ]
-                    ]
-                ]
-            ]
+                        ],
+                    ],
+                ],
+            ],
         ];
     };
 
@@ -266,14 +265,14 @@ describe('unique field methods', function () {
         expect($this->fieldObject->getPreparedFields())
             ->hasFields([
                 ...exampleFields()->toArray(),
-                Json::make('Inner')
+                Json::make('Inner'),
             ]);
 
         foreach ($this->fieldObject->getPreparedFields() as $field) {
             expect($field->getNameAttribute())
                 ->toContain('object[');
 
-            if($field instanceof Json) {
+            if ($field instanceof Json) {
                 expect($field->getNameAttribute())
                     ->toBe('object[inner]');
 
@@ -289,21 +288,21 @@ describe('unique field methods', function () {
         expect($this->fieldTableWithObject->getPreparedFields())
             ->hasFields([
                 Text::make('Title'),
-                Json::make('Object')
+                Json::make('Object'),
             ]);
 
         foreach ($this->fieldTableWithObject->getPreparedFields() as $field) {
-            if($field instanceof Json) {
+            if ($field instanceof Json) {
                 expect($field->getNameAttribute())
                     ->toBe('table_with_object[${index0}][object]');
 
                 foreach ($field->getPreparedFields() as $inner) {
-                    if($inner instanceof Json) {
+                    if ($inner instanceof Json) {
                         expect($inner->getNameAttribute())
                             ->toBe('table_with_object[${index0}][object][inner]');
 
                         foreach ($inner->getPreparedFields() as $i) {
-                            if($i instanceof Json) {
+                            if ($i instanceof Json) {
                                 expect($i->getNameAttribute())
                                     ->toBe('table_with_object[${index0}][object][inner][only_value]');
 
@@ -360,7 +359,7 @@ describe('unique field methods', function () {
                 'inner' => [
                     'inner_field1' => 'inner_field1_value',
                     'inner_field2' => 'inner_field2_value',
-                ]
+                ],
             ]);
     });
 
@@ -376,9 +375,9 @@ describe('unique field methods', function () {
                         'only_value' => [
                             'value1',
                             'value2',
-                        ]
-                    ]
-                ]]
+                        ],
+                    ],
+                ]],
             ]);
     });
 });
