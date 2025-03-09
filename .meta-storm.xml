@@ -25,6 +25,22 @@
         </classMethod>
 
         <classMethod
+            class="\MoonShine\UI\Components\Breadcrumbs"
+            method="prepend"
+            argument="2"
+        >
+            <files extension="blade.php" xpath="$project/vendor/moonshine/moonshine/src/UI/resources/views/icons"/>
+        </classMethod>
+
+        <classMethod
+            class="\MoonShine\UI\Components\Breadcrumbs"
+            method="add"
+            argument="2"
+        >
+            <files extension="blade.php" xpath="$project/vendor/moonshine/moonshine/src/UI/resources/views/icons"/>
+        </classMethod>
+
+        <classMethod
             class="\MoonShine\UI\Components\Icon"
             method="make"
             argument="0"
