@@ -259,7 +259,7 @@ describe('select field with images', function () {
                     true,
                     properties: new OptionProperty('image3.png')
                 ),
-            ]))
+            ])),
         ]);
 
         $field = Select::make('Select field with images')
@@ -322,7 +322,7 @@ describe('select field with images', function () {
                         )
                     )
                 ),
-            ]))
+            ])),
         ]);
 
         $field = Select::make('Select field with images')
