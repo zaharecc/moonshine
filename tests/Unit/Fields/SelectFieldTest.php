@@ -192,7 +192,7 @@ describe('select field with images (passed via arrays)', function () {
                 1 => 'Option 1',
                 2 => 'Option 2',
             ])
-            ->optionProperties(fn() => [
+            ->optionProperties(fn () => [
                 1 => ['image' => 'image1.jpg'],
                 2 => ['image' => 'image2.png'],
             ]);
@@ -203,12 +203,12 @@ describe('select field with images (passed via arrays)', function () {
             'src' => 'image1.jpg',
             'width' => 10,
             'height' => 10,
-            'objectFit' => ObjectFit::COVER->value
+            'objectFit' => ObjectFit::COVER->value,
         ])->and($result['values'][2]['properties']['image'])->toBe([
             'src' => 'image2.png',
             'width' => 10,
             'height' => 10,
-            'objectFit' => ObjectFit::COVER->value
+            'objectFit' => ObjectFit::COVER->value,
         ]);
     });
 
@@ -218,7 +218,7 @@ describe('select field with images (passed via arrays)', function () {
                 1 => 'Option 1',
                 2 => 'Option 2',
             ])
-            ->optionProperties(fn() => [
+            ->optionProperties(fn () => [
                 1 => ['image' => new OptionImage('image1.jpg', 6, 6, ObjectFit::FILL)],
                 2 => ['image' => new OptionImage('image2.png')],
             ]);
@@ -229,12 +229,12 @@ describe('select field with images (passed via arrays)', function () {
             'src' => 'image1.jpg',
             'width' => 6,
             'height' => 6,
-            'objectFit' => ObjectFit::FILL->value
+            'objectFit' => ObjectFit::FILL->value,
         ])->and($result['values'][2]['properties']['image'])->toBe([
             'src' => 'image2.png',
             'width' => 10,
             'height' => 10,
-            'objectFit' => ObjectFit::COVER->value
+            'objectFit' => ObjectFit::COVER->value,
         ]);
     });
 });
@@ -252,7 +252,7 @@ describe('select field with images (passed via Options object)', function () {
                 '2',
                 true,
                 properties: new OptionProperty('image2.png')
-            )
+            ),
         ]);
 
         $field = Select::make('Select field with images')
@@ -264,12 +264,12 @@ describe('select field with images (passed via Options object)', function () {
             'src' => 'image1.jpg',
             'width' => 10,
             'height' => 10,
-            'objectFit' => ObjectFit::COVER->value
+            'objectFit' => ObjectFit::COVER->value,
         ])->and($result['values'][2]['properties']['image'])->toBe([
             'src' => 'image2.png',
             'width' => 10,
             'height' => 10,
-            'objectFit' => ObjectFit::COVER->value
+            'objectFit' => ObjectFit::COVER->value,
         ]);
     });
 
@@ -297,7 +297,7 @@ describe('select field with images (passed via Options object)', function () {
                         objectFit: ObjectFit::CONTAIN
                     )
                 )
-            )
+            ),
         ]);
 
         $field = Select::make('Select field with images')
@@ -311,12 +311,12 @@ describe('select field with images (passed via Options object)', function () {
             'src' => 'image1.jpg',
             'width' => 5,
             'height' => 5,
-            'objectFit' => ObjectFit::COVER->value
+            'objectFit' => ObjectFit::COVER->value,
         ])->and($result['values'][2]['properties']['image'])->toBe([
             'src' => 'image2.png',
             'width' => 8,
             'height' => 10,
-            'objectFit' => ObjectFit::CONTAIN->value
+            'objectFit' => ObjectFit::CONTAIN->value,
         ]);
     });
 
@@ -326,7 +326,7 @@ describe('select field with images (passed via Options object)', function () {
                 'Option 1',
                 '1',
                 properties: new OptionProperty()
-            )
+            ),
         ]);
 
         $field = Select::make('Select field with images')

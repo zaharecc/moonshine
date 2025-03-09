@@ -156,7 +156,7 @@ final readonly class Options implements Arrayable
 
         $imageData = $properties['image'];
 
-        if (is_string($imageData)) {
+        if (\is_string($imageData)) {
             $properties['image'] = new OptionImage($imageData);
 
             return $properties;

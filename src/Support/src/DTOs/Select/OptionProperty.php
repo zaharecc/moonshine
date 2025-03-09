@@ -9,7 +9,7 @@ use Illuminate\Contracts\Support\Arrayable;
 final readonly class OptionProperty implements Arrayable
 {
     public function __construct(
-	    private null|string|OptionImage $image = null,
+        private null|string|OptionImage $image = null,
     ) {
     }
 
@@ -20,14 +20,14 @@ final readonly class OptionProperty implements Arrayable
 
     public function toArray(): array
     {
-	    $image = $this->getImage();
+        $image = $this->getImage();
 
-	    if ($image instanceof OptionImage) {
-		    $image = $image->toArray();
-	    }
+        if ($image instanceof OptionImage) {
+            $image = $image->toArray();
+        }
 
-	    return [
-		    'image' => $image,
-	    ];
+        return [
+            'image' => $image,
+        ];
     }
 }
