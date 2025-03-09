@@ -142,7 +142,7 @@ final readonly class MoonShineEndpoints implements EndpointsContract
                 static fn (Pages $pages): ?PageContract => $pages->findByUri($pageUri),
             );
 
-            if(!$targetPage instanceof PageContract) {
+            if (! $targetPage instanceof PageContract) {
                 $pageType = PageType::getTypeFromUri($pageUri);
 
                 $targetPage = $pageType instanceof PageType
@@ -157,7 +157,7 @@ final readonly class MoonShineEndpoints implements EndpointsContract
                 : moonshine()->getPages()->findByClass($page);
         }
 
-        if (!$targetPage instanceof PageContract) {
+        if (! $targetPage instanceof PageContract) {
             throw EndpointException::pageRequired();
         }
 
