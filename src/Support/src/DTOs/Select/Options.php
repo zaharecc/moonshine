@@ -76,7 +76,7 @@ final readonly class Options implements Arrayable
 
         $properties = $this->normalizeProperties($properties);
 
-        return new OptionProperty(...$properties ?? []);
+        return new OptionProperty(...$properties);
     }
 
     /**
