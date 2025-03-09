@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Database\Eloquent\Model;
 use MoonShine\Support\DTOs\Select\Option;
+use MoonShine\Support\DTOs\Select\OptionGroup;
 use MoonShine\Support\DTOs\Select\OptionImage;
 use MoonShine\Support\DTOs\Select\OptionProperty;
 use MoonShine\Support\DTOs\Select\Options;
@@ -185,8 +186,8 @@ describe('basic methods', function () {
     });
 });
 
-describe('select field with images (passed via arrays)', function () {
-    it('renders images passed as strings', function () {
+describe('select field with images', function () {
+    it('by array', function () {
         $field = Select::make('Select field with images')
             ->options([
                 1 => 'Option 1',
@@ -212,7 +213,7 @@ describe('select field with images (passed via arrays)', function () {
         ]);
     });
 
-    it('renders images passed via OptionImage object', function () {
+    it('array with OptionImage object', function () {
         $field = Select::make('Select field with images')
             ->options([
                 1 => 'Option 1',
@@ -237,10 +238,8 @@ describe('select field with images (passed via arrays)', function () {
             'objectFit' => ObjectFit::COVER->value,
         ]);
     });
-});
 
-describe('select field with images (passed via Options object)', function () {
-    it('renders images passed as strings', function () {
+    it('objects with image string', function () {
         $options = new Options([
             new Option(
                 'Option 1',
@@ -253,6 +252,14 @@ describe('select field with images (passed via Options object)', function () {
                 true,
                 properties: new OptionProperty('image2.png')
             ),
+            new OptionGroup('Group', new Options([
+                new Option(
+                    'Option 3',
+                    '3',
+                    true,
+                    properties: new OptionProperty('image3.png')
+                ),
+            ]))
         ]);
 
         $field = Select::make('Select field with images')
@@ -270,10 +277,15 @@ describe('select field with images (passed via Options object)', function () {
             'width' => 10,
             'height' => 10,
             'objectFit' => ObjectFit::COVER->value,
+        ])->and($result['values']['Group']['values'][0]['properties']['image'])->toBe([
+            'src' => 'image3.png',
+            'width' => 10,
+            'height' => 10,
+            'objectFit' => ObjectFit::COVER->value,
         ]);
     });
 
-    it('renders images passed via OptionImage', function () {
+    it('only objects', function () {
         $options = new Options([
             new Option(
                 'Option 1',
@@ -298,6 +310,19 @@ describe('select field with images (passed via Options object)', function () {
                     )
                 )
             ),
+            new OptionGroup('Group', new Options([
+                new Option(
+                    'Option 3',
+                    '3',
+                    properties: new OptionProperty(
+                        new OptionImage(
+                            src: 'image3.png',
+                            width: 8,
+                            objectFit: ObjectFit::CONTAIN
+                        )
+                    )
+                ),
+            ]))
         ]);
 
         $field = Select::make('Select field with images')
@@ -314,6 +339,11 @@ describe('select field with images (passed via Options object)', function () {
             'objectFit' => ObjectFit::COVER->value,
         ])->and($result['values'][2]['properties']['image'])->toBe([
             'src' => 'image2.png',
+            'width' => 8,
+            'height' => 10,
+            'objectFit' => ObjectFit::CONTAIN->value,
+        ])->and($result['values']['Group']['values'][0]['properties']['image'])->toBe([
+            'src' => 'image3.png',
             'width' => 8,
             'height' => 10,
             'objectFit' => ObjectFit::CONTAIN->value,

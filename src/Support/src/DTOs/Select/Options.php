@@ -74,9 +74,9 @@ final readonly class Options implements Arrayable
             return $properties;
         }
 
-        $properties = $this->normalizeProperties($properties);
-
-        return new OptionProperty(...$properties);
+        return new OptionProperty(
+            ...$this->normalizeProperties($properties)
+        );
     }
 
     /**
@@ -148,6 +148,11 @@ final readonly class Options implements Arrayable
         ];
     }
 
+    /**
+     * @param  array{image: OptionImage}  $properties
+     *
+     * @return array
+     */
     private function normalizeProperties(array $properties): array
     {
         if (! isset($properties['image']) || $properties['image'] instanceof OptionImage) {
