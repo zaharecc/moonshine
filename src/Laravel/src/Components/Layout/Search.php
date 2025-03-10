@@ -34,7 +34,7 @@ final class Search extends MoonShineComponent
     }
     protected function isSearchEnabled(): bool
     {
-        if($this->isEnabled) {
+        if ($this->isEnabled) {
             return true;
         }
 
