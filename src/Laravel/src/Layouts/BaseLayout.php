@@ -72,6 +72,22 @@ abstract class BaseLayout extends AbstractLayout
         return Profile::make(withBorder: $sidebar);
     }
 
+    /**
+     * @return list<ComponentContract>
+     */
+    protected function sidebarSlot(): array
+    {
+        return [];
+    }
+
+    /**
+     * @return list<ComponentContract>
+     */
+    protected function sidebarTopSlot(): array
+    {
+        return [];
+    }
+
     protected function getSidebarComponent(): Sidebar
     {
         return Sidebar::make([
@@ -82,7 +98,7 @@ abstract class BaseLayout extends AbstractLayout
 
                 Div::make([
                     ThemeSwitcher::make(),
-
+                    ...$this->sidebarTopSlot(),
                     Div::make([
                         Burger::make(),
                     ])->class('menu-heading-burger'),
@@ -90,6 +106,7 @@ abstract class BaseLayout extends AbstractLayout
             ])->class('menu-heading'),
 
             Div::make([
+                ...$this->sidebarSlot(),
                 Menu::make(),
                 When::make(
                     fn (): bool => $this->isProfileEnabled(),
@@ -104,6 +121,14 @@ abstract class BaseLayout extends AbstractLayout
         ])->collapsed();
     }
 
+    /**
+     * @return list<ComponentContract>
+     */
+    protected function topBarSlot(): array
+    {
+        return [];
+    }
+
     protected function getTopBarComponent(): Topbar
     {
         return TopBar::make([
@@ -116,6 +141,7 @@ abstract class BaseLayout extends AbstractLayout
             ])->class('menu-navigation'),
 
             Div::make([
+                ...$this->topBarSlot(),
                 When::make(
                     fn (): bool => $this->isProfileEnabled(),
                     fn (): array => [
@@ -204,7 +230,7 @@ abstract class BaseLayout extends AbstractLayout
     {
         $components = [
             Components::make(
-                $this->getPage()->getComponents()
+                $this->getPage()->getComponents(),
             ),
         ];
 
