@@ -49,7 +49,7 @@ class AppLayout extends BaseLayout
                 Body::make([
                     Wrapper::make([
                         // $this->getTopBarComponent(),
-                        $this->getSidebarComponent()->class('dark'),
+                        $this->getSidebarComponent(),
 
                         Div::make([
                             Fragment::make([
