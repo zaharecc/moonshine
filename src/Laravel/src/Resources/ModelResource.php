@@ -57,7 +57,7 @@ abstract class ModelResource extends CrudResource implements
 
     public function getColumn(): string
     {
-        return $this->column ?: $this->getModel()->getQualifiedKeyName();
+        return $this->column ?: $this->getModel()->getKeyName();
     }
 
     /**

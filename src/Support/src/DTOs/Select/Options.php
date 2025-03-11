@@ -28,6 +28,7 @@ final readonly class Options implements Arrayable
     public function getValues(): Collection
     {
         return collect($this->values)
+            ->filter()
             ->map(function (array|string|OptionGroup|Option $labelOrValues, int|string $valueOrLabel): OptionGroup|Option {
                 if ($labelOrValues instanceof Option) {
                     return $labelOrValues;
