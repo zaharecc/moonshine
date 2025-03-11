@@ -46,7 +46,7 @@ trait HasModalModeConcern
         $button = ActionButton::make($label)->inModal(
             title: $label,
             content: (string) Fragment::make($components)->name($fragmentName),
-            builder: $this->modifyModalModeModal ?? static fn(Modal $modal): Modal => $modal->wide()
+            builder: $this->modifyModalModeModal ?? static fn (Modal $modal): Modal => $modal->wide()
         );
 
         if (! \is_null($this->modifyModalModeButton)) {
