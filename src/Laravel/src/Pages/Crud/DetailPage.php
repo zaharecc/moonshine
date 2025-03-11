@@ -139,6 +139,7 @@ class DetailPage extends CrudPage
                     $tabs[] = Tab::make($field->getLabel(), [
                         $field,
                     ]);
+
                     continue;
                 }
 

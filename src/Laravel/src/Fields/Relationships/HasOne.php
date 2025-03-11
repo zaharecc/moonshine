@@ -357,7 +357,7 @@ class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithC
     {
         // On the form when outsideComponent is false,
         // the HasOne field can be displayed only in modalMode.
-        if(! $this->outsideComponent) {
+        if (! $this->outsideComponent) {
             $this->modalMode();
         }
 
