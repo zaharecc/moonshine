@@ -8,6 +8,7 @@ use MoonShine\UI\Contracts\DefaultValueTypes\CanBeArray;
 use MoonShine\UI\Contracts\HasDefaultValueContract;
 use MoonShine\UI\Contracts\RemovableContract;
 use MoonShine\UI\Fields\Json;
+use MoonShine\UI\Fields\Select;
 use MoonShine\UI\Fields\Text;
 
 uses()->group('fields');
@@ -44,6 +45,7 @@ beforeEach(function (): void {
                 Json::make('Inner')->fields([
                     Text::make('Inner Field 1'),
                     Text::make('Inner Field 2'),
+                    Select::make('Inner Field 3')->multiple(),
                     $this->fieldOnlyValue,
                 ])->object(),
             ])->object(),
@@ -304,7 +306,7 @@ describe('unique field methods', function () {
                         foreach ($inner->getPreparedFields() as $i) {
                             if ($i instanceof Json) {
                                 expect($i->getNameAttribute())
-                                    ->toBe('table_with_object[${index0}][object][inner][only_value]');
+                                    ->toBe('table_with_object[${index0}][object][inner][only_value][]');
 
                                 foreach ($i->getPreparedFields() as $ii) {
                                     expect($ii->getNameAttribute())
@@ -314,6 +316,13 @@ describe('unique field methods', function () {
                                 expect($i->getNameAttribute())
                                     ->toContain('table_with_object[${index0}][object][inner][inner_field');
                             }
+
+                            $select = $inner->getPreparedFields()[2];
+
+                            expect($select)
+                                ->toBeInstanceOf(Select::class)
+                                ->and($select->getNameAttribute())
+                                ->toBe('table_with_object[${index0}][object][inner][inner_field3][]');
                         }
                     } else {
                         expect($inner->getNameAttribute())
