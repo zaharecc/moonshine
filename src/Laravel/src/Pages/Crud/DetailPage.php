@@ -137,7 +137,7 @@ class DetailPage extends CrudPage
 
                 if ($field instanceof HasTabModeContract && $field->isTabMode()) {
                     $tabs[] = Tab::make($field->getLabel(), [
-                        !$field->isToOne() ? $field : Box::make($field->getLabel(), [$field]),
+                        $field->isToOne() ? Box::make($field->getLabel(), [$field]) : $field,
                     ]);
 
                     continue;
