@@ -34,6 +34,7 @@ use MoonShine\Laravel\Traits\Fields\WithRelatedLink;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Components\ActionGroup;
 use MoonShine\UI\Components\Layout\Flex;
+use MoonShine\UI\Components\Layout\LineBreak;
 use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\UI\Contracts\HasUpdateOnPreviewContract;
 use MoonShine\UI\Fields\Field;
@@ -700,6 +701,7 @@ class HasMany extends ModelRelationField implements HasFieldsContract, FieldWith
             $components->add(Flex::make($flexComponents)->justifyAlign('between'));
         }
 
+        $components->add(LineBreak::make());
         $components->add($this->getComponent());
 
         return [
