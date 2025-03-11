@@ -71,8 +71,6 @@ class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithC
 
     public function disableOutside(): static
     {
-        $this->modalMode();
-
         $this->outsideComponent = false;
 
         return $this;
@@ -139,7 +137,7 @@ class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithC
 
         $resource = $this->getResource()->stopGettingItemFromUrl();
 
-        return TableBuilder::make(items: $items)
+        $table = TableBuilder::make(items: $items)
             ->fields($this->getFieldsOnPreview())
             ->cast($resource->getCaster())
             ->preview()
@@ -148,8 +146,15 @@ class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithC
             ->when(
                 ! \is_null($this->modifyTable),
                 fn (TableBuilderContract $tableBuilder) => value($this->modifyTable, $tableBuilder)
+            );
+
+        return $this->isModalMode()
+            ? (string) $this->getModalButton(
+                Components::make([$table]),
+                $this->getLabel(),
+                $this->getRelationName()
             )
-            ->render();
+            : $table->render();
     }
 
     /**
@@ -350,6 +355,12 @@ class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithC
      */
     protected function viewData(): array
     {
+        // On the form when outsideComponent is false,
+        // the HasOne field can be displayed only in modalMode.
+        if(! $this->outsideComponent) {
+            $this->modalMode();
+        }
+
         if (\is_null($this->getRelatedModel()?->getKey())) {
             return ['component' => ''];
         }

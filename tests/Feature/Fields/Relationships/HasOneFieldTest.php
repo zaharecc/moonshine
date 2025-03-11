@@ -127,26 +127,21 @@ it('modal mode in add form', function () {
 });
 
 it('disableOutside with modalMode', function () {
-    $item = createItem(countComments: 6);
-
     $resource = TestResourceBuilder::new(Item::class)->setTestFields([
         ID::make(),
         Text::make('Name'),
         HasOne::make('File', 'itemFile', resource: TestFileResource::class)
             ->disableOutside(),
     ]);
-
     expect($resource->getOutsideFields()->isEmpty())
         ->toBeTrue();
 
     /** @var HasOne $field */
     $field = $resource->getFormFields()->filter(fn ($field) => $field->getColumn() === 'itemFile')->first();
+    expect($field)->not()->toBeNull();
 
-    expect($field)
-        ->not()->toBeNull()
-        ->and($field->isModalMode())
-        ->toBeTrue()
-    ;
+    $field->toArray();
+    expect($field->isModalMode())->toBeTrue();
 });
 
 it('tabMode in edit form', function () {

@@ -10,6 +10,7 @@ use MoonShine\Core\Exceptions\PageException;
 use MoonShine\Core\Exceptions\ResourceException;
 use MoonShine\Laravel\Collections\Fields;
 use MoonShine\Laravel\Components\Fragment;
+use MoonShine\Laravel\Contracts\Fields\HasTabModeContract;
 use MoonShine\Laravel\Enums\Ability;
 use MoonShine\Laravel\Enums\Action;
 use MoonShine\Laravel\Fields\Relationships\ModelRelationField;
@@ -20,6 +21,8 @@ use MoonShine\UI\Components\Heading;
 use MoonShine\UI\Components\Layout\Box;
 use MoonShine\UI\Components\Layout\LineBreak;
 use MoonShine\UI\Components\Table\TableBuilder;
+use MoonShine\UI\Components\Tabs;
+use MoonShine\UI\Components\Tabs\Tab;
 use MoonShine\UI\Exceptions\MoonShineComponentException;
 use Throwable;
 
@@ -114,6 +117,8 @@ class DetailPage extends CrudPage
 
         $outsideFields = $this->getResource()->getDetailFields(onlyOutside: true);
 
+        $tabs = [];
+
         if ($outsideFields->isNotEmpty()) {
             $components[] = LineBreak::make();
 
@@ -124,26 +129,32 @@ class DetailPage extends CrudPage
                     $field->getResource()?->getCaster()
                 );
 
-                $components[] = LineBreak::make();
-
-                $blocks = [
-                    Heading::make($field->getLabel()),
-                    $field,
-                ];
-
                 if ($field->isToOne()) {
                     $field
                         ->withoutWrapper()
                         ->previewMode();
-
-                    $blocks = [
-                        Box::make($field->getLabel(), [$field]),
-                    ];
                 }
+
+                if ($field instanceof HasTabModeContract && $field->isTabMode()) {
+                    $tabs[] = Tab::make($field->getLabel(), [
+                        $field,
+                    ]);
+                    continue;
+                }
+
+                $components[] = LineBreak::make();
+
+                $blocks = $field->isToOne()
+                    ? [Box::make($field->getLabel(), [$field])]
+                    : [Heading::make($field->getLabel()), $field];
 
                 $components[] = Fragment::make($blocks)
                     ->name($field->getRelationName());
             }
+        }
+
+        if ($tabs !== []) {
+            $components[] = Tabs::make($tabs);
         }
 
         $components = array_merge($components, $this->getEmptyModals());

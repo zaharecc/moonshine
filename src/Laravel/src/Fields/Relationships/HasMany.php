@@ -593,8 +593,16 @@ class HasMany extends ModelRelationField implements HasFieldsContract, FieldWith
      */
     protected function resolvePreview(): Renderable|string
     {
-        return $this->isRelatedLink()
-            ? $this->getRelatedLink()->render()
+        if($this->isRelatedLink()) {
+            return $this->getRelatedLink()->render();
+        }
+
+        return $this->isModalMode()
+            ? (string) $this->getModalButton(
+                Components::make([$this->getTablePreview()]),
+                $this->getLabel(),
+                $this->getRelationName()
+            )
             : $this->getTablePreview()->render();
     }
 
