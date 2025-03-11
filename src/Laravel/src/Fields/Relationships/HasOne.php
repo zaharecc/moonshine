@@ -355,14 +355,14 @@ class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithC
      */
     protected function viewData(): array
     {
-        if (\is_null($this->getRelatedModel()?->getKey())) {
-            return ['component' => ''];
-        }
-
         // On the form when outsideComponent is false,
         // the HasOne field can be displayed only in modalMode.
         if(! $this->outsideComponent) {
             $this->modalMode();
+        }
+
+        if (\is_null($this->getRelatedModel()?->getKey())) {
+            return ['component' => ''];
         }
 
         return [
