@@ -85,11 +85,11 @@ abstract class ModelResource extends CrudResource implements
 
     protected function isCan(Ability $ability): bool
     {
-        if (! moonshineConfig()->isAuthEnabled()) {
+        $user = MoonShineAuth::getGuard()->user();
+
+        if($user === null) {
             return true;
         }
-
-        $user = MoonShineAuth::getGuard()->user();
 
         $item = \in_array($ability, [
             Ability::CREATE,
