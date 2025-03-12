@@ -26,6 +26,7 @@ use MoonShine\Core\Collections\Components;
 use MoonShine\Laravel\Buttons\HasManyButton;
 use MoonShine\Laravel\Collections\Fields;
 use MoonShine\Laravel\Contracts\Fields\HasModalModeContract;
+use MoonShine\Laravel\Contracts\Fields\HasOutsideSwitcherContract;
 use MoonShine\Laravel\Contracts\Fields\HasTabModeContract;
 use MoonShine\Laravel\Enums\Action;
 use MoonShine\Laravel\Resources\ModelResource;
@@ -48,7 +49,12 @@ use Throwable;
  * @implements HasFieldsContract<Fields|FieldsContract>
  * @implements FieldWithComponentContract<TableBuilderContract|FormBuilderContract|ActionButtonContract>
  */
-class HasMany extends ModelRelationField implements HasFieldsContract, FieldWithComponentContract, HasModalModeContract, HasTabModeContract
+class HasMany extends ModelRelationField implements
+    HasFieldsContract,
+    FieldWithComponentContract,
+    HasModalModeContract,
+    HasTabModeContract,
+    HasOutsideSwitcherContract
 {
     use WithFields;
     use WithRelatedLink;

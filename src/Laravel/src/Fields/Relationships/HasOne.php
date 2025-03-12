@@ -21,6 +21,7 @@ use MoonShine\Contracts\UI\TableBuilderContract;
 use MoonShine\Core\Collections\Components;
 use MoonShine\Laravel\Collections\Fields;
 use MoonShine\Laravel\Contracts\Fields\HasModalModeContract;
+use MoonShine\Laravel\Contracts\Fields\HasOutsideSwitcherContract;
 use MoonShine\Laravel\Contracts\Fields\HasTabModeContract;
 use MoonShine\Laravel\Exceptions\ModelRelationFieldException;
 use MoonShine\Laravel\Resources\ModelResource;
@@ -41,7 +42,12 @@ use Throwable;
  * @implements HasFieldsContract<Fields|FieldsContract>
  * @implements FieldWithComponentContract<FormBuilderContract>
  */
-class HasOne extends ModelRelationField implements HasFieldsContract, FieldWithComponentContract, HasModalModeContract, HasTabModeContract
+class HasOne extends ModelRelationField implements
+    HasFieldsContract,
+    FieldWithComponentContract,
+    HasModalModeContract,
+    HasTabModeContract,
+    HasOutsideSwitcherContract
 {
     use WithFields;
     use HasModalModeConcern;
