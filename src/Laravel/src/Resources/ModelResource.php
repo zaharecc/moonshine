@@ -87,7 +87,7 @@ abstract class ModelResource extends CrudResource implements
     {
         $user = MoonShineAuth::getGuard()->user();
 
-        if($user === null) {
+        if ($user === null) {
             return true;
         }
 
