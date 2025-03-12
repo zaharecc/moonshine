@@ -158,10 +158,10 @@ abstract class ModelResource extends CrudResource implements
             );
         };
 
-        $fields->each(function (FieldContract $field) use($item, $relationDestroyer): void {
+        $fields->each(function (FieldContract $field) use ($item, $relationDestroyer): void {
             if ($field instanceof ModelRelationField
                 && $field instanceof HasOutsideSwitcherContract
-                && !$field->isOutsideComponent()
+                && ! $field->isOutsideComponent()
                 && $this->isDeleteRelationships()
             ) {
                 $relationDestroyer($field);
