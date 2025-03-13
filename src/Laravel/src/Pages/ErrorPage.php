@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace MoonShine\Laravel\Pages;
 
 use MoonShine\Contracts\UI\ComponentContract;
+use MoonShine\Core\Attributes\Layout;
 use MoonShine\Laravel\Layouts\BlankLayout;
 use MoonShine\MenuManager\Attributes\SkipMenu;
 use MoonShine\UI\Components\FlexibleRender;
 
 #[SkipMenu]
+#[Layout(BlankLayout::class)]
 /**
  * @method static static make(int $code, string $message)
  * @extends Page<null>
  */
 class ErrorPage extends Page
 {
-    protected ?string $layout = BlankLayout::class;
-
     private int $code;
 
     private string $message;

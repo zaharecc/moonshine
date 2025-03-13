@@ -8,6 +8,7 @@ use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
 use JsonException;
+use MoonShine\Support\Enums\ObjectFit;
 use UnitEnum;
 
 final readonly class Options implements Arrayable
@@ -27,6 +28,7 @@ final readonly class Options implements Arrayable
     public function getValues(): Collection
     {
         return collect($this->values)
+            ->filter()
             ->map(function (array|string|OptionGroup|Option $labelOrValues, int|string $valueOrLabel): OptionGroup|Option {
                 if ($labelOrValues instanceof Option) {
                     return $labelOrValues;
@@ -73,7 +75,9 @@ final readonly class Options implements Arrayable
             return $properties;
         }
 
-        return new OptionProperty(...$properties ?? []);
+        return new OptionProperty(
+            ...$this->normalizeProperties($properties)
+        );
     }
 
     /**
@@ -143,5 +147,34 @@ final readonly class Options implements Arrayable
             'options' => $options,
             'properties' => $properties,
         ];
+    }
+
+    /**
+     * @param  array{image: OptionImage}  $properties
+     *
+     * @return array
+     */
+    private function normalizeProperties(array $properties): array
+    {
+        if (! isset($properties['image']) || $properties['image'] instanceof OptionImage) {
+            return $properties;
+        }
+
+        $imageData = $properties['image'];
+
+        if (\is_string($imageData)) {
+            $properties['image'] = new OptionImage($imageData);
+
+            return $properties;
+        }
+
+        $properties['image'] = new OptionImage(
+            $imageData['src'] ?? '',
+            $imageData['width'] ?? null,
+            $imageData['height'] ?? null,
+            isset($imageData['objectFit']) ? ObjectFit::from($imageData['objectFit']) : null
+        );
+
+        return $properties;
     }
 }

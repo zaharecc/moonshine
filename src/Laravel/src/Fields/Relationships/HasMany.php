@@ -26,6 +26,7 @@ use MoonShine\Core\Collections\Components;
 use MoonShine\Laravel\Buttons\HasManyButton;
 use MoonShine\Laravel\Collections\Fields;
 use MoonShine\Laravel\Contracts\Fields\HasModalModeContract;
+use MoonShine\Laravel\Contracts\Fields\HasOutsideSwitcherContract;
 use MoonShine\Laravel\Contracts\Fields\HasTabModeContract;
 use MoonShine\Laravel\Enums\Action;
 use MoonShine\Laravel\Resources\ModelResource;
@@ -34,6 +35,7 @@ use MoonShine\Laravel\Traits\Fields\WithRelatedLink;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Components\ActionGroup;
 use MoonShine\UI\Components\Layout\Flex;
+use MoonShine\UI\Components\Layout\LineBreak;
 use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\UI\Contracts\HasUpdateOnPreviewContract;
 use MoonShine\UI\Fields\Field;
@@ -47,7 +49,12 @@ use Throwable;
  * @implements HasFieldsContract<Fields|FieldsContract>
  * @implements FieldWithComponentContract<TableBuilderContract|FormBuilderContract|ActionButtonContract>
  */
-class HasMany extends ModelRelationField implements HasFieldsContract, FieldWithComponentContract, HasModalModeContract, HasTabModeContract
+class HasMany extends ModelRelationField implements
+    HasFieldsContract,
+    FieldWithComponentContract,
+    HasModalModeContract,
+    HasTabModeContract,
+    HasOutsideSwitcherContract
 {
     use WithFields;
     use WithRelatedLink;
@@ -593,8 +600,16 @@ class HasMany extends ModelRelationField implements HasFieldsContract, FieldWith
      */
     protected function resolvePreview(): Renderable|string
     {
-        return $this->isRelatedLink()
-            ? $this->getRelatedLink()->render()
+        if ($this->isRelatedLink()) {
+            return $this->getRelatedLink()->render();
+        }
+
+        return $this->isModalMode()
+            ? (string) $this->getModalButton(
+                Components::make([$this->getTablePreview()]),
+                $this->getLabel(),
+                $this->getRelationName()
+            )
             : $this->getTablePreview()->render();
     }
 
@@ -692,6 +707,7 @@ class HasMany extends ModelRelationField implements HasFieldsContract, FieldWith
             $components->add(Flex::make($flexComponents)->justifyAlign('between'));
         }
 
+        $components->add(LineBreak::make());
         $components->add($this->getComponent());
 
         return [

@@ -20,6 +20,8 @@ interface HasComponentAttributesContract
 
     public function mergeAttribute(string $name, string $value, string $separator = ' '): static;
 
+    public function removeClass(string $pattern): static;
+
     public function class(string|array $classes): static;
 
     public function style(string|array $styles): static;

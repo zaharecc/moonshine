@@ -8,6 +8,7 @@ use MoonShine\UI\Contracts\DefaultValueTypes\CanBeArray;
 use MoonShine\UI\Contracts\HasDefaultValueContract;
 use MoonShine\UI\Contracts\RemovableContract;
 use MoonShine\UI\Fields\Json;
+use MoonShine\UI\Fields\Select;
 use MoonShine\UI\Fields\Text;
 
 uses()->group('fields');
@@ -23,6 +24,33 @@ beforeEach(function (): void {
     $this->fieldOnlyValue = Json::make('Only value')
         ->onlyValue();
 
+    $this->fieldObject = Json::make('Object')
+        ->fields([
+            ...exampleFields()->toArray(),
+            Json::make('Inner')->fields([
+                Text::make('Inner Field 1'),
+                Text::make('Inner Field 2'),
+            ])->object(),
+        ])
+        ->object();
+
+
+    $this->fieldTableWithObject = Json::make('Table With Object')
+        ->fields([
+            Text::make('Title'),
+            Json::make('Object')->fields([
+                Text::make('Field 1'),
+                Text::make('Field 2'),
+
+                Json::make('Inner')->fields([
+                    Text::make('Inner Field 1'),
+                    Text::make('Inner Field 2'),
+                    Select::make('Inner Field 3')->multiple(),
+                    $this->fieldOnlyValue,
+                ])->object(),
+            ])->object(),
+        ]);
+
     $this->item = new class () extends Model {
         public array $key_value = [
             'key1' => 'value1',
@@ -37,6 +65,33 @@ beforeEach(function (): void {
         public array $json = [
             ['field1' => 'field1_value', 'field2' => 'field2_value'],
         ];
+
+        public array $object = [
+            'field1' => 'field1_value',
+            'field2' => 'field2_value',
+            'inner' => [
+                'inner_field1' => 'inner_field1_value',
+                'inner_field2' => 'inner_field2_value',
+            ],
+        ];
+
+        public array $tableWithObject = [
+            [
+                'title' => 'Value',
+                'object' => [
+                    'field1' => 'field1_value',
+                    'field2' => 'field2_value',
+                    'inner' => [
+                        'inner_field1' => 'inner_field1_value',
+                        'inner_field2' => 'inner_field2_value',
+                        'only_value' => [
+                            'value1',
+                            'value2',
+                        ],
+                    ],
+                ],
+            ],
+        ];
     };
 
     $this->field->fill($this->item->json);
@@ -47,6 +102,14 @@ beforeEach(function (): void {
 
     $this->fieldOnlyValue->fill(
         $this->item->only_value
+    );
+
+    $this->fieldObject->fill(
+        $this->item->object
+    );
+
+    $this->fieldTableWithObject->fill(
+        $this->item->tableWithObject
     );
 });
 
@@ -200,6 +263,80 @@ describe('unique field methods', function () {
             });
     });
 
+    it('has fields object', function (): void {
+        expect($this->fieldObject->getPreparedFields())
+            ->hasFields([
+                ...exampleFields()->toArray(),
+                Json::make('Inner'),
+            ]);
+
+        foreach ($this->fieldObject->getPreparedFields() as $field) {
+            expect($field->getNameAttribute())
+                ->toContain('object[');
+
+            if ($field instanceof Json) {
+                expect($field->getNameAttribute())
+                    ->toBe('object[inner]');
+
+                foreach ($field->getPreparedFields() as $inner) {
+                    expect($inner->getNameAttribute())
+                        ->toContain('object[inner][inner_field');
+                }
+            }
+        }
+    });
+
+    it('has fields with object', function (): void {
+        expect($this->fieldTableWithObject->getPreparedFields())
+            ->hasFields([
+                Text::make('Title'),
+                Json::make('Object'),
+            ]);
+
+        foreach ($this->fieldTableWithObject->getPreparedFields() as $field) {
+            if ($field instanceof Json) {
+                expect($field->getNameAttribute())
+                    ->toBe('table_with_object[${index0}][object]');
+
+                foreach ($field->getPreparedFields() as $inner) {
+                    if ($inner instanceof Json) {
+                        expect($inner->getNameAttribute())
+                            ->toBe('table_with_object[${index0}][object][inner]');
+
+                        foreach ($inner->getPreparedFields() as $i) {
+                            if ($i instanceof Json) {
+                                expect($i->getNameAttribute())
+                                    ->toBe('table_with_object[${index0}][object][inner][only_value][]');
+
+                                foreach ($i->getPreparedFields() as $ii) {
+                                    expect($ii->getNameAttribute())
+                                        ->toBe('table_with_object[${index0}][object][inner][only_value][${index1}][value]');
+                                }
+                            } else {
+                                expect($i->getNameAttribute())
+                                    ->toContain('table_with_object[${index0}][object][inner][inner_field');
+                            }
+
+                            $select = $inner->getPreparedFields()[2];
+
+                            expect($select)
+                                ->toBeInstanceOf(Select::class)
+                                ->and($select->getNameAttribute())
+                                ->toBe('table_with_object[${index0}][object][inner][inner_field3][]');
+                        }
+                    } else {
+                        expect($inner->getNameAttribute())
+                            ->toContain('table_with_object[${index0}][object][field');
+                    }
+
+                }
+            } else {
+                expect($field->getNameAttribute())
+                    ->toBe('table_with_object[${index0}][title]');
+            }
+        }
+    });
+
     it('extract value', function () {
         expect($this->field->toValue())
             ->toBe([
@@ -220,6 +357,36 @@ describe('unique field methods', function () {
             ->toBe([
                 ['value' => 'value1'],
                 ['value' => 'value2'],
+            ]);
+    });
+
+    it('extract value for object', function () {
+        expect($this->fieldObject->toValue())
+            ->toBe([
+                'field1' => 'field1_value',
+                'field2' => 'field2_value',
+                'inner' => [
+                    'inner_field1' => 'inner_field1_value',
+                    'inner_field2' => 'inner_field2_value',
+                ],
+            ]);
+    });
+
+    it('extract value for table object', function () {
+        expect($this->fieldTableWithObject->toValue())
+            ->toBe([
+                ['title' => 'Value', 'object' => [
+                    'field1' => 'field1_value',
+                    'field2' => 'field2_value',
+                    'inner' => [
+                        'inner_field1' => 'inner_field1_value',
+                        'inner_field2' => 'inner_field2_value',
+                        'only_value' => [
+                            'value1',
+                            'value2',
+                        ],
+                    ],
+                ]],
             ]);
     });
 });

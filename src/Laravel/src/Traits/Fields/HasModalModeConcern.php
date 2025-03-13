@@ -9,6 +9,7 @@ use MoonShine\Contracts\UI\ActionButtonContract;
 use MoonShine\Core\Collections\Components;
 use MoonShine\Laravel\Components\Fragment;
 use MoonShine\UI\Components\ActionButton;
+use MoonShine\UI\Components\Modal;
 
 trait HasModalModeConcern
 {
@@ -45,7 +46,7 @@ trait HasModalModeConcern
         $button = ActionButton::make($label)->inModal(
             title: $label,
             content: (string) Fragment::make($components)->name($fragmentName),
-            builder: $this->modifyModalModeModal
+            builder: $this->modifyModalModeModal ?? static fn (Modal $modal): Modal => $modal->wide()
         );
 
         if (! \is_null($this->modifyModalModeButton)) {

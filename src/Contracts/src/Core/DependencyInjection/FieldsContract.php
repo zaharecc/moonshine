@@ -45,7 +45,7 @@ interface FieldsContract extends Enumerable, HasStructureContract
 
     public function reactiveFields(): static;
 
-    public function prepareReindexNames(?FieldContract $parent = null, ?callable $before = null, ?callable $performName = null): static;
+    public function prepareReindexNames(?FieldContract $parent = null, ?callable $before = null, ?callable $performName = null, ?Closure $except = null): static;
 
     public function prepareAttributes(): static;
 

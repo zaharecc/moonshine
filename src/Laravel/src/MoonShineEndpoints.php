@@ -11,6 +11,7 @@ use MoonShine\Contracts\Core\ResourceContract;
 use MoonShine\Core\Exceptions\EndpointException;
 use MoonShine\Core\Pages\Pages;
 use MoonShine\Laravel\DependencyInjection\MoonShineRouter;
+use MoonShine\Support\Enums\PageType;
 use MoonShine\Support\UriKey;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Throwable;
@@ -127,15 +128,27 @@ final readonly class MoonShineEndpoints implements EndpointsContract
                 ? $resource
                 : moonshine()->getResources()->findByClass($resource);
 
+            $pageUri = $page instanceof PageContract
+                ? $page->getUriKey()
+                : (new UriKey($page))->generate();
+
+            /**
+             * Because from the resource we call the method with default CRUD pages, which can be replaced with custom ones
+             * @example toPage(FormPage::class, $resource) -> CustomFormPage
+             */
             $targetPage = $targetResource?->getPages()->when(
                 \is_null($page),
                 static fn (Pages $pages) => $pages->first(),
-                static fn (Pages $pages): ?PageContract => $pages->findByUri(
-                    $page instanceof PageContract
-                        ? $page->getUriKey()
-                        : (new UriKey($page))->generate()
-                ),
+                static fn (Pages $pages): ?PageContract => $pages->findByUri($pageUri),
             );
+
+            if (! $targetPage instanceof PageContract) {
+                $pageType = PageType::getTypeFromUri($pageUri);
+
+                $targetPage = $pageType instanceof PageType
+                    ? $targetResource?->getPages()->findByType($pageType)
+                    : null;
+            }
         }
 
         if (\is_null($resource)) {
@@ -144,7 +157,7 @@ final readonly class MoonShineEndpoints implements EndpointsContract
                 : moonshine()->getPages()->findByClass($page);
         }
 
-        if (\is_null($targetPage)) {
+        if (! $targetPage instanceof PageContract) {
             throw EndpointException::pageRequired();
         }
 

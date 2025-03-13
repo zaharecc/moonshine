@@ -15,6 +15,7 @@ use MoonShine\Contracts\Core\TypeCasts\DataCasterContract;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Core\Exceptions\ResourceException;
 use MoonShine\Laravel\Collections\Fields;
+use MoonShine\Laravel\Contracts\Fields\HasOutsideSwitcherContract;
 use MoonShine\Laravel\Contracts\Resource\HasHandlersContract;
 use MoonShine\Laravel\Contracts\Resource\HasQueryTagsContract;
 use MoonShine\Laravel\Contracts\Resource\WithQueryBuilderContract;
@@ -45,12 +46,19 @@ abstract class ModelResource extends CrudResource implements
 
     protected string $model;
 
+    protected string $column = '';
+
     public function flushState(): void
     {
         parent::flushState();
 
         $this->queryBuilder = null;
         $this->customQueryBuilder = null;
+    }
+
+    public function getColumn(): string
+    {
+        return $this->column ?: $this->getModel()->getKeyName();
     }
 
     /**
@@ -78,11 +86,11 @@ abstract class ModelResource extends CrudResource implements
 
     protected function isCan(Ability $ability): bool
     {
-        if (! moonshineConfig()->isAuthEnabled()) {
+        $user = MoonShineAuth::getGuard()->user();
+
+        if ($user === null) {
             return true;
         }
-
-        $user = MoonShineAuth::getGuard()->user();
 
         $item = \in_array($ability, [
             Ability::CREATE,
@@ -140,18 +148,30 @@ abstract class ModelResource extends CrudResource implements
 
         $fields->fill($item->toArray(), $this->getCaster()->cast($item));
 
-        $fields->each(static fn (FieldContract $field): mixed => $field->afterDestroy($item));
+        $relationDestroyer = static function (ModelRelationField $field) use ($item): void {
+            $relationItems = $item->{$field->getRelationName()};
+
+            ! $field->isToOne() ?: $relationItems = collect([$relationItems]);
+
+            $relationItems->each(
+                static fn (mixed $relationItem): mixed => $field->afterDestroy($relationItem)
+            );
+        };
+
+        $fields->each(function (FieldContract $field) use ($item, $relationDestroyer): void {
+            if ($field instanceof ModelRelationField
+                && $field instanceof HasOutsideSwitcherContract
+                && ! $field->isOutsideComponent()
+                && $this->isDeleteRelationships()
+            ) {
+                $relationDestroyer($field);
+            } else {
+                $field->afterDestroy($item);
+            }
+        });
 
         if ($this->isDeleteRelationships()) {
-            $this->getOutsideFields()->each(static function (ModelRelationField $field) use ($item): void {
-                $relationItems = $item->{$field->getRelationName()};
-
-                ! $field->isToOne() ?: $relationItems = collect([$relationItems]);
-
-                $relationItems->each(
-                    static fn (mixed $relationItem): mixed => $field->afterDestroy($relationItem)
-                );
-            });
+            $this->getOutsideFields()->each($relationDestroyer);
         }
 
         return (bool) tap($item->delete(), fn (): mixed => $this->afterDeleted($item));

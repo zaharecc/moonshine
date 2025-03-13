@@ -7,7 +7,6 @@ namespace MoonShine\Laravel\Components\Layout;
 use Illuminate\Support\Collection;
 use MoonShine\Core\Traits\WithCore;
 use MoonShine\Laravel\DependencyInjection\MoonShine;
-use MoonShine\Laravel\Http\Middleware\ChangeLocale;
 use MoonShine\UI\Components\MoonShineComponent;
 
 /**
@@ -29,7 +28,7 @@ final class Locales extends MoonShineComponent
         $this->locales = collect($this->getCore()->getConfig()->getLocales())
             ->mapWithKeys(fn (string $locale, int|string $code): array => [
                 $this->getCore()->getRequest()->getUrlWithQuery([
-                    ChangeLocale::KEY => is_numeric($code) ? $locale : $code,
+                    moonshineConfig()->getLocaleKey() => is_numeric($code) ? $locale : $code,
                 ]) => $locale,
             ]);
     }

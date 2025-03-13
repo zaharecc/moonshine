@@ -179,6 +179,40 @@ it('apply as only value', function () {
     testJsonValue($resource, $this->item, $data, ['Value 1', 'Value 2']);
 });
 
+it('apply as object', function () {
+    $resource = addFieldsToTestResource(
+        Json::make('Data')->fields([
+            Text::make('Title'),
+            Json::make('Inner data')->fields([
+                Text::make('Inner Title'),
+                Json::make('Only value')->onlyValue(),
+            ])->object(),
+        ])->object()
+    );
+
+    $data = [
+        'title' => 'Value',
+        'inner_data' => [
+            'inner_title' => 'Inner Value',
+            'only_value' => [
+                ['value' => 'value1'],
+                ['value' => 'value2'],
+            ],
+        ],
+    ];
+
+    testJsonValue($resource, $this->item, $data, [
+        'title' => 'Value',
+        'inner_data' => [
+            'only_value' => [
+                'value1',
+                'value2',
+            ],
+            'inner_title' => 'Inner Value',
+        ],
+    ]);
+})->todo('Changed sort of inner_title');
+
 it('apply as relation', function () {
     $resource = addFieldsToTestResource(
         RelationRepeater::make('Comments', resource: TestCommentResource::class)

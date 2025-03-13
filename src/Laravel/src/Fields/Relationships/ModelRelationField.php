@@ -83,11 +83,11 @@ abstract class ModelRelationField extends Field implements HasResourceContract
         }
 
         if (\is_string($resource)) {
-            $this->setResource($this->findResource($resource));
+            $this->setResource(clone $this->findResource($resource));
         } elseif (\is_null($resource)) {
-            $this->setResource($this->findResource());
+            $this->setResource(clone $this->findResource());
         } else {
-            $this->setResource($resource);
+            $this->setResource(clone $resource);
         }
 
         // required to create field entities and load assets

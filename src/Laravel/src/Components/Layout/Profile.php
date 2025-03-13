@@ -7,8 +7,11 @@ namespace MoonShine\Laravel\Components\Layout;
 use Closure;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Storage;
+use MoonShine\Contracts\UI\ActionButtonContract;
+use MoonShine\Contracts\UI\Collection\ActionButtonsContract;
 use MoonShine\Laravel\MoonShineAuth;
 use MoonShine\Laravel\Pages\ProfilePage;
+use MoonShine\UI\Collections\ActionButtons;
 use MoonShine\UI\Components\MoonShineComponent;
 use Throwable;
 
@@ -22,6 +25,12 @@ final class Profile extends MoonShineComponent
     protected ?string $defaultAvatar = null;
 
     private readonly ?Authenticatable $user;
+
+    protected ?array $menu = null;
+
+    protected array $translates = [
+        'logout' => 'moonshine::ui.login.logout',
+    ];
 
     public function __construct(
         protected ?string $route = null,
@@ -52,36 +61,6 @@ final class Profile extends MoonShineComponent
     public function getAvatarPlaceholder(): string
     {
         return $this->defaultAvatar ?? moonshineAssets()->getAsset('vendor/moonshine/avatar.jpg');
-    }
-
-    /**
-     * @return array<string, mixed>
-     * @throws Throwable
-     */
-    protected function viewData(): array
-    {
-        $nameOfUser = \is_null($this->nameOfUser)
-            ? $this->getDefaultName()
-            : value($this->nameOfUser, $this);
-
-        $username = \is_null($this->username)
-            ? $this->getDefaultUsername()
-            : value($this->username, $this);
-
-        $avatar = \is_null($this->avatar)
-            ? $this->getDefaultAvatar()
-            : value($this->avatar, $this);
-
-        return [
-            'route' => $this->route ?? toPage(
-                moonshineConfig()->getPage('profile', ProfilePage::class)
-            ),
-            'logOutRoute' => rescue(fn (): string => $this->logOutRoute ?? moonshineRouter()->to('logout'), fn (): string => ''),
-            'avatar' => $avatar,
-            'nameOfUser' => $nameOfUser,
-            'username' => $username,
-            'withBorder' => $this->isWithBorder(),
-        ];
     }
 
     private function getDefaultName(): string
@@ -127,5 +106,55 @@ final class Profile extends MoonShineComponent
         return $avatar
             ? Storage::disk(moonshineConfig()->getDisk())->url($avatar)
             : $this->getAvatarPlaceholder();
+    }
+
+    /**
+     * @param  list<ActionButtonContract>  $menu
+     */
+    public function menu(array $menu): self
+    {
+        $this->menu = $menu;
+
+        return $this;
+    }
+
+    protected function getMenu(): ?ActionButtonsContract
+    {
+        if (\is_null($this->menu)) {
+            return null;
+        }
+
+        return ActionButtons::make($this->menu);
+    }
+
+    /**
+     * @return array<string, mixed>
+     * @throws Throwable
+     */
+    protected function viewData(): array
+    {
+        $nameOfUser = \is_null($this->nameOfUser)
+            ? $this->getDefaultName()
+            : value($this->nameOfUser, $this);
+
+        $username = \is_null($this->username)
+            ? $this->getDefaultUsername()
+            : value($this->username, $this);
+
+        $avatar = \is_null($this->avatar)
+            ? $this->getDefaultAvatar()
+            : value($this->avatar, $this);
+
+        return [
+            'route' => $this->route ?? toPage(
+                moonshineConfig()->getPage('profile', ProfilePage::class),
+            ),
+            'logOutRoute' => $this->logOutRoute ?? rescue(fn() => moonshineRouter()->to('logout'), ''),
+            'avatar' => $avatar,
+            'nameOfUser' => $nameOfUser,
+            'username' => $username,
+            'withBorder' => $this->isWithBorder(),
+            'menu' => $this->getMenu(),
+        ];
     }
 }

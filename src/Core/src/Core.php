@@ -7,6 +7,7 @@ namespace MoonShine\Core;
 use Closure;
 use Illuminate\Support\Traits\Conditionable;
 use MoonShine\Contracts\AssetManager\AssetManagerContract;
+use MoonShine\Contracts\Core\DependencyInjection\CacheAttributesContract;
 use MoonShine\Contracts\Core\DependencyInjection\ConfiguratorContract;
 use MoonShine\Contracts\Core\DependencyInjection\CoreContract;
 use MoonShine\Contracts\Core\DependencyInjection\FieldsContract;
@@ -243,11 +244,13 @@ abstract class Core implements CoreContract, StatefulContract
         );
     }
 
-    /**
-     * Get an autoload instance
-     */
     public function getOptimizer(): OptimizerCollectionContract
     {
         return $this->optimizer;
+    }
+
+    public function getAttributes(): CacheAttributesContract
+    {
+        return $this->getContainer(CacheAttributesContract::class);
     }
 }

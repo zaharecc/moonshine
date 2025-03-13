@@ -7,7 +7,7 @@ namespace MoonShine\Laravel\Components\Layout;
 use MoonShine\UI\Components\MoonShineComponent;
 
 /**
- * @method static static make(string $key = 'search', string $action = '', string $placeholder = '')
+ * @method static static make(string $key = 'search', string $action = '', string $placeholder = '', bool $isEnabled = false)
  */
 final class Search extends MoonShineComponent
 {
@@ -17,6 +17,7 @@ final class Search extends MoonShineComponent
         private readonly string $key = 'search',
         private string $action = '',
         private string $placeholder = '',
+        private bool $isEnabled = false,
     ) {
         parent::__construct();
 
@@ -25,8 +26,18 @@ final class Search extends MoonShineComponent
         }
     }
 
+    public function enabled(): static
+    {
+        $this->isEnabled = true;
+
+        return $this;
+    }
     protected function isSearchEnabled(): bool
     {
+        if ($this->isEnabled) {
+            return true;
+        }
+
         $resource = moonshineRequest()->getResource();
 
         return ! \is_null($resource) && $resource->hasSearch();
@@ -34,8 +45,10 @@ final class Search extends MoonShineComponent
 
     protected function prepareBeforeRender(): void
     {
-        if ($this->isSearchEnabled()) {
-            $this->action = moonshineRequest()->getResource()?->getUrl();
+        $url = moonshineRequest()->getResource()?->getUrl();
+
+        if ($url !== null && $this->isSearchEnabled()) {
+            $this->action = $url;
         }
     }
 
