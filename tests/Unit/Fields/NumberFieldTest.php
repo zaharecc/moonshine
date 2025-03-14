@@ -12,7 +12,7 @@ use MoonShine\UI\InputExtensions\InputNumberUpDown;
 uses()->group('fields');
 
 beforeEach(function (): void {
-    $this->field = Number::make('Rating');
+    $this->field = Number::make('Rating')->max(20)->min(0);
     $this->item = new class () extends Model {
         public int $rating = 3;
     };
@@ -68,8 +68,8 @@ it('preview with stars', function (): void {
         );
 });
 
-it('apply', function (): void {
-    $data = ['rating' => 5];
+it('apply', function ($rating, $toBe): void {
+    $data = ['rating' => $rating];
 
     fakeRequest(method: 'post', parameters: $data);
 
@@ -85,6 +85,13 @@ it('apply', function (): void {
     )
         ->toBeInstanceOf(Model::class)
         ->rating
-        ->toBe($data['rating'])
+        ->toBe($toBe)
     ;
-});
+})->with([
+    [5,5],
+    [5.5,5.5],
+    ["5.5",5.5],
+    ["5,5",5.5],
+    ["25",20],
+    ["-1",0],
+]);

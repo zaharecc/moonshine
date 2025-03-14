@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Eloquent\Model;
+use MoonShine\Tests\Fixtures\Resources\TestResourceBuilder;
 use MoonShine\UI\Components\Boolean;
 use MoonShine\UI\Fields\Checkbox;
 use MoonShine\UI\Fields\Switcher;
@@ -81,3 +82,35 @@ describe('basic methods', function () {
             ->applies($this->field);
     });
 });
+
+it('apply', function ($value, $toBe): void {
+    $data = ['active' => $value];
+
+    fakeRequest(method: 'post', parameters: $data);
+
+    expect(
+        $this->field->apply(
+            TestResourceBuilder::new()->fieldApply($this->field),
+            new class () extends Model {
+                protected $fillable = [
+                    'active',
+                ];
+            }
+        )
+    )
+        ->toBeInstanceOf(Model::class)
+        ->active
+        ->toBe($toBe)
+    ;
+})->with([
+    [0,0],
+    [1,1],
+    ["0",0],
+    ["1",1],
+    [null,0],
+    [false,0],
+    ["false",0],
+    ["",0],
+    [true,1],
+    ["true",0],
+]);
