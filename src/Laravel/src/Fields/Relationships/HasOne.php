@@ -264,7 +264,7 @@ class HasOne extends ModelRelationField implements
         $relation = $parentItem->{$this->getRelationName()}();
 
         $fields = $resource->getFormFields();
-        $fields->onlyFields()->each(fn (FieldContract $field): FieldContract => $field->setParent($this));
+        $fields->onlyFields()->each(fn (FieldContract $field): FieldContract => $field->setParent($this)->nowOnResource($resource));
 
         $action = $resource->getRoute(
             \is_null($item) ? 'crud.store' : 'crud.update',
