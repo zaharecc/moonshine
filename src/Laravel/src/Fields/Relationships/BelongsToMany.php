@@ -243,6 +243,7 @@ class BelongsToMany extends ModelRelationField implements
             before: fn (self $parent, Field $field): Field => (clone $field)
                 ->setColumn("{$this->getPivotAs()}.{$field->getColumn()}")
                 ->class('js-pivot-field')
+                ->nowOnResource($this->getResource())
                 ->withoutWrapper(),
             performName: fn (string $name): string => str_replace($this->getRelationName(), $this->getPivotName(), $name),
         );
