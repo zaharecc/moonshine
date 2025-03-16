@@ -113,7 +113,7 @@ class HasOne extends ModelRelationField implements
      */
     protected function prepareFields(): FieldsContract
     {
-        $page = $this->getNowOnPage() ?? moonshineRequest()->getPage();
+        $page = $this->getNowOnPage() ?? moonshineRequest()->findPage();
 
         if (! $this->hasFields()) {
             $fields = $page?->getPageType() === PageType::INDEX
