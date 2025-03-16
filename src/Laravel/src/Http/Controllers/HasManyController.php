@@ -65,7 +65,6 @@ final class HasManyController extends MoonShineController
             $fields->onlyFields()->each(
                 static fn (FieldContract $nestedFields): FieldContract => $nestedFields
                     ->setParent($field)
-                    ->nowOnResource($resource)
             );
 
             $relation = $field->getRelation();

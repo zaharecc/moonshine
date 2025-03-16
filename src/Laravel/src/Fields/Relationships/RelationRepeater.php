@@ -176,7 +176,6 @@ class RelationRepeater extends ModelRelationField implements
     {
         return $this->getFields()->prepareAttributes()->prepareReindexNames(parent: $this, before: function (self $parent, Field $field): void {
             $field
-                ->nowOnResource($this->getResource())
                 ->disableSortable()
                 ->withoutWrapper()
                 ->setRequestKeyPrefix($parent->getRequestKeyPrefix())
