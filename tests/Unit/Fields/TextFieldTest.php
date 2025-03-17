@@ -74,7 +74,7 @@ it('visual states', function () {
     expect((string) $field->render())
         ->toContain('input', 'type="text"')
         ->and((string) $field->flushRenderCache()->previewMode()->render())
-        ->toBe('&lt;p&gt;Hello world&lt;/p&gt;')
+        ->toBe('<div class="text-ellipsis">&lt;p&gt;Hello world&lt;/p&gt;</div>')
         ->and((string) $field->flushRenderCache()->rawMode()->render())
         ->toBe('<p>Hello world</p>')
         ->and((string) $field->flushRenderCache()->defaultMode()->rawMode()->previewMode()->render())
