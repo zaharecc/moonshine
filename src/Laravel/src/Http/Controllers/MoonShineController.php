@@ -7,6 +7,7 @@ namespace MoonShine\Laravel\Http\Controllers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Validation\ValidationException;
+use MoonShine\Contracts\Core\CrudResourceContract;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Contracts\Core\ResourceContract;
 use MoonShine\Contracts\UI\TableBuilderContract;
@@ -96,7 +97,7 @@ abstract class MoonShineController extends BaseController
     /**
      * @throws Throwable
      */
-    protected function responseWithTable(TableBuilderContract $table, ?ResourceContract $resource = null): TableBuilderContract|TableRowContract|string
+    protected function responseWithTable(TableBuilderContract $table, ?CrudResourceContract $resource = null): TableBuilderContract|TableRowContract|string
     {
         if (! request()->filled('_key')) {
             return $table;
@@ -117,14 +118,14 @@ abstract class MoonShineController extends BaseController
             ) ?? '';
         }
 
-        /** @var null|CrudResource $resource */
+        /** @var null|CrudResourceContract $resource */
         $resource ??= moonshineRequest()->getResource();
 
-        if (! $resource instanceof ResourceContract) {
+        if (! $resource instanceof CrudResourceContract) {
             $item = $class::query()->find($key);
         }
 
-        if ($resource instanceof ResourceContract) {
+        if ($resource instanceof CrudResourceContract) {
             $resource->setItemID($key);
 
             $item = $resource->findItem();
