@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Validation\ValidationException;
 use MoonShine\Contracts\Core\PageContract;
+use MoonShine\Contracts\Core\ResourceContract;
 use MoonShine\Contracts\UI\TableBuilderContract;
 use MoonShine\Contracts\UI\TableRowContract;
 use MoonShine\Laravel\Contracts\Notifications\MoonShineNotificationContract;
@@ -95,7 +96,7 @@ abstract class MoonShineController extends BaseController
     /**
      * @throws Throwable
      */
-    protected function responseWithTable(TableBuilderContract $table): TableBuilderContract|TableRowContract|string
+    protected function responseWithTable(TableBuilderContract $table, ?ResourceContract $resource = null): TableBuilderContract|TableRowContract|string
     {
         if (! request()->filled('_key')) {
             return $table;
@@ -112,12 +113,12 @@ abstract class MoonShineController extends BaseController
 
         if (! $class instanceof Model) {
             return $table->getRows()->first(
-                static fn (TableRowContract $row): bool => $row->getKey() === $key,
-            );
+                static fn (TableRowContract $row): bool => (string) $row->getKey() === $key,
+            ) ?? '';
         }
 
         /** @var null|CrudResource $resource */
-        $resource = moonshineRequest()->getResource();
+        $resource = $resource ?? moonshineRequest()->getResource();
 
         if ($resource === null) {
             $item = $class::query()->find($key);

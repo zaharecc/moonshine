@@ -168,7 +168,7 @@ final class HasManyController extends MoonShineController
         $value = $field->getComponent();
 
         if ($value instanceof TableBuilderContract && $request->filled('_key')) {
-            return (string) $this->responseWithTable($value);
+            return (string) $this->responseWithTable($value, $field->getResource());
         }
 
         return (string) $value->render();
