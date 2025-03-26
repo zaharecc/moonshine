@@ -120,11 +120,11 @@ abstract class MoonShineController extends BaseController
         /** @var null|CrudResource $resource */
         $resource ??= moonshineRequest()->getResource();
 
-        if ($resource === null) {
+        if (!$resource instanceof ResourceContract) {
             $item = $class::query()->find($key);
         }
 
-        if ($resource !== null) {
+        if ($resource instanceof ResourceContract) {
             $resource->setItemID($key);
 
             $item = $resource->findItem();
