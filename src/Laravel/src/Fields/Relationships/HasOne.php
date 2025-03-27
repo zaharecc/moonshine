@@ -26,6 +26,7 @@ use MoonShine\Laravel\Contracts\Fields\HasTabModeContract;
 use MoonShine\Laravel\Exceptions\ModelRelationFieldException;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Laravel\Traits\Fields\HasModalModeConcern;
+use MoonShine\Support\Enums\PageType;
 use MoonShine\UI\Components\FormBuilder;
 use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\UI\Contracts\HasUpdateOnPreviewContract;
@@ -107,12 +108,17 @@ class HasOne extends ModelRelationField implements
     }
 
     /**
+     * Only for Preview
      * @throws Throwable
      */
     protected function prepareFields(): FieldsContract
     {
+        $page = $this->getNowOnPage() ?? moonshineRequest()->findPage();
+
         if (! $this->hasFields()) {
-            $fields = $this->getResource()->getDetailFields();
+            $fields = $page?->getPageType() === PageType::INDEX
+                ? $this->getResource()->getIndexFields()
+                : $this->getResource()->getDetailFields();
 
             $this->fields($fields->toArray());
 
@@ -122,7 +128,9 @@ class HasOne extends ModelRelationField implements
         /** @var Fields $fields */
         $fields = $this->getFields()->onlyFields(withWrappers: true);
 
-        return $fields->detailFields(withOutside: false);
+        return $page?->getPageType() === PageType::INDEX
+            ? $fields->indexFields()
+            : $fields->detailFields();
     }
 
     protected function resolveRawValue(): mixed

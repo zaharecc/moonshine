@@ -84,6 +84,8 @@ interface CrudResourceContract extends ResourceContract
      */
     public function getItem(): mixed;
 
+    public function setItemID(int|string|false|null $itemID): static;
+
     public function getItemID(): int|string|null;
 
     /**

@@ -355,6 +355,7 @@ class HasMany extends ModelRelationField implements
     }
 
     /**
+     * Only for Preview
      * @throws Throwable
      */
     protected function prepareFields(): FieldsContract
