@@ -30,7 +30,7 @@ interface ComponentsContract extends Enumerable, HasStructureContract
     /**
      * @return TFields
      */
-    public function onlyFields(bool $withWrappers = false): FieldsContract;
+    public function onlyFields(bool $withWrappers = false, bool $withApplyWrappers = false): FieldsContract;
 
     public function onlyForms(): static;
 

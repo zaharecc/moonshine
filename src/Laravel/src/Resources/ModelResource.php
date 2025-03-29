@@ -144,7 +144,7 @@ abstract class ModelResource extends CrudResource implements
     {
         $item = $this->beforeDeleting($item);
 
-        $fields ??= $this->getFormFields()->onlyFields();
+        $fields ??= $this->getFormFields()->onlyFields(withApplyWrappers: true);
 
         $fields->fill($item->toArray(), $this->getCaster()->cast($item));
 
@@ -187,7 +187,7 @@ abstract class ModelResource extends CrudResource implements
      */
     public function save(mixed $item, ?FieldsContract $fields = null): mixed
     {
-        $fields ??= $this->getFormFields()->onlyFields();
+        $fields ??= $this->getFormFields()->onlyFields(withApplyWrappers: true);
 
         $fields->fill($item->toArray(), $this->getCaster()->cast($item));
 

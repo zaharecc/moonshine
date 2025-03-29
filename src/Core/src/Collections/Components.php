@@ -91,11 +91,11 @@ final class Components extends BaseCollection implements ComponentsContract
      * @return TFields
      * @throws Throwable
      */
-    public function onlyFields(bool $withWrappers = false): FieldsContract
+    public function onlyFields(bool $withWrappers = false, bool $withApplyWrappers = false): FieldsContract
     {
         return $this->getCore()
             ->getFieldsCollection($this->toArray())
-            ->onlyFields($withWrappers);
+            ->onlyFields($withWrappers, $withApplyWrappers);
     }
 
     /**

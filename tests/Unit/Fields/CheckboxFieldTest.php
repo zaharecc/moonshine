@@ -123,7 +123,7 @@ describe('basic methods', function () {
         )
             ->toBeInstanceOf(Model::class)
             ->active
-            ->toBe($data['active']);
+            ->toBe(0);
     });
 });
 

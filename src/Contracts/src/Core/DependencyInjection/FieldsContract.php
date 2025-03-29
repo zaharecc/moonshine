@@ -25,7 +25,7 @@ interface FieldsContract extends Enumerable, HasStructureContract
     /** @param Closure(ComponentContract): bool $except */
     public function exceptElements(Closure $except): static;
 
-    public function onlyFields(bool $withWrappers = false): FieldsContract;
+    public function onlyFields(bool $withWrappers = false, bool $withApplyWrappers = false): FieldsContract;
 
     public function fill(array $raw = [], ?DataWrapperContract $casted = null, int $index = 0): void;
 
@@ -76,5 +76,5 @@ interface FieldsContract extends Enumerable, HasStructureContract
 
     public function wrapNames(string $name): static;
 
-    public function withoutWrappers(): static;
+    public function withoutWrappers(bool $applyWrappers = true): static;
 }
