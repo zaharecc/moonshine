@@ -9,6 +9,7 @@ use Illuminate\Support\Traits\Conditionable;
 use MoonShine\Support\AlpineJs;
 use MoonShine\Support\Enums\ToastType;
 use MoonShine\Support\Traits\Makeable;
+use MoonShine\UI\Enums\HtmlMode;
 
 /** @method static static make(array $data = []) */
 final class MoonShineJsonResponse extends JsonResponse
@@ -52,9 +53,24 @@ final class MoonShineJsonResponse extends JsonResponse
         return $this->mergeJsonData(['events' => AlpineJs::prepareEvents($events)]);
     }
 
-    public function html(string|array $value): self
+    public function html(string|array $value, HtmlMode $mode = HtmlMode::INNER_HTML): self
     {
-        return $this->mergeJsonData(['html' => $value]);
+        return $this->mergeJsonData(['html' => $value, 'htmlMode' => $mode->value]);
+    }
+
+    public function htmlData(string|array $value, string $selector, HtmlMode $mode = HtmlMode::INNER_HTML): self
+    {
+        if(! isset($this->jsonData['htmlData']))  {
+            $this->jsonData['htmlData'] = [];
+        }
+
+        $this->jsonData['htmlData'][] = [
+            'html' => $value,
+            'selector' => $selector,
+            'htmlMode' => $mode->value
+        ];
+
+        return $this->setData($this->jsonData);
     }
 
     /**
