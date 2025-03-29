@@ -7,6 +7,7 @@ namespace MoonShine\Laravel\Http\Controllers;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
+use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Laravel\Contracts\Notifications\MoonShineNotificationContract;
 use MoonShine\Laravel\Http\Requests\MoonShineFormRequest;
 use MoonShine\Laravel\Http\Requests\Resources\DeleteFormRequest;
@@ -16,6 +17,7 @@ use MoonShine\Laravel\Http\Requests\Resources\UpdateFormRequest;
 use MoonShine\Laravel\MoonShineRequest;
 use MoonShine\Laravel\Resources\CrudResource;
 use MoonShine\Support\Enums\ToastType;
+use MoonShine\UI\Enums\HtmlMode;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -206,9 +208,26 @@ final class CrudController extends MoonShineController
         $resource->setItem($item);
 
         if ($request->ajax() || $request->wantsJson()) {
+            $data = [];
+            $resource
+                ->getFormFields()
+                ->onlyFields()
+                ->refreshFields()
+                ->fillCloned($item->toArray(), $resource->getCastedData())
+                ->each(function (FieldContract $field) use (&$data) {
+                    $data['htmlData'][] = [
+                        'html' => (string) $field
+                            ->resolveRefreshAfterApply()
+                            ->render(),
+                        'selector' => "[data-field-selector='{$field->getNameDot()}']",
+                        'htmlMode' => HtmlMode::OUTER_HTML->value
+                    ];
+                });
+
             return $resource->modifySaveResponse(
                 $this->json(
                     message: __('moonshine::ui.saved'),
+                    data: $data,
                     redirect: $redirectRoute($resource),
                     status: $resource->isRecentlyCreated() ? Response::HTTP_CREATED : Response::HTTP_OK
                 )

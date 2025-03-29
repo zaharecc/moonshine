@@ -87,6 +87,17 @@ interface FormElementContract extends
 
     public function reset(): static;
 
+    /**
+     * @param  null|Closure(static $ctx): static  $callback
+     */
+    public function refreshAfterApply(?Closure $callback = null): static;
+
+    public function disableRefreshAfterApply(): static;
+
+    public function isOnRefreshAfterApply(): bool;
+
+    public function resolveRefreshAfterApply(): static;
+
     public function canApply(Closure $canApply): static;
 
     public function isCanApply(): bool;
