@@ -122,7 +122,9 @@ final class MoonShineConfigurator implements ConfiguratorContract
      */
     public function getLocales(): array
     {
-        return $this->get('locales', []);
+        return Collection::make($this->get('locales', []))
+            ->mapWithKeys(fn ($value, $key) => [is_numeric($key) ? $value : $key => $value])
+            ->toArray();
     }
 
     /**

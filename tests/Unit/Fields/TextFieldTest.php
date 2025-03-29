@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Eloquent\Model;
+use MoonShine\Support\Enums\TextWrap;
 use MoonShine\Tests\Fixtures\Resources\TestResourceBuilder;
 use MoonShine\UI\Fields\Field;
 use MoonShine\UI\Fields\FormElement;
@@ -74,7 +75,7 @@ it('visual states', function () {
     expect((string) $field->render())
         ->toContain('input', 'type="text"')
         ->and((string) $field->flushRenderCache()->previewMode()->render())
-        ->toBe('&lt;p&gt;Hello world&lt;/p&gt;')
+        ->toBe('<div class="text-ellipsis">&lt;p&gt;Hello world&lt;/p&gt;</div>')
         ->and((string) $field->flushRenderCache()->rawMode()->render())
         ->toBe('<p>Hello world</p>')
         ->and((string) $field->flushRenderCache()->defaultMode()->rawMode()->previewMode()->render())
@@ -123,5 +124,17 @@ it('add/remove classes', function () {
     expect(str($field->getAttributes()->get('class'))->explode(' '))
         ->toContainEqual('form-control', 'btn-primary', 'btn-primaries', 'btn-primary-lg')
         ->not->toContainEqual('primary')
+    ;
+});
+
+it('text wrap', function () {
+    $field = Text::make('Field name')->previewMode();
+
+    expect($field->render())
+        ->toContain('div class="text-ellipsis">')
+        ->and($field->flushRenderCache()->textWrap(TextWrap::CLAMP)->render())
+        ->toContain('div class="text-clamp">')
+        ->and($field->flushRenderCache()->withoutTextWrap()->render())
+        ->not->toContain('div class="text-clamp">', 'div class="text-ellipsis">')
     ;
 });

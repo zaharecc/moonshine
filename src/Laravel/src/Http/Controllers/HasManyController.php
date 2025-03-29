@@ -62,7 +62,11 @@ final class HasManyController extends MoonShineController
         $getFields = static function () use ($resource, $field, $parent, $update): array {
             $fields = $resource->getFormFields();
 
-            $fields->onlyFields()->each(static fn (FieldContract $nestedFields): FieldContract => $nestedFields->setParent($field));
+            $fields->onlyFields()->each(
+                static fn (FieldContract $nestedFields): FieldContract => $nestedFields
+                    ->setParent($field)
+            );
+
             $relation = $field->getRelation();
 
             return $fields->when(
@@ -164,7 +168,7 @@ final class HasManyController extends MoonShineController
         $value = $field->getComponent();
 
         if ($value instanceof TableBuilderContract && $request->filled('_key')) {
-            return (string) $this->responseWithTable($value);
+            return (string) $this->responseWithTable($value, $field->getResource());
         }
 
         return (string) $value->render();

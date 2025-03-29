@@ -174,7 +174,7 @@ class RelationRepeater extends ModelRelationField implements
      */
     protected function prepareFields(): FieldsContract
     {
-        return $this->getFields()->prepareAttributes()->prepareReindexNames(parent: $this, before: static function (self $parent, Field $field): void {
+        return $this->getFields()->prepareAttributes()->prepareReindexNames(parent: $this, before: function (self $parent, Field $field): void {
             $field
                 ->disableSortable()
                 ->withoutWrapper()

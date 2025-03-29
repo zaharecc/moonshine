@@ -22,7 +22,7 @@
 [![Meta Storm Plugin](https://img.shields.io/static/v1?&label=Better+with&message=Meta+Storm+Plugin&logo=phpstorm&color=aa55ee)](https://github.com/xepozz/meta-storm-idea-plugin)
 
 
-#### [Documentation](https://moonshine-laravel.com)
+#### [Documentation](https://getmoonshine.app)
 #### [Documentation repository](https://github.com/moonshine-software/doc)
 #### [Demo project 1](https://github.com/moonshine-software/demo-project)
 #### [Demo project 2](https://github.com/moonshine-software/demo-blog)
@@ -43,16 +43,16 @@ Everything is already ready for use in your projects, documentation has been cre
 I invite interested users to use and develop Moonshine together.
 
 <p align="center">
-<img src="https://moonshine-laravel.com/images/main.png?v=3.0" alt="Main">
+<img src="https://getmoonshine.app/images/main.png?v=3.0" alt="Main">
 </p>
 
 <p align="center">
-<img src="https://moonshine-laravel.com/images/login.png?v=3.0" alt="Login">
+<img src="https://getmoonshine.app/images/login.png?v=3.0" alt="Login">
 </p>
 
 ## Contributing
 
-Thank you for contributing in the project, more information in the official guide [Documentation](https://moonshine-laravel.com/docs/resource/getting-started/contribution).
+Thank you for contributing in the project, more information in the official guide [Documentation](https://getmoonshine.app/docs/resource/getting-started/contribution).
 
 ## License
 
