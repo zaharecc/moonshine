@@ -32,10 +32,10 @@ beforeEach(function () {
                     'ov' => [
                         'OV_value1',
                         'OV_value2',
-                    ]
-                ]
-            ]
-        ]
+                    ],
+                ],
+            ],
+        ],
     ];
 
     $this->form = FormBuilder::make()
@@ -105,10 +105,10 @@ it('apply', function () {
                     'ov' => [
                         ['value' => 'OV_value1'],
                         ['value' => 'OV_value2'],
-                    ]
-                ]
-            ]
-        ]
+                    ],
+                ],
+            ],
+        ],
     ];
 
     fakeRequest(parameters: $data);
@@ -116,7 +116,7 @@ it('apply', function () {
     expect(
         $this->field->apply(
             TestResourceBuilder::new()->fieldApply($this->field),
-            new class extends Model {}
+            new class () extends Model {}
         )
     )
         ->toBeInstanceOf(Model::class)
@@ -136,18 +136,18 @@ it('custom apply', function () {
                     'ov' => [
                         ['value' => 'OV_value1'],
                         ['value' => 'OV_value2'],
-                    ]
-                ]
-            ]
-        ]
+                    ],
+                ],
+            ],
+        ],
     ];
 
     fakeRequest(parameters: $data);
 
     expect(
-        $this->field->onApply(fn(Model $model) => $model->setAttribute('data', 'test'))->apply(
+        $this->field->onApply(fn (Model $model) => $model->setAttribute('data', 'test'))->apply(
             TestResourceBuilder::new()->fieldApply($this->field),
-            new class extends Model {}
+            new class () extends Model {}
         )
     )
         ->toBeInstanceOf(Model::class)
