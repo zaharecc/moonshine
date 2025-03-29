@@ -17,6 +17,7 @@ use MoonShine\Laravel\Http\Requests\Resources\UpdateFormRequest;
 use MoonShine\Laravel\MoonShineRequest;
 use MoonShine\Laravel\Resources\CrudResource;
 use MoonShine\Support\Enums\ToastType;
+use MoonShine\UI\Enums\HtmlMode;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -214,9 +215,13 @@ final class CrudController extends MoonShineController
                 ->refreshFields()
                 ->fillCloned($item->toArray(), $resource->getCastedData())
                 ->each(function (FieldContract $field) use (&$data) {
-                    $data['html']['[data-field-selector="'.$field->getNameDot().'"]'] = (string) $field
-                        ->resolveRefreshAfterApply()
-                        ->render();
+                    $data['htmlData'][] = [
+                        'html' => (string) $field
+                            ->resolveRefreshAfterApply()
+                            ->render(),
+                        'selector' => "[data-field-selector='{$field->getNameDot()}']",
+                        'htmlMode' => HtmlMode::OUTER_HTML->value
+                    ];
                 });
 
             return $resource->modifySaveResponse(
