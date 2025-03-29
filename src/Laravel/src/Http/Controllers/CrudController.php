@@ -220,7 +220,7 @@ final class CrudController extends MoonShineController
                             ->resolveRefreshAfterApply()
                             ->render(),
                         'selector' => "[data-field-selector='{$field->getNameDot()}']",
-                        'htmlMode' => HtmlMode::OUTER_HTML->value
+                        'htmlMode' => HtmlMode::OUTER_HTML->value,
                     ];
                 });
 
