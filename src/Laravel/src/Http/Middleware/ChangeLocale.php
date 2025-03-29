@@ -23,6 +23,11 @@ final class ChangeLocale
 
         $locale = strtolower((string) $locale);
 
+        if (moonshineConfig()->getLocale() === $locale) {
+            app()->setLocale($locale);
+            moonshineConfig()->locale($locale);
+        }
+
         if (! \array_key_exists($locale, moonshineConfig()->getLocales())) {
             return $next($request);
         }
