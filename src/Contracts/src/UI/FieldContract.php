@@ -11,6 +11,7 @@ use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Contracts\Core\ResourceContract;
 use MoonShine\Support\DTOs\AsyncCallback;
 use MoonShine\Support\Enums\HttpMethod;
+use MoonShine\Support\Enums\TextWrap;
 
 /**
  * @mixin Conditionable
@@ -66,6 +67,10 @@ interface FieldContract extends
     public function beforeLabel(): static;
 
     public function isBeforeLabel(): bool;
+
+    public function textWrap(TextWrap $wrap): static;
+
+    public function withoutTextWrap(): static;
 
     public function onChangeMethod(
         string $method,
