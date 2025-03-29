@@ -214,7 +214,7 @@ final class CrudController extends MoonShineController
                 ->onlyFields()
                 ->refreshFields()
                 ->fillCloned($item->toArray(), $resource->getCastedData())
-                ->each(function (FieldContract $field) use (&$data) {
+                ->each(function (FieldContract $field) use (&$data): void {
                     $data['htmlData'][] = [
                         'html' => (string) $field
                             ->resolveRefreshAfterApply()
