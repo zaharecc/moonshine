@@ -60,14 +60,14 @@ final class MoonShineJsonResponse extends JsonResponse
 
     public function htmlData(string|array $value, string $selector, HtmlMode $mode = HtmlMode::INNER_HTML): self
     {
-        if(! isset($this->jsonData['htmlData']))  {
+        if (! isset($this->jsonData['htmlData'])) {
             $this->jsonData['htmlData'] = [];
         }
 
         $this->jsonData['htmlData'][] = [
             'html' => $value,
             'selector' => $selector,
-            'htmlMode' => $mode->value
+            'htmlMode' => $mode->value,
         ];
 
         return $this->setData($this->jsonData);
