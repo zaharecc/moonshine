@@ -3,11 +3,13 @@
 declare(strict_types=1);
 
 use MoonShine\Laravel\Http\Controllers\CrudController;
+use MoonShine\Laravel\Resources\CrudResource;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Tests\Fixtures\Factories\CategoryFactory;
 use MoonShine\Tests\Fixtures\Factories\CoverFactory;
 use MoonShine\Tests\Fixtures\Models\Category;
 use MoonShine\Tests\Fixtures\Models\Item;
+use MoonShine\Tests\Fixtures\Resources\Crud\TestCommentCrudResource;
 use MoonShine\Tests\Fixtures\Resources\TestItemResource;
 use MoonShine\Tests\Fixtures\Resources\TestResource;
 use MoonShine\Tests\Fixtures\Resources\TestResourceBuilder;
@@ -84,6 +86,21 @@ describe('without special fields', function () {
         ;
     });
 
+    it('crud store with ajax', function () {
+
+        $date = date('Y-m-d', strtotime('-1 DAY'));
+
+        $data = $this->storeData;
+        $data['dates']['start_date'] = $date;
+        $data['dates']['end_date'] = $date;
+
+        asAdmin()
+            ->withHeader('X-Requested-With', 'XMLHttpRequest')
+            ->post($this->itemResource->getRoute('crud.store'), $data)
+            ->assertStatus(201);
+        ;
+    });
+
     it('crud update', function () {
         $item = storeResource($this->itemResource, $this->storeData);
 
@@ -157,6 +174,63 @@ describe('without special fields', function () {
     });
 });
 
+describe('with base crud resource', function () {
+    it ('crud create ajax', function () {
+        TestCommentCrudResource::registerToMoonshine();
+
+        $crudResource = app(TestCommentCrudResource::class);
+
+        $saveData = [
+            'user_id' => 1,
+            'content' => 'Test comment'
+        ];
+
+        $comment = createComment($crudResource, $saveData);
+
+        expect($comment)
+            ->toEqual([
+                'id' => 1,
+                'user_id' => 1,
+                'content' => 'Test comment'
+            ]);
+    });
+
+    it ('crud update', function () {
+        TestCommentCrudResource::registerToMoonshine();
+
+        $crudResource = app(TestCommentCrudResource::class);
+
+        $saveData = [
+            'user_id' => 1,
+            'content' => 'Test comment'
+        ];
+
+        $comment = createComment($crudResource, $saveData);
+
+        expect($comment)
+            ->not->toBeNull('Comment not created');
+
+        $saveData = [
+            'user_id' => 10,
+            'content' => 'New test comment'
+        ];
+
+        asAdmin()
+            ->withHeader('X-Requested-With', 'XMLHttpRequest')
+            ->patch($crudResource->getRoute('crud.update', $comment['id']), $saveData)
+            ->assertStatus(200);
+
+        expect(TestCommentCrudResource::$items)
+            ->toHaveCount(1)
+            ->and(TestCommentCrudResource::$items[$comment['id']])
+            ->toEqual([
+                'id' => $comment['id'],
+                'user_id' => 10,
+                'content' => 'New test comment'
+            ]);
+    });
+});
+
 it('crud index with filters date range', function () {
     createItem(3);
 
@@ -166,6 +240,16 @@ it('crud index with filters date range', function () {
         app(TestItemResource::class)->getIndexPageUrl(['filter' => ['created_at' => $dates]])
     )->assertOk();
 });
+
+function createComment(TestCommentCrudResource $resource, $saveData)
+{
+    asAdmin()
+        ->withHeader('X-Requested-With', 'XMLHttpRequest')
+        ->post($resource->getRoute('crud.store'), $saveData)
+        ->assertStatus(201);
+
+    return TestCommentCrudResource::$items[TestCommentCrudResource::$id] ?? null;
+}
 
 
 function storeResource(ModelResource $resource, $saveData)
