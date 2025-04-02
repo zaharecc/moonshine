@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use MoonShine\Laravel\Http\Controllers\CrudController;
-use MoonShine\Laravel\Resources\CrudResource;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Tests\Fixtures\Factories\CategoryFactory;
 use MoonShine\Tests\Fixtures\Factories\CoverFactory;
@@ -175,14 +174,16 @@ describe('without special fields', function () {
 });
 
 describe('with base crud resource', function () {
-    it ('crud create ajax', function () {
-        TestCommentCrudResource::registerToMoonshine();
-
-        $crudResource = app(TestCommentCrudResource::class);
+    it('crud create ajax', function () {
+        /** @var TestCommentCrudResource $crudResource */
+        $crudResource = moonshine()
+            ->resources([TestCommentCrudResource::class])
+            ->getResources()
+            ->findByClass(TestCommentCrudResource::class);
 
         $saveData = [
             'user_id' => 1,
-            'content' => 'Test comment'
+            'content' => 'Test comment',
         ];
 
         $comment = createComment($crudResource, $saveData);
@@ -191,18 +192,20 @@ describe('with base crud resource', function () {
             ->toEqual([
                 'id' => 1,
                 'user_id' => 1,
-                'content' => 'Test comment'
+                'content' => 'Test comment',
             ]);
     });
 
-    it ('crud update', function () {
-        TestCommentCrudResource::registerToMoonshine();
-
-        $crudResource = app(TestCommentCrudResource::class);
+    it('crud update', function () {
+        /** @var TestCommentCrudResource $crudResource */
+        $crudResource = moonshine()
+            ->resources([TestCommentCrudResource::class])
+            ->getResources()
+            ->findByClass(TestCommentCrudResource::class);
 
         $saveData = [
             'user_id' => 1,
-            'content' => 'Test comment'
+            'content' => 'Test comment',
         ];
 
         $comment = createComment($crudResource, $saveData);
@@ -212,7 +215,7 @@ describe('with base crud resource', function () {
 
         $saveData = [
             'user_id' => 10,
-            'content' => 'New test comment'
+            'content' => 'New test comment',
         ];
 
         asAdmin()
@@ -220,13 +223,15 @@ describe('with base crud resource', function () {
             ->patch($crudResource->getRoute('crud.update', $comment['id']), $saveData)
             ->assertStatus(200);
 
-        expect(TestCommentCrudResource::$items)
+        $crudResource->setItemID($comment['id']);
+
+        expect(iterator_to_array($crudResource->getItems()))
             ->toHaveCount(1)
-            ->and(TestCommentCrudResource::$items[$comment['id']])
+            ->and($crudResource->findItem(true))
             ->toEqual([
                 'id' => $comment['id'],
                 'user_id' => 10,
-                'content' => 'New test comment'
+                'content' => 'New test comment',
             ]);
     });
 });
@@ -248,7 +253,9 @@ function createComment(TestCommentCrudResource $resource, $saveData)
         ->post($resource->getRoute('crud.store'), $saveData)
         ->assertStatus(201);
 
-    return TestCommentCrudResource::$items[TestCommentCrudResource::$id] ?? null;
+    $resource->setItemID($resource->getLastId());
+
+    return $resource->findItem(true);
 }
 
 

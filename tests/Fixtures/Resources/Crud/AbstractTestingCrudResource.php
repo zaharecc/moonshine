@@ -5,27 +5,36 @@ declare(strict_types=1);
 namespace MoonShine\Tests\Fixtures\Resources\Crud;
 
 use Closure;
-use Generator;
 use MoonShine\Contracts\Core\DependencyInjection\FieldsContract;
 use MoonShine\Contracts\Core\TypeCasts\DataCasterContract;
 use MoonShine\Contracts\UI\FieldContract;
+use MoonShine\Core\TypeCasts\MixedDataCaster;
 use MoonShine\Laravel\Exceptions\MoonShineNotFoundException;
 use MoonShine\Laravel\Resources\CrudResource;
-use MoonShine\Tests\Fixtures\TypeCasts\ArrayDataCaster;
 use Throwable;
 
 abstract class AbstractTestingCrudResource extends CrudResource
 {
-    public static int $id = 0;
+    private int $lastId = 0;
 
     /**
      * @var array<int, mixed>
      */
-    public static array $items = [];
+    private array $items = [];
 
     public function getCaster(): DataCasterContract
     {
-        return new ArrayDataCaster('id');
+        return new MixedDataCaster('id');
+    }
+
+    public function getLastId(): int
+    {
+        return $this->lastId;
+    }
+
+    private function newId(): int
+    {
+        return ++$this->lastId;
     }
 
     public function massDelete(array $ids): void
@@ -37,8 +46,8 @@ abstract class AbstractTestingCrudResource extends CrudResource
 
     public function delete(mixed $item, ?FieldsContract $fields = null): bool
     {
-        if (array_key_exists($item['id'], static::$items)) {
-            unset(static::$items[$item['id']]);
+        if (\array_key_exists($item['id'], $this->items)) {
+            unset($this->items[$item['id']]);
 
             return true;
         }
@@ -60,12 +69,12 @@ abstract class AbstractTestingCrudResource extends CrudResource
         foreach ($fields as $field) {
             $data = [
                 ...$data,
-                ...$field->apply($this->applyField($field), $data)
+                ...$field->apply($this->applyField($field), $data),
             ];
         }
 
         if ($item['id'] ?? false) {
-            static::$items[$item['id']] = [
+            $this->items[$item['id']] = [
                 'id' => $item['id'],
                 ...$data,
             ];
@@ -78,11 +87,11 @@ abstract class AbstractTestingCrudResource extends CrudResource
         $this->isRecentlyCreated = true;
 
         $data = [
-            'id' => ++static::$id,
+            'id' => $this->newId(),
             ...$data,
         ];
 
-        static::$items[$data['id']] = $data;
+        $this->items[$data['id']] = $data;
 
         return $data;
     }
@@ -102,13 +111,13 @@ abstract class AbstractTestingCrudResource extends CrudResource
 
     public function getItems(): iterable
     {
-        yield from static::$items;
+        yield from $this->items;
     }
 
     public function findItem(bool $orFail = false): mixed
     {
-        if (array_key_exists($this->getItemID(), static::$items)) {
-            return static::$items[$this->getItemID()];
+        if (\array_key_exists($this->getItemID(), $this->items)) {
+            return $this->items[$this->getItemID()];
         }
 
         if ($orFail) {
@@ -118,16 +127,11 @@ abstract class AbstractTestingCrudResource extends CrudResource
         return null;
     }
 
-    public static function flushTestItems(): void
+    public function flushState(): void
     {
-        static::$id = 0;
-        static::$items = [];
-    }
+        parent::flushState();
 
-    public static function registerToMoonshine(): void
-    {
-        static::flushTestItems();
-
-        moonshine()->resources([static::class]);
+        $this->lastId = 0;
+        $this->items = [];
     }
 }
