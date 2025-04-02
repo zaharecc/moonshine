@@ -220,6 +220,21 @@ final class MoonShineConfigurator implements ConfiguratorContract
         return $this->set('use_profile', true);
     }
 
+    public function isUseRoutes(): bool
+    {
+        return $this->get('use_routes', true);
+    }
+
+    public function useRoutes(): self
+    {
+        return $this->set('use_routes', true);
+    }
+
+    public function disableRoutes(): self
+    {
+        return $this->set('use_routes', false);
+    }
+
     public function isUseNotifications(): bool
     {
         return $this->get('use_notifications', false);
