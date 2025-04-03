@@ -86,7 +86,6 @@ describe('without special fields', function () {
     });
 
     it('crud store with ajax', function () {
-
         $date = date('Y-m-d', strtotime('-1 DAY'));
 
         $data = $this->storeData;
@@ -97,7 +96,6 @@ describe('without special fields', function () {
             ->withHeader('X-Requested-With', 'XMLHttpRequest')
             ->post($this->itemResource->getRoute('crud.store'), $data)
             ->assertStatus(201);
-        ;
     });
 
     it('crud update', function () {
