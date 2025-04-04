@@ -33,6 +33,7 @@ use MoonShine\Core\Collections\OptimizerCollection;
 use MoonShine\Core\Core;
 use MoonShine\Laravel\Applies\Fields\FileModelApply;
 use MoonShine\Laravel\Applies\Filters\BelongsToManyModelApply;
+use MoonShine\Laravel\Applies\Filters\BelongsToModelApply;
 use MoonShine\Laravel\Applies\Filters\CheckboxModelApply;
 use MoonShine\Laravel\Applies\Filters\DateModelApply;
 use MoonShine\Laravel\Applies\Filters\DateRangeModelApply;
@@ -65,6 +66,7 @@ use MoonShine\Laravel\DependencyInjection\MoonShineRouter;
 use MoonShine\Laravel\DependencyInjection\Request;
 use MoonShine\Laravel\DependencyInjection\Translator;
 use MoonShine\Laravel\DependencyInjection\ViewRenderer;
+use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use MoonShine\Laravel\Fields\Relationships\BelongsToMany;
 use MoonShine\Laravel\Fields\Relationships\MorphTo;
 use MoonShine\Laravel\Models\MoonshineUser;
@@ -253,6 +255,7 @@ final class MoonShineServiceProvider extends ServiceProvider
             Textarea::class => TextModelApply::class,
             Checkbox::class => CheckboxModelApply::class,
             Select::class => SelectModelApply::class,
+            BelongsTo::class => BelongsToModelApply::class,
         ]);
 
         return $this;
