@@ -6,7 +6,6 @@ namespace MoonShine\Laravel\Http\Controllers;
 
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Support\Jsonable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Laravel\Contracts\Notifications\MoonShineNotificationContract;
