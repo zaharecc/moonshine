@@ -6,6 +6,7 @@ namespace MoonShine\Laravel\Http\Controllers;
 
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Support\Jsonable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Laravel\Contracts\Notifications\MoonShineNotificationContract;
@@ -209,11 +210,13 @@ final class CrudController extends MoonShineController
 
         if ($request->ajax() || $request->wantsJson()) {
             $data = [];
+            $castedData = $resource->getCastedData();
+
             $resource
                 ->getFormFields()
                 ->onlyFields()
                 ->refreshFields()
-                ->fillCloned($item->toArray(), $resource->getCastedData())
+                ->fillCloned($castedData?->toArray() ?? [], $castedData)
                 ->each(function (FieldContract $field) use (&$data): void {
                     $data['htmlData'][] = [
                         'html' => (string) $field
