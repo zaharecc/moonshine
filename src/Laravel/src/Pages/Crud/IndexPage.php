@@ -247,7 +247,7 @@ class IndexPage extends CrudPage
         );
 
         return [
-            $this->getListComponent()
+            $this->getListComponent(),
         ];
     }
 
@@ -260,7 +260,7 @@ class IndexPage extends CrudPage
             $this->getItemsComponent($items, $fields)
         );
 
-        if($withoutFragment) {
+        if ($withoutFragment) {
             return $component;
         }
 
