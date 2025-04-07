@@ -246,15 +246,24 @@ class IndexPage extends CrudPage
             request()->only($this->getResource()->getQueryParamsKeys())
         );
 
+        return [
+            $this->getListComponent()
+        ];
+    }
+
+    public function getListComponent(bool $withoutFragment = false): ComponentContract
+    {
         $items = $this->getResource()->isLazy() ? [] : $this->getResource()->getItems();
         $fields = $this->getResource()->getIndexFields();
 
-        return [
-            Fragment::make([
-                $this->getResource()->modifyListComponent(
-                    $this->getItemsComponent($items, $fields)
-                ),
-            ])->name('crud-list'),
-        ];
+        $component = $this->getResource()->modifyListComponent(
+            $this->getItemsComponent($items, $fields)
+        );
+
+        if($withoutFragment) {
+            return $component;
+        }
+
+        return Fragment::make([$component])->name('crud-list');
     }
 }
