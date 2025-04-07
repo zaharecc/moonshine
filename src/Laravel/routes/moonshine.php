@@ -19,7 +19,7 @@ use MoonShine\Laravel\Http\Controllers\UpdateFieldController;
 use MoonShine\Laravel\Traits\Fields\WithAsyncSearch;
 use MoonShine\UI\Traits\Fields\UpdateOnPreview;
 
-if(moonshineConfig()->isUseRoutes()) {
+if (moonshineConfig()->isUseRoutes()) {
     Route::moonshine(static function (Router $router): void {
         $pagePrefix = moonshineConfig()->getPagePrefix();
         $resourcePrefix = moonshineConfig()->getResourcePrefix();
