@@ -57,7 +57,7 @@ final class FileStorage implements StorageContract
 
     public function getFiles(?string $directory = null, bool $recursive = false): array
     {
-        if (!is_dir($directory)) {
+        if (! is_dir($directory)) {
             return [];
         }
 
@@ -85,7 +85,7 @@ final class FileStorage implements StorageContract
 
     public function getDirectories(?string $directory = null, bool $recursive = false): array
     {
-        if (!is_dir($directory)) {
+        if (! is_dir($directory)) {
             return [];
         }
 
