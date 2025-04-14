@@ -24,6 +24,8 @@ abstract class Page extends CorePage implements WithResponseModifierContract
 {
     protected function prepareBeforeRender(): void
     {
+        parent::prepareBeforeRender();
+
         $withoutQuery = trim(parse_url($this->getUrl(), PHP_URL_PATH), '/');
         $currentPath = trim(moonshine()->getRequest()->getPath(), '/');
 

@@ -340,6 +340,15 @@ abstract class Page implements PageContract
         ];
     }
 
+    protected function prepareBeforeRender(): void
+    {
+        if($this->hasResource()) {
+            $this->getResource()?->loaded();
+        }
+
+        $this->loaded();
+    }
+
     public function getView(): string
     {
         return $this->customView ?? $this->view ?: 'moonshine::page';
