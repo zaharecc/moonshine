@@ -25,9 +25,6 @@ use MoonShine\UI\Fields\PasswordRepeat;
 use MoonShine\UI\Fields\Text;
 
 #[SkipMenu]
-/**
- * @extends Page<null>
- */
 class ProfilePage extends Page
 {
     use WithComponentsPusher;

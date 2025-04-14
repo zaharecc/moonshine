@@ -8,9 +8,6 @@ use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\MenuManager\Attributes\SkipMenu;
 
 #[SkipMenu]
-/**
- * @extends Page<null>
- */
 class Dashboard extends Page
 {
     /**
