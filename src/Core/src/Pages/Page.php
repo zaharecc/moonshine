@@ -25,7 +25,7 @@ use MoonShine\Support\Enums\PageType;
 
 /**
  * @template TCore of Core
- * @template TResource of ResourceContract|null
+ * @template TResource of ResourceContract|null = null
  */
 abstract class Page implements PageContract
 {
