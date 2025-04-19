@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MoonShine\Laravel\Pages\Crud;
 
+use MoonShine\Contracts\Core\CrudResourceContract;
 use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Core\Exceptions\PageException;
@@ -27,8 +28,8 @@ use MoonShine\UI\Exceptions\MoonShineComponentException;
 use Throwable;
 
 /**
- * @method CrudResource getResource()
-
+ * @template TResource of CrudResource = \MoonShine\Laravel\Resources\ModelResource
+ * @extends CrudPage<TResource>
  */
 class DetailPage extends CrudPage
 {

@@ -154,6 +154,12 @@ interface CrudResourceContract extends ResourceContract
 
     public function isUpdateFormPage(): bool;
 
+    public function isCreateInModal(): bool;
+
+    public function isEditInModal(): bool;
+
+    public function isDetailInModal(): bool;
+
     public function setQueryParams(iterable $params): static;
 
     public function getQueryParams(): Collection;
