@@ -10,6 +10,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Collection;
 use MoonShine\Contracts\Core\DependencyInjection\FieldsContract;
 use MoonShine\Contracts\UI\ActionButtonContract;
+use MoonShine\Contracts\UI\ComponentAttributesBagContract;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Contracts\UI\FieldWithComponentContract;
@@ -18,6 +19,7 @@ use MoonShine\Contracts\UI\TableBuilderContract;
 use MoonShine\Laravel\Collections\Fields;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\UI\Components\ActionButton;
+use MoonShine\UI\Components\Icon;
 use MoonShine\UI\Components\Layout\Column;
 use MoonShine\UI\Components\Layout\Div;
 use MoonShine\UI\Components\Table\TableBuilder;
@@ -27,6 +29,7 @@ use MoonShine\UI\Contracts\HasDefaultValueContract;
 use MoonShine\UI\Contracts\RemovableContract;
 use MoonShine\UI\Fields\Field;
 use MoonShine\UI\Fields\Json;
+use MoonShine\UI\Fields\Preview;
 use MoonShine\UI\Traits\Fields\HasVerticalMode;
 use MoonShine\UI\Traits\Fields\WithDefaultValue;
 use MoonShine\UI\Traits\Removable;
@@ -70,6 +73,12 @@ class RelationRepeater extends ModelRelationField implements
 
     protected ?Closure $modifyRemoveButton = null;
 
+    protected ?Closure $modifyCreateButton = null;
+
+    protected bool $isReorderable = false;
+
+    protected ?Closure $reorderableUrl = null;
+
     protected ?TableBuilderContract $resolvedComponent = null;
 
     public function __construct(
@@ -104,7 +113,13 @@ class RelationRepeater extends ModelRelationField implements
 
     public function getCreateButton(): ?ActionButtonContract
     {
-        return $this->creatableButton;
+        $button = $this->creatableButton;
+
+        if (! \is_null($this->modifyCreateButton)) {
+            $button = value($this->modifyCreateButton, $button, $this);
+        }
+
+        return $button;
     }
 
     public function isCreatable(): bool
@@ -115,6 +130,22 @@ class RelationRepeater extends ModelRelationField implements
     public function getCreateLimit(): ?int
     {
         return $this->creatableLimit;
+    }
+
+    /**
+     * @param  Closure(static): string  $url
+     */
+    public function reorderable(Closure $url, Closure|bool|null $condition = null): static
+    {
+        $this->isReorderable = value($condition, $this) ?? true;
+        $this->reorderableUrl = $url;
+
+        return $this;
+    }
+
+    public function isReorderable(): bool
+    {
+        return $this->isReorderable;
     }
 
     /**
@@ -133,6 +164,16 @@ class RelationRepeater extends ModelRelationField implements
     public function modifyRemoveButton(Closure $callback): self
     {
         $this->modifyRemoveButton = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @param  Closure(ActionButton $button, self $field): ActionButton  $callback
+     */
+    public function modifyCreateButton(Closure $callback): self
+    {
+        $this->modifyCreateButton = $callback;
 
         return $this;
     }
@@ -254,29 +295,74 @@ class RelationRepeater extends ModelRelationField implements
 
         $fields = $this->getPreparedFields();
 
-        return $this->resolvedComponent = TableBuilder::make($fields, $this->getValue())
+        $reorderable = ! $this->isPreviewMode() && $this->isReorderable();
+        $reorderableUrl = $reorderable ? \call_user_func($this->reorderableUrl, $this) : null;
+
+        if ($reorderable) {
+            $fields->prepend(
+                Preview::make(
+                    column: '__handle',
+                    formatted: static fn () => Icon::make('bars-4'),
+                )->customAttributes(['class' => 'handle', 'style' => 'cursor: move']),
+            );
+        }
+
+        $component = TableBuilder::make($fields, $this->getValue())
             ->name("relation_repeater_{$this->getIdentity()}")
             ->inside('field')
             ->customAttributes(
                 $this->getAttributes()
                     ->except(['class', 'data-name', 'data-column'])
+                    ->when(
+                        $reorderable,
+                        static fn (ComponentAttributesBagContract $attr): ComponentAttributesBagContract => $attr->merge([
+                            'data-handle' => '.handle',
+                        ]),
+                    )
                     ->jsonSerialize()
+            )
+            ->customAttributes(['data-validation-wrapper' => true])
+            ->when(
+                $reorderable,
+                static fn (TableBuilderContract $table): TableBuilderContract => $table->reorderable($reorderableUrl),
             )
             ->cast($this->getResource()?->getCaster())
             ->when(
                 $this->isVertical(),
                 fn (TableBuilderContract $table): TableBuilderContract => $table->vertical(
-                    title: fn (FieldContract $field, ComponentContract $default): Column => Column::make([
-                        Div::make([
+                    title: $reorderable ? fn (FieldContract $field, ComponentContract $default): Column => Column::make([
+                        $field->getColumn() === '__handle' ? $field : Div::make([
                             $field->getLabel(),
                         ]),
-                    ])->columnSpan($this->verticalTitleSpan),
-                )
+                    ])->columnSpan($this->verticalTitleSpan) : null,
+                    value: $reorderable ? fn (FieldContract $field, ComponentContract $default): Column => $field->getColumn() === '__handle'
+                        ? Column::make()->columnSpan($this->verticalValueSpan)
+                        /** @var Column $default */
+                        /** @phpstan-ignore-next-line  */
+                        : $default->columnSpan($this->verticalValueSpan)->customAttributes(['data-validation-wrapper' => true]) : null,
+                ),
             )
             ->when(
                 ! \is_null($this->modifyTable),
                 fn (TableBuilder $tableBuilder) => value($this->modifyTable, $tableBuilder, $this->isPreviewMode())
             );
+
+        if(! $this->isPreviewMode()) {
+            $component = $component
+                ->editable()
+                ->reindex(prepared: true)
+                ->when(
+                    $this->isCreatable(),
+                    fn (TableBuilderContract $table): TableBuilderContract => $table->creatable(
+                        limit: $this->getCreateLimit(),
+                        button: $this->getCreateButton()
+                    )->removeAfterClone()
+                )
+                ->buttons($this->getButtons())
+                ->simple();
+        }
+
+        return $this->resolvedComponent = $component;
     }
 
     /**
@@ -446,18 +532,7 @@ class RelationRepeater extends ModelRelationField implements
     protected function viewData(): array
     {
         return [
-            'component' => $this->getComponent()
-                ->editable()
-                ->reindex(prepared: true)
-                ->when(
-                    $this->isCreatable(),
-                    fn (TableBuilderContract $table): TableBuilderContract => $table->creatable(
-                        limit: $this->getCreateLimit(),
-                        button: $this->getCreateButton()
-                    )->removeAfterClone()
-                )
-                ->buttons($this->getButtons())
-                ->simple(),
+            'component' => $this->getComponent(),
         ];
     }
 }
