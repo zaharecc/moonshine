@@ -342,7 +342,7 @@ abstract class Page implements PageContract
 
     protected function prepareBeforeRender(): void
     {
-        if($this->hasResource()) {
+        if ($this->hasResource()) {
             $this->getResource()?->loaded();
         }
 
