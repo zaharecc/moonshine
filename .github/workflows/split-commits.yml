@@ -13,13 +13,13 @@ jobs:
     strategy:
       matrix:
         package:
-          #- { namespace: AssetManager, repo: asset-manager }
-          #- { namespace: ColorManager, repo: color-manager }
-          #- { namespace: Contracts, repo: contracts }
-          #- { namespace: Core, repo: core }
-          #- { namespace: Laravel, repo: laravel }
-          #- { namespace: MenuManager, repo: menu-manager }
-          #- { namespace: Support, repo: support }
+          - { namespace: AssetManager, repo: asset-manager }
+          - { namespace: ColorManager, repo: color-manager }
+          - { namespace: Contracts, repo: contracts }
+          - { namespace: Core, repo: core }
+          - { namespace: Laravel, repo: laravel }
+          - { namespace: MenuManager, repo: menu-manager }
+          - { namespace: Support, repo: support }
           - { namespace: UI, repo: ui }
     steps:
       - uses: actions/checkout@v4
@@ -27,9 +27,5 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
           repo_url="https://${{ secrets.SUPER_ACCESS_TOKEN }}@github.com/moonshine-software/${{ matrix.package.repo }}.git"
-          git subtree merge --prefix src/${{ matrix.package.namespace }} "$repo_url" ${{ github.ref_name }}
-          git subtree pull --prefix src/${{ matrix.package.namespace }} "$repo_url" ${{ github.ref_name }}
           git subtree push --prefix src/${{ matrix.package.namespace }} "$repo_url" ${{ github.ref_name }}
