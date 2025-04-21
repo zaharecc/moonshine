@@ -114,4 +114,6 @@ interface ActionButtonContract extends
     public function info(Closure|bool|null $condition = null): static;
 
     public function error(Closure|bool|null $condition = null): static;
+
+    public function hotKeys(array $keys, bool $withBadge = false): static;
 }
