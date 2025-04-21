@@ -35,7 +35,9 @@ jobs:
 
       - name: Skip CI if commit has [skip tests]
         if: contains(github.event.head_commit.message, '[skip tests]')
-        run: echo "CI skipped due to commit message"
+        run: |
+          echo "CI skipped due to commit message"
+          exit 0
         continue-on-error: true
 
       - name: Set up MySQL
