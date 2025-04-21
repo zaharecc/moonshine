@@ -33,6 +33,11 @@ jobs:
           coverage: none
       - uses: actions/checkout@v4
 
+      - name: Skip CI if commit has [skip tests]
+        if: contains(github.event.head_commit.message, '[skip tests]')
+        run: echo "CI skipped due to commit message"
+        continue-on-error: true
+
       - name: Set up MySQL
         env:
           DB_USERNAME: root
