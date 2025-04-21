@@ -11,6 +11,7 @@ use MoonShine\Laravel\Collections\Fields;
 use MoonShine\Laravel\Components\Fragment;
 use MoonShine\Laravel\Contracts\Resource\HasQueryTagsContract;
 use MoonShine\Laravel\Enums\Ability;
+use MoonShine\Laravel\Resources\CrudResource;
 use MoonShine\Support\Enums\JsEvent;
 use MoonShine\Support\Enums\PageType;
 use MoonShine\UI\Components\ActionGroup;
@@ -20,6 +21,10 @@ use MoonShine\UI\Components\Layout\LineBreak;
 use MoonShine\UI\Components\Table\TableBuilder;
 use Throwable;
 
+/**
+ * @template TResource of CrudResource = \MoonShine\Laravel\Resources\ModelResource
+ * @extends CrudPage<TResource>
+ */
 class IndexPage extends CrudPage
 {
     protected ?PageType $pageType = PageType::INDEX;
