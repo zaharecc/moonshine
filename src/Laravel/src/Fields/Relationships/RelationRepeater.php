@@ -347,7 +347,7 @@ class RelationRepeater extends ModelRelationField implements
                 fn (TableBuilder $tableBuilder) => value($this->modifyTable, $tableBuilder, $this->isPreviewMode())
             );
 
-        if(! $this->isPreviewMode()) {
+        if (! $this->isPreviewMode()) {
             $component = $component
                 ->editable()
                 ->reindex(prepared: true)
