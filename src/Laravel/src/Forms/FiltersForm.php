@@ -27,7 +27,9 @@ final readonly class FiltersForm implements FormContract
 {
     use Makeable;
 
-    public function __construct(private CrudResource $resource) {}
+    public function __construct(private CrudResource $resource)
+    {
+    }
 
     /**
      * @throws Throwable
@@ -62,7 +64,7 @@ final readonly class FiltersForm implements FormContract
                 $filters
                     ->when(
                         $sort,
-                        static fn($fields): Fields
+                        static fn ($fields): Fields
                             => $fields
                             ->prepend(
                                 Hidden::make(column: 'sort')->setValue(
@@ -72,7 +74,7 @@ final readonly class FiltersForm implements FormContract
                     )
                     ->when(
                         $queryTag,
-                        static fn($fields): Fields
+                        static fn ($fields): Fields
                             => $fields
                             ->prepend(
                                 Hidden::make(column: 'query-tag')->setValue(
@@ -102,7 +104,7 @@ final readonly class FiltersForm implements FormContract
             ->submit(__('moonshine::ui.search'), ['class' => 'btn-primary'])
             ->when(
                 $resource->getFilterParams() !== [],
-                fn(FormBuilderContract $form): FormBuilderContract => $form->buttons([
+                fn (FormBuilderContract $form): FormBuilderContract => $form->buttons([
                     $this->getResetButton(),
                 ]),
             );
@@ -145,7 +147,7 @@ final readonly class FiltersForm implements FormContract
     {
         return str(request()->url())->when(
             $query,
-            static fn(Stringable $str): Stringable
+            static fn (Stringable $str): Stringable
                 => $str
                 ->append('?')
                 ->append(Arr::query($query)),
