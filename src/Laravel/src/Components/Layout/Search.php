@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace MoonShine\Laravel\Components\Layout;
 
+use Closure;
+use MoonShine\Support\Enums\FormMethod;
+use MoonShine\UI\Components\ActionButton;
+use MoonShine\UI\Components\FormBuilder;
 use MoonShine\UI\Components\MoonShineComponent;
+use MoonShine\UI\Fields\Text;
 
 /**
  * @method static static make(string $key = 'search', string $action = '', string $placeholder = '', bool $isEnabled = false)
@@ -12,6 +17,10 @@ use MoonShine\UI\Components\MoonShineComponent;
 final class Search extends MoonShineComponent
 {
     protected string $view = 'moonshine::components.layout.search';
+
+    protected ?Closure $modifyForm = null;
+
+    protected ?Closure $modifyInput = null;
 
     public function __construct(
         private readonly string $key = 'search',
@@ -32,6 +41,7 @@ final class Search extends MoonShineComponent
 
         return $this;
     }
+
     protected function isSearchEnabled(): bool
     {
         if ($this->isEnabled) {
@@ -53,15 +63,91 @@ final class Search extends MoonShineComponent
     }
 
     /**
+     * @param  Closure(FormBuilder $form, self $ctx): FormBuilder  $callback
+     */
+    public function modifyForm(Closure $callback): self
+    {
+        $this->modifyForm = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @param  Closure(Text $input, self $ctx): Text  $callback
+     */
+    public function modifyInput(Closure $callback): self
+    {
+        $this->modifyInput = $callback;
+
+        return $this;
+    }
+
+    protected function getInput(): Text
+    {
+        $input = Text::make($this->placeholder, 'search')
+            ->setAttribute('type', 'search')
+            ->xModel('searchValue')
+            ->class('search-form-field')
+            ->required()
+            ->placeholder($this->placeholder)
+            ->withoutWrapper()
+            ->customAttributes([
+                'x-ref' => 'searchInput',
+                '@keyup.ctrl.k.window' => '$refs.searchInput.focus()',
+                '@keyup.ctrl.period.window' => '$refs.searchInput.focus()',
+            ]);
+
+        if (! \is_null($this->modifyInput)) {
+            $input = \call_user_func($this->modifyInput, $input, $this);
+        }
+
+        return $input;
+    }
+
+    protected function getForm(): FormBuilder
+    {
+        $form = FormBuilder::make($this->action, FormMethod::GET)
+            ->xData(['searchValue' => moonshine()->getRequest()->getScalar($this->key, '')])
+            ->rawMode()
+            ->class('search-form')
+            ->fields([
+                $this->getInput(),
+
+                ActionButton::make('')
+                    ->rawMode()
+                    ->onClick(fn() => 'searchValue = ""; $refs.searchInput.value = ""; $refs.searchForm.submit()')
+                    ->class('search-form-clear')
+                    ->xShow('searchValue', '!=', '')
+                    ->customAttributes([
+                        'type' => 'button',
+                    ])
+                    ->icon('x-mark'),
+
+                ActionButton::make('')
+                    ->rawMode()
+                    ->customAttributes([
+                        'type' => 'submit',
+                    ])
+                    ->class('search-form-submit')
+                    ->icon('magnifying-glass'),
+            ])
+            ->hideSubmit();
+
+        if (! \is_null($this->modifyForm)) {
+            $form = \call_user_func($this->modifyForm, $form, $this);
+        }
+
+        return $form;
+    }
+
+    /**
      * @return array<string, mixed>
      */
     protected function viewData(): array
     {
         return [
-            'action' => $this->action,
-            'value' => moonshine()->getRequest()->getScalar($this->key, ''),
-            'placeholder' => $this->placeholder,
             'isEnabled' => $this->isSearchEnabled(),
+            'form' => $this->getForm(),
         ];
     }
 }
