@@ -8,6 +8,7 @@ use Closure;
 use MoonShine\Support\Enums\FormMethod;
 use MoonShine\UI\Components\ActionButton;
 use MoonShine\UI\Components\FormBuilder;
+use MoonShine\UI\Components\Layout\Div;
 use MoonShine\UI\Components\MoonShineComponent;
 use MoonShine\UI\Fields\Text;
 
@@ -84,7 +85,7 @@ final class Search extends MoonShineComponent
 
     protected function getInput(): Text
     {
-        $input = Text::make($this->placeholder, 'search')
+        $input = Text::make($this->placeholder, $this->key)
             ->setAttribute('type', 'search')
             ->xModel('searchValue')
             ->class('search-form-field')
@@ -106,30 +107,38 @@ final class Search extends MoonShineComponent
 
     protected function getForm(): FormBuilder
     {
+        $value = moonshine()->getRequest()->getScalar($this->key, '');
+
         $form = FormBuilder::make($this->action, FormMethod::GET)
-            ->xData(['searchValue' => moonshine()->getRequest()->getScalar($this->key, '')])
+            ->customAttributes([
+                'x-ref' => 'searchForm'
+            ])
             ->rawMode()
             ->class('search-form')
             ->fields([
-                $this->getInput(),
+                Div::make([
+                    $this->getInput(),
 
-                ActionButton::make('')
-                    ->rawMode()
-                    ->onClick(fn() => 'searchValue = ""; $refs.searchInput.value = ""; $refs.searchForm.submit()')
-                    ->class('search-form-clear')
-                    ->xShow('searchValue', '!=', '')
-                    ->customAttributes([
-                        'type' => 'button',
-                    ])
-                    ->icon('x-mark'),
+                    ActionButton::make('')
+                        ->rawMode()
+                        ->onClick(fn() => 'searchValue = ""; $refs.searchInput.value = ""; $refs.searchForm.submit()')
+                        ->class('search-form-clear')
+                        ->xShow('searchValue', '!=', '')
+                        ->customAttributes([
+                            'type' => 'button',
+                        ])
+                        ->icon('x-mark'),
 
-                ActionButton::make('')
-                    ->rawMode()
-                    ->customAttributes([
-                        'type' => 'submit',
-                    ])
-                    ->class('search-form-submit')
-                    ->icon('magnifying-glass'),
+                    ActionButton::make('')
+                        ->rawMode()
+                        ->customAttributes([
+                            'type' => 'submit',
+                        ])
+                        ->class('search-form-submit')
+                        ->icon('magnifying-glass'),
+                ])
+                    ->style('display: inline')
+                    ->xData(['searchValue' => $value])
             ])
             ->hideSubmit();
 
