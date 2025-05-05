@@ -56,7 +56,7 @@ final class MoonShineJsonResponse extends JsonResponse
 
     public function html(string|array $value, HtmlMode $mode = HtmlMode::INNER_HTML): self
     {
-        if(is_string($value)) {
+        if (\is_string($value)) {
             return $this->htmlData($value, mode: $mode);
         }
 

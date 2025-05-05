@@ -19,14 +19,16 @@ class EventParams
     /**
      * @param  array<string, numeric|string>  $data
      */
-    public function __construct(private array $data = []) {}
+    public function __construct(private array $data = [])
+    {
+    }
 
     /**
      * @param  array<non-empty-string, scalar>  $data
      */
     public function selectors(array $data): static
     {
-        if(array_filter($data) === []) {
+        if (array_filter($data) === []) {
             return $this;
         }
 
@@ -40,7 +42,7 @@ class EventParams
      */
     public function fieldsValues(array $data): static
     {
-        if(array_filter($data) === []) {
+        if (array_filter($data) === []) {
             return $this;
         }
 
@@ -65,7 +67,7 @@ class EventParams
         return implode(
             '|',
             array_map(
-                static fn(string $key, mixed $value): string => \is_scalar($value)
+                static fn (string $key, mixed $value): string => \is_scalar($value)
                     ? "$key{->}$value"
                     : throw new InvalidArgumentException('Only scalar values allowed'),
                 array_keys($data),
