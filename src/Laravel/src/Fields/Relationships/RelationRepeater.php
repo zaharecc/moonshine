@@ -217,7 +217,7 @@ class RelationRepeater extends ModelRelationField implements
     {
         $fields = $this->getFields();
 
-        if(!$this->isPreviewMode()) {
+        if (! $this->isPreviewMode()) {
             $fields->prepareAttributes();
         }
 
