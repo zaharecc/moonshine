@@ -223,7 +223,7 @@ class RelationRepeater extends ModelRelationField implements
         }
 
         return $fields->prepareReindexNames(parent: $this, before: function (self $parent, Field $field): void {
-            if($field instanceof HasUpdateOnPreviewContract && $field->isUpdateOnPreview()) {
+            if ($field instanceof HasUpdateOnPreviewContract && $field->isUpdateOnPreview()) {
                 $field->nowOnResource($this->getResource());
             }
 
