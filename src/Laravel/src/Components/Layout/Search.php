@@ -121,7 +121,7 @@ final class Search extends MoonShineComponent
 
                     ActionButton::make('')
                         ->rawMode()
-                        ->onClick(fn() => 'searchValue = ""; $refs.searchInput.value = ""; $refs.searchForm.submit()')
+                        ->onClick(fn(): string => 'searchValue = ""; $refs.searchInput.value = ""; $refs.searchForm.submit()')
                         ->class('search-form-clear')
                         ->xShow('searchValue', '!=', '')
                         ->customAttributes([
