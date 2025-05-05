@@ -215,8 +215,15 @@ class RelationRepeater extends ModelRelationField implements
      */
     protected function prepareFields(): FieldsContract
     {
-        return $this->getFields()->prepareAttributes()->prepareReindexNames(parent: $this, before: function (self $parent, Field $field): void {
+        $fields = $this->getFields();
+
+        if(!$this->isPreviewMode()) {
+            $fields->prepareAttributes();
+        }
+
+        return $fields->prepareReindexNames(parent: $this, before: function (self $parent, Field $field): void {
             $field
+                ->nowOnResource($this->getResource())
                 ->disableSortable()
                 ->withoutWrapper()
                 ->setRequestKeyPrefix($parent->getRequestKeyPrefix())
