@@ -76,3 +76,27 @@ describe('basic methods', function () {
             ->applies($this->field);
     });
 });
+
+describe('reactive', function () {
+    it('prepare value', function (): void {
+        $except = [];
+        $value = $this->user->first();
+        $this->field->setValue($this->user->first());
+
+        $expect = $this->field->prepareReactivityValue($value->getKey(), $this->item, $except);
+
+        expect($expect)
+            ->toBe($value->getKey())
+        ;
+    });
+
+    it('get value', function (): void {
+        $value = $this->user->first();
+        $this->field->setValue($this->user->first());
+        $expect = $this->field->getReactiveValue();
+
+        expect($expect)
+            ->toBe($value->getKey())
+        ;
+    });
+});

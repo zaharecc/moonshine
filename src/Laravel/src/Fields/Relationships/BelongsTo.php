@@ -126,8 +126,12 @@ class BelongsTo extends ModelRelationField implements
         $value = data_get($value, 'value', $value);
 
         $casted = $this->getRelatedModel();
-        $casted?->setRelation($this->getRelationName(), $this->makeRelatedModel($value));
+        $model = $this->makeRelatedModel($value, related: $this->getRelation()?->getRelated());
+        $casted?->setRelation($this->getRelationName(), $model);
 
+        /**
+         * TODO(4.0) return $model
+         */
         return $value;
     }
 

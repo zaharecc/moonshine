@@ -7,6 +7,7 @@ use MoonShine\Laravel\Contracts\Fields\HasAsyncSearchContract;
 use MoonShine\Laravel\Contracts\Fields\HasPivotContract;
 use MoonShine\Laravel\Contracts\Fields\HasRelatedValuesContact;
 use MoonShine\Laravel\Fields\Relationships\BelongsToMany;
+use MoonShine\Tests\Fixtures\Models\Category;
 use MoonShine\Tests\Fixtures\Models\Item;
 use MoonShine\Tests\Fixtures\Resources\TestCategoryResource;
 use MoonShine\UI\Fields\Text;
@@ -124,5 +125,30 @@ describe('unique field methods', function () {
                     ->getIdentity()
                     ->toBe('pivot_' . $key);
             });
+    });
+});
+
+describe('reactive', function () {
+    it('prepare value', function (): void {
+        $except = [];
+        $values = $this->field->getReactiveValue();
+        $expect = $this->field->prepareReactivityValue($values, $this->item, $except);
+
+        expect($expect)
+            ->toBeCollection()
+            ->each->toBeInstanceOf(Category::class)
+            ->and($expect->first()->getKey())
+            ->toBeIn($values)
+        ;
+    });
+
+    it('get value', function (): void {
+        $expect = $this->field->getReactiveValue();
+
+        expect($expect)
+            ->toBeCollection()
+            ->each->toBeScalar()
+            ->not->toBeEmpty()
+        ;
     });
 });
