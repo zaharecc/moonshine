@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MoonShine\Support;
 
+use InvalidArgumentException;
 use MoonShine\Support\Traits\Makeable;
 
 /**
@@ -66,7 +67,7 @@ class EventParams
             array_map(
                 static fn(string $key, mixed $value): string => \is_scalar($value)
                     ? "$key{->}$value"
-                    : throw new \InvalidArgumentException('Only scalar values allowed'),
+                    : throw new InvalidArgumentException('Only scalar values allowed'),
                 array_keys($data),
                 $data,
             ),
