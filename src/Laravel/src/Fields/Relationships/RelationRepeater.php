@@ -26,6 +26,7 @@ use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\UI\Contracts\DefaultValueTypes\CanBeArray;
 use MoonShine\UI\Contracts\DefaultValueTypes\CanBeObject;
 use MoonShine\UI\Contracts\HasDefaultValueContract;
+use MoonShine\UI\Contracts\HasUpdateOnPreviewContract;
 use MoonShine\UI\Contracts\RemovableContract;
 use MoonShine\UI\Fields\Field;
 use MoonShine\UI\Fields\Json;
@@ -222,8 +223,11 @@ class RelationRepeater extends ModelRelationField implements
         }
 
         return $fields->prepareReindexNames(parent: $this, before: function (self $parent, Field $field): void {
+            if($field instanceof HasUpdateOnPreviewContract && $field->isUpdateOnPreview()) {
+                $field->nowOnResource($this->getResource());
+            }
+
             $field
-                ->nowOnResource($this->getResource())
                 ->disableSortable()
                 ->withoutWrapper()
                 ->setRequestKeyPrefix($parent->getRequestKeyPrefix())
