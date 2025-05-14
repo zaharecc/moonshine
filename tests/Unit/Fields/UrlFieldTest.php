@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Database\Eloquent\Model;
 use MoonShine\Tests\Fixtures\Resources\TestResourceBuilder;
-use MoonShine\UI\Components\Url as UrlComponent;
+use MoonShine\UI\Components\Link;
 use MoonShine\UI\Fields\Text;
 use MoonShine\UI\Fields\Url;
 
@@ -31,7 +31,7 @@ it('type', function (): void {
 it('index view value', function (): void {
     expect((string) $this->field->preview())
         ->toBe(
-            (string) UrlComponent::make('https://cutcode.dev', 'https://cutcode.dev')
+            (string) Link::make('https://cutcode.dev', 'https://cutcode.dev')
                 ->render()
         );
 });
