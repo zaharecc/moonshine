@@ -32,6 +32,7 @@ it('index view value', function (): void {
     expect((string) $this->field->preview())
         ->toBe(
             (string) Link::make('https://cutcode.dev', 'https://cutcode.dev')
+                ->icon('link')
                 ->render()
         );
 });
