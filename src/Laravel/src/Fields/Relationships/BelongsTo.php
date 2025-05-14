@@ -18,6 +18,7 @@ use MoonShine\UI\Contracts\HasDefaultValueContract;
 use MoonShine\UI\Traits\Fields\HasPlaceholder;
 use MoonShine\UI\Traits\Fields\Searchable;
 use MoonShine\UI\Traits\Fields\WithDefaultValue;
+use MoonShine\UI\Traits\Fields\WithEscapedValue;
 use Throwable;
 
 /**
@@ -37,6 +38,7 @@ class BelongsTo extends ModelRelationField implements
     use WithDefaultValue;
     use HasPlaceholder;
     use BelongsToOrManyCreatable;
+    use WithEscapedValue;
 
     protected string $view = 'moonshine::fields.relationships.belongs-to';
 
@@ -50,7 +52,9 @@ class BelongsTo extends ModelRelationField implements
     protected function resolvePreview(): string
     {
         if (! $this->getResource()->hasAnyAction(Action::VIEW, Action::UPDATE)) {
-            return parent::resolvePreview();
+            return $this->isUnescape()
+                ? parent::resolvePreview()
+                : $this->escapeValue((string) parent::resolvePreview());
         }
 
         if (! $this->hasLink() && $this->toValue()) {
@@ -68,7 +72,9 @@ class BelongsTo extends ModelRelationField implements
             );
         }
 
-        return parent::resolvePreview();
+        return $this->isUnescape()
+            ? parent::resolvePreview()
+            : $this->escapeValue((string) parent::resolvePreview());
     }
 
     protected function resolveValue(): mixed
