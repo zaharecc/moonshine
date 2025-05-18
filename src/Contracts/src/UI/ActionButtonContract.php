@@ -99,6 +99,10 @@ interface ActionButtonContract extends
 
     public function isAsync(): bool;
 
+    public function download(): static;
+
+    public function withoutLoading(Closure|bool|null $condition = null): static;
+
     public function content(Closure|string $content): static;
 
     public function badge(Closure|string|int|float|null $value): static;
