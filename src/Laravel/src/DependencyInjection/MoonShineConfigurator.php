@@ -225,6 +225,10 @@ final class MoonShineConfigurator implements ConfiguratorContract
         return $this->get('use_profile', true);
     }
 
+    /**
+     * @deprecated Will be removed in 4.0 (useless)
+     * @see for routes use config
+     */
     public function useProfile(): self
     {
         return $this->set('use_profile', true);
@@ -319,11 +323,19 @@ final class MoonShineConfigurator implements ConfiguratorContract
         return $this->get('auth.enabled', true);
     }
 
+    /**
+     * @deprecated Will be removed in 4.0 (useless)
+     * @see for routes use config
+     */
     public function authEnable(): self
     {
         return $this->set('auth.enabled', true);
     }
 
+    /**
+     * @deprecated Will be removed in 4.0 (useless)
+     * @see for routes use config
+     */
     public function authDisable(): self
     {
         return $this->set('auth.enabled', false);
