@@ -55,7 +55,7 @@ abstract class ModelRelationField extends Field implements HasResourceContract
         ModelResource|string|null $resource = null,
     ) {
         if (\is_string($formatted)) {
-            $formatted = static fn($item) => data_get($item, $formatted);
+            $formatted = static fn ($item) => data_get($item, $formatted);
         }
 
         parent::__construct($label, $relationName, $formatted);
@@ -65,8 +65,8 @@ abstract class ModelRelationField extends Field implements HasResourceContract
                 ->camel()
                 ->when(
                     $this->isToOne(),
-                    static fn(Stringable $str): Stringable => $str->singular(),
-                    static fn(Stringable $str): Stringable => $str->plural(),
+                    static fn (Stringable $str): Stringable => $str->singular(),
+                    static fn (Stringable $str): Stringable => $str->plural(),
                 )->value();
         }
 
