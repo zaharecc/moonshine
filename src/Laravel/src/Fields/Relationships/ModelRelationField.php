@@ -55,7 +55,7 @@ abstract class ModelRelationField extends Field implements HasResourceContract
         ModelResource|string|null $resource = null,
     ) {
         if (\is_string($formatted)) {
-            $formatted = static fn ($item) => data_get($item, $formatted);
+            $formatted = static fn($item) => data_get($item, $formatted);
         }
 
         parent::__construct($label, $relationName, $formatted);
@@ -65,8 +65,8 @@ abstract class ModelRelationField extends Field implements HasResourceContract
                 ->camel()
                 ->when(
                     $this->isToOne(),
-                    static fn (Stringable $str): Stringable => $str->singular(),
-                    static fn (Stringable $str): Stringable => $str->plural(),
+                    static fn(Stringable $str): Stringable => $str->singular(),
+                    static fn(Stringable $str): Stringable => $str->plural(),
                 )->value();
         }
 
@@ -114,6 +114,7 @@ abstract class ModelRelationField extends Field implements HasResourceContract
 
     /**
      * @param  ?class-string<ModelResource>  $classString
+     *
      * @throws Throwable
      */
     protected function findResource(?string $classString = null): ModelResource
@@ -258,8 +259,12 @@ abstract class ModelRelationField extends Field implements HasResourceContract
         return $this->relatedModel;
     }
 
-    public function makeRelatedModel(int|string $key, array $attributes = [], array $relations = [], ?Model $related = null): ?Model
-    {
+    public function makeRelatedModel(
+        int|string|null $key = null,
+        array $attributes = [],
+        array $relations = [],
+        ?Model $related = null,
+    ): ?Model {
         $related ??= $this->getRelatedModel();
 
         if (\is_null($related)) {
