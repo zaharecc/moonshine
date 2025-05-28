@@ -114,6 +114,7 @@ abstract class ModelRelationField extends Field implements HasResourceContract
 
     /**
      * @param  ?class-string<ModelResource>  $classString
+     *
      * @throws Throwable
      */
     protected function findResource(?string $classString = null): ModelResource
@@ -258,8 +259,12 @@ abstract class ModelRelationField extends Field implements HasResourceContract
         return $this->relatedModel;
     }
 
-    public function makeRelatedModel(int|string $key, array $attributes = [], array $relations = [], ?Model $related = null): ?Model
-    {
+    public function makeRelatedModel(
+        int|string|null $key = null,
+        array $attributes = [],
+        array $relations = [],
+        ?Model $related = null,
+    ): ?Model {
         $related ??= $this->getRelatedModel();
 
         if (\is_null($related)) {

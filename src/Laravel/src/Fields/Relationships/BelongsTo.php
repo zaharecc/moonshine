@@ -54,7 +54,7 @@ class BelongsTo extends ModelRelationField implements
         if (! $this->getResource()->hasAnyAction(Action::VIEW, Action::UPDATE)) {
             return $this->isUnescape()
                 ? parent::resolvePreview()
-                : $this->escapeValue((string) parent::resolvePreview());
+                : $this->escapeValue((string)parent::resolvePreview());
         }
 
         if (! $this->hasLink() && $this->toValue()) {
@@ -68,13 +68,13 @@ class BelongsTo extends ModelRelationField implements
 
             $this->link(
                 $this->getResource()->getPageUrl($page, ['resourceItem' => $this->getValue()]),
-                withoutIcon: true
+                withoutIcon: true,
             );
         }
 
         return $this->isUnescape()
             ? parent::resolvePreview()
-            : $this->escapeValue((string) parent::resolvePreview());
+            : $this->escapeValue((string)parent::resolvePreview());
     }
 
     protected function resolveValue(): mixed
@@ -92,7 +92,7 @@ class BelongsTo extends ModelRelationField implements
             return false;
         }
 
-        return (string) $this->toValue()->getKey() === $value;
+        return (string)$this->toValue()->getKey() === $value;
     }
 
     public function native(): static
@@ -118,13 +118,29 @@ class BelongsTo extends ModelRelationField implements
 
             if ($value === false && $this->isNullable()) {
                 return $item
-                    ->{$this->getRelationName()}()
+                    ->{$this
+                        ->getRelationName()}()
                     ->dissociate();
             }
 
-            return $item->{$this->getRelationName()}()
+            return $item->{$this
+                ->getRelationName()}()
                 ->associate($value);
         };
+    }
+
+    public function getReactiveValue(): mixed
+    {
+        $value = $this->getValue();
+
+        if ($value === null && ! $this->isNullable()) {
+            $options = $this->getValues();
+            $values = $options->getValues();
+
+            $value = $values->count() ? $values->first()->getValue() : null;
+        }
+
+        return $value;
     }
 
     public function prepareReactivityValue(mixed $value, mixed &$casted, array &$except): mixed
