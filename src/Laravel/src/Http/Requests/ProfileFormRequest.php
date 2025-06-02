@@ -33,7 +33,7 @@ class ProfileFormRequest extends MoonShineFormRequest
                     moonshineConfig()->getUserField('username')
                 )->ignore(MoonShineAuth::getGuard()->id()),
             ],
-            $avatar => blank($avatar) ? null : ['image', 'mimes:jpeg,jpg,png,gif'],
+            $avatar => blank($avatar) ? null : ['sometimes', 'nullable', 'image', 'mimes:jpeg,jpg,png,gif'],
             $password => blank($password) ? null : 'sometimes|nullable|min:6|required_with:password_repeat|same:password_repeat',
         ]);
     }

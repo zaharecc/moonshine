@@ -154,7 +154,7 @@ class MoonShineUserResource extends ModelResource
                 'email',
                 Rule::unique('moonshine_users')->ignoreModel($item),
             ],
-            'avatar' => ['image', 'mimes:jpeg,jpg,png,gif'],
+            'avatar' => ['sometimes', 'nullable', 'image', 'mimes:jpeg,jpg,png,gif'],
             'password' => $item->exists
                 ? 'sometimes|nullable|min:6|required_with:password_repeat|same:password_repeat'
                 : 'required|min:6|required_with:password_repeat|same:password_repeat',
