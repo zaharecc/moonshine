@@ -107,7 +107,7 @@ final class Profile extends MoonShineComponent
             return $this->getAvatarPlaceholder();
         }
 
-        if (str_starts_with($avatar, 'http://') || str_starts_with($avatar, 'https://')) {
+        if (str_starts_with((string) $avatar, 'http://') || str_starts_with((string) $avatar, 'https://')) {
             return $avatar;
         }
 
