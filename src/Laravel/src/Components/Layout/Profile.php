@@ -103,7 +103,7 @@ final class Profile extends MoonShineComponent
 
         $avatar = $this->user?->{$userField};
 
-        if ($avatar === '') {
+        if ($avatar === '' || $avatar === null) {
             return $this->getAvatarPlaceholder();
         }
 
