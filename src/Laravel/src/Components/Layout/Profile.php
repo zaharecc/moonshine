@@ -103,9 +103,15 @@ final class Profile extends MoonShineComponent
 
         $avatar = $this->user?->{$userField};
 
-        return $avatar
-            ? Storage::disk(moonshineConfig()->getDisk())->url($avatar)
-            : $this->getAvatarPlaceholder();
+        if ($avatar === '' || $avatar === null) {
+            return $this->getAvatarPlaceholder();
+        }
+
+        if (str_starts_with($avatar, 'http://') || str_starts_with($avatar, 'https://')) {
+            return $avatar;
+        }
+
+        return Storage::disk(moonshineConfig()->getDisk())->url($avatar);
     }
 
     /**
