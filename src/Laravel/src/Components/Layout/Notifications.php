@@ -18,25 +18,27 @@ final class Notifications extends MoonShineComponent
         'mark_as_read_all' => 'moonshine::ui.notifications.mark_as_read_all',
     ];
 
-    public Collection $notifications;
-
     private readonly MoonShineNotificationContract $notificationService;
 
-    public function __construct()
-    {
-        parent::__construct();
+    public Collection $notifications;
 
-        $this->notificationService = $this->getCore()
+    public string $readAllRoute = '';
+
+    protected function prepareBeforeRender(): void
+    {
+        $this->notificationService = $this
+            ->getCore()
             ->getContainer(MoonShineNotificationContract::class);
 
-        $this->notifications = $this->notificationService
-            ->getAll();
+        $this->notifications = $this->notificationService->getAll();
+        $this->readAllRoute = $this->notificationService->getReadAllRoute();
     }
 
     protected function viewData(): array
     {
         return [
-            'readAllRoute' => $this->notificationService->getReadAllRoute(),
+            'notifications' => $this->notifications,
+            'readAllRoute' => $this->readAllRoute,
         ];
     }
 }
