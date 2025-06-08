@@ -24,13 +24,19 @@ final class Notifications extends MoonShineComponent
 
     public string $readAllRoute = '';
 
-    protected function prepareBeforeRender(): void
+    public function __construct()
     {
-        $this->notificationService = $this
-            ->getCore()
+        parent::__construct();
+
+        $this->notificationService = $this->getCore()
             ->getContainer(MoonShineNotificationContract::class);
 
-        $this->notifications = $this->notificationService->getAll();
+        $this->notifications = $this->notificationService
+            ->getAll();
+    }
+
+    protected function prepareBeforeRender(): void
+    {
         $this->readAllRoute = $this->notificationService->getReadAllRoute();
     }
 
