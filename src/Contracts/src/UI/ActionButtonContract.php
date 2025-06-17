@@ -13,8 +13,8 @@ use MoonShine\Support\DTOs\AsyncCallback;
 use MoonShine\Support\Enums\HttpMethod;
 
 /**
- * @template TModal of  ComponentContract
- * @template TOffCanvas of  ComponentContract
+ * @template TModal of  ComponentContract = ComponentContract
+ * @template TOffCanvas of  ComponentContract = ComponentContract
  *
  * @extends HasModalContract<TModal>
  * @extends HasOffCanvasContract<TOffCanvas>
