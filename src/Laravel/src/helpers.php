@@ -62,7 +62,7 @@ if (! \function_exists('moonshineMenu')) {
 
 if (! \function_exists('moonshineRouter')) {
     /**
-     * @return RouterContract<MoonShineRouter>
+     * @return MoonShineRouter
      */
     function moonshineRouter(): RouterContract
     {
@@ -72,7 +72,7 @@ if (! \function_exists('moonshineRouter')) {
 
 if (! \function_exists('moonshineConfig')) {
     /**
-     * @return ConfiguratorContract<MoonShineConfigurator>
+     * @return MoonShineConfigurator
      */
     function moonshineConfig(): ConfiguratorContract
     {
@@ -82,7 +82,7 @@ if (! \function_exists('moonshineConfig')) {
 
 if (! \function_exists('appliesRegister')) {
     /**
-     * @return AppliesRegisterContract<AppliesRegister>
+     * @return AppliesRegister
      */
     function appliesRegister(): AppliesRegisterContract
     {
