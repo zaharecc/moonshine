@@ -292,7 +292,7 @@ class RelationRepeater extends ModelRelationField implements
             if ($field instanceof File) {
                 $column = $field->getColumn();
 
-                $old = array_map(static fn(array $data): array => [
+                $old = array_map(static fn (array $data): array => [
                     ...$data,
                     $column => $data[$field->getHiddenColumn()] ?? null,
                 ], $old);
