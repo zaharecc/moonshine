@@ -427,7 +427,7 @@ class RelationRepeater extends ModelRelationField implements
 
                 $apply = $callback($field, $values, $data);
 
-                if($field instanceof self) {
+                if ($field instanceof self) {
                     continue;
                 }
 
