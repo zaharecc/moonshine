@@ -282,7 +282,7 @@ abstract class ModelRelationField extends Field implements HasResourceContract
      */
     public function getRelation(): ?Relation
     {
-        if($this->getParent() instanceof self) {
+        if ($this->getParent() instanceof self) {
             return $this->getParent()->getRelation()?->getRelated()?->{$this->getRelationName()}();
         }
 
