@@ -141,7 +141,7 @@ class DetailPage extends CrudPage
                 $toOneRenderer = fn (ModelRelationField $field, ?string $redirectBack = null) => Box::make($field->getLabel(), array_filter([
                     $field instanceof HasOne
                         ? $field->modifyTable(
-                        fn (TableBuilderContract $table): TableBuilderContract => $table->buttons([
+                            fn (TableBuilderContract $table): TableBuilderContract => $table->buttons([
                             $field->getFormModalButton(__('moonshine::ui.edit'), $redirectBack),
 
                             DeleteButton::for(
@@ -153,7 +153,7 @@ class DetailPage extends CrudPage
                                 modalName: "has-one-{$field->getRelationName()}",
                             ),
                         ]),
-                    ) : $field,
+                        ) : $field,
 
                     ! $field->toValue() && $field instanceof HasOne
                         ? $field->getFormModalButton(__('moonshine::ui.add'), $redirectBack)
