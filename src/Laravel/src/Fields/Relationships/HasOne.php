@@ -262,7 +262,7 @@ class HasOne extends ModelRelationField implements
                     ->getComponent()
                     ->when(
                         $redirectBack === null,
-                        fn (FormBuilderContract $form): FormBuilderContract => $form->withoutRedirect()
+                        fn (FormBuilder $form): FormBuilder => $form->withoutRedirect()
                     )
                     ->async(events: [
                         AlpineJs::event(
