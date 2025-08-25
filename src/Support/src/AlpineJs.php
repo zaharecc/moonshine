@@ -116,7 +116,7 @@ final readonly class AlpineJs
 
         return implode(
             ';',
-            array_map(static fn ($event): string => "\$dispatch('$event')", $events)
+            array_map(static fn (string $event): string => "\$dispatch('$event')", $events)
         );
     }
 
