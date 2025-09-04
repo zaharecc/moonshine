@@ -49,7 +49,7 @@ trait WithRelatedLink
             return false;
         }
 
-        if($this->relatedCount !== null) {
+        if ($this->relatedCount !== null) {
             return true;
         }
 
@@ -88,7 +88,7 @@ trait WithRelatedLink
     {
         $relationName = $this->getRelatedLinkRelation();
 
-        if($this->relatedCount === null) {
+        if ($this->relatedCount === null) {
             $value = $this->getRelatedModel()?->{$this->getRelationName()}() ?? new Collection();
             $this->relatedCount = $value->count();
         }
