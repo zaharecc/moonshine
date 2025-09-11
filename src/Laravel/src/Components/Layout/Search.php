@@ -89,6 +89,7 @@ final class Search extends MoonShineComponent
                 'x-ref' => 'searchInput',
                 '@keyup.ctrl.k.window' => '$refs.searchInput.focus()',
                 '@keyup.ctrl.period.window' => '$refs.searchInput.focus()',
+                '@keydown.enter' => '$refs.searchForm.submit()',
             ]);
 
         if (! \is_null($this->modifyInput)) {
