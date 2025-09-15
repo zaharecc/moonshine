@@ -179,10 +179,10 @@ abstract class BaseLayout extends AbstractLayout
         return Search::make();
     }
 
-    protected function getFooterMenu(): array
+protected function getFooterMenu(): array
     {
         return [
-            'https://moonshine-laravel.com/docs' => 'Documentation',
+            'https://t.me/gunslingeris' => 'Telegram',
         ];
     }
 
@@ -190,13 +190,8 @@ abstract class BaseLayout extends AbstractLayout
     {
         return \sprintf(
             <<<'HTML'
-                &copy; 2021-%d Made with ❤️ by
-                <a href="https://cutcode.dev"
-                    class="font-semibold text-primary hover:text-secondary"
-                    target="_blank"
-                >
-                    CutCode
-                </a>
+                &copy; 2021-%d by
+                zaharec
                 HTML,
             now()->year,
         );
