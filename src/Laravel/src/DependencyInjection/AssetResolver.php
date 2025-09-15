@@ -30,7 +30,7 @@ final class AssetResolver implements AssetResolverContract
 
     public function getVersion(): string
     {
-        return InstalledVersions::getVersion('moonshine/moonshine');
+        return InstalledVersions::getVersion('zaharecc/moonshine');
     }
 
     public function getHotFile(): string
