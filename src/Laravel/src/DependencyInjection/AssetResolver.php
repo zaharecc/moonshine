@@ -17,7 +17,7 @@ final class AssetResolver implements AssetResolverContract
 
     public function getDev(string $path): string
     {
-        return Vite::useBuildDirectory('vendor/moonshine')
+        return Vite::useBuildDirectory('vendor/zaharecc')
             ->useHotFile($path)
             ->withEntryPoints(['resources/css/main.css', 'resources/js/app.js'])
             ->toHtml();
