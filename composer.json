@@ -105,6 +105,9 @@
             "composer install",
             "vendor/bin/pest --bail"
         ],
+        "post-create-project-cmd": [
+            "cp -R vendor/zaharecc/moonshine/src/Laravel/lang/* lang"
+        ],
         "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes",
         "monorepo:merge": "vendor/bin/monorepo-builder merge"
     }
