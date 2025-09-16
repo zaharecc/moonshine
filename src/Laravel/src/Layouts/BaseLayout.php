@@ -190,7 +190,7 @@ protected function getFooterMenu(): array
     {
         return \sprintf(
             <<<'HTML'
-                &copy; 2021-%d by
+                &copy; %d by
                 zaharec
                 HTML,
             now()->year,
