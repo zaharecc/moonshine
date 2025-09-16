@@ -69,7 +69,7 @@ abstract class BaseLayout extends AbstractLayout
 
     protected function getProfileComponent(bool $sidebar = false): Profile
     {
-        return Profile::make(withBorder: $sidebar);
+        return Profile::make(withBorder: $sidebar)->defaultAvatar('/default/avatar.svg');
     }
 
     /**

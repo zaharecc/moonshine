@@ -51,6 +51,13 @@ final class Profile extends MoonShineComponent
         return $this->withBorder;
     }
 
+    public function defaultAvatar(string $url): self
+    {
+        $this->defaultAvatar = $url;
+
+        return $this;
+    }
+
     public function avatarPlaceholder(string $url): self
     {
         $this->defaultAvatar = $url;
